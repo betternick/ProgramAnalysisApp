@@ -4,7 +4,7 @@ Use this file to commit information clearly documenting your check-ins' content.
 ## Brief description of your planned program analysis (and visualization, if applicable) ideas.
 - Given a code, we can generate a graph connected by edges that shows the execution flow.
 - Includes branches for for/while loops and if statements
-
+```
     +------+
     | main |
     +------+
@@ -24,7 +24,7 @@ Use this file to commit information clearly documenting your check-ins' content.
        .
        .
        .
-
+```
 ## Notes of any important changes/feedback from TA discussion.
 - The first idea isn’t very good, it doesn’t involve too much analysis
 - TA said that a call-graph/control flow graph satisfies the analysis requirement of the project, however, it would be nice to add an additional analysis - component if possible.
