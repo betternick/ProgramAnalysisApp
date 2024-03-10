@@ -26,20 +26,10 @@ jobs:
         
     # - name: Grant execute permission for gradlew
     #   run: chmod +x ./gradlew
-    - name: Install Gradle
-      run: |
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          choco install gradle
-        elif [ "$RUNNER_OS" == "Linux" ]; then
-          sudo apt-get install gradle
-        elif [ "$RUNNER_OS" == "macOS" ]; then
-          brew install gradle
-        fi
-
 
     - name: Build with Gradle
-      run: gradle build
+      run: ./gradlew build
       
     - name: Run tests
-      run: gradle test
+      run: ./gradlew test
 
