@@ -12,8 +12,8 @@ else
     # # Run the tests before pushing to the target repository
     # yarn cover
 
-    # # Run the prettier to format the code
-    # yarn pretty
+    # Run the prettier to format the code
+    gradle spotlessApply
 
     printf "\nAlso pushing to the GitHub repo to use the CI tools it provides\n"
 fi
