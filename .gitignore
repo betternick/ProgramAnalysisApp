@@ -10,6 +10,7 @@ out/
 .classpath
 .project
 
+logs/
 
 # Ignore Gradle build output directory
 build/

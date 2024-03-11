@@ -12,7 +12,7 @@ function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    fetch('/api/tasks')
+    fetch('http://localhost:8080/api/tasks')
       .then((response) => response.json())
       .then(setTasks);
   }, []);
