@@ -1,5 +1,40 @@
 Use this file to commit information clearly documenting your check-ins' content. If you want to store more information/details besides what's required for the check-ins that's fine too. Make sure that your TA has had a chance to sign off on your check-in each week (before the deadline); typically you should discuss your material with them before finalizing it here.
 
+
+
+# Project 2 - Check-In 3
+## Mockup of how your project is planned to operate (as used for your first user study). Include any sketches/examples/scenarios.
+<img src="/controlFlowDiagram.jpg" height="600">
+
+<img src="/performanceAnalysisReport.jpg" height="600">
+
+## Notes about first user study results.
+Looking at the mock-up shown in the earlier section, one of the feedback received was that it was unclear what the different colors of the blocks were signifying. At this stage, we haven't decided how we want to use colouring to convey information but this is something we plan to look into. An early idea is to use a gradient from low to dark with dark signifying higher system resources use and room for optimization. 
+There was additional confusion regarding the extent of the call graph, particularly regarding the inclusion of programming functionalities like exceptions, retries, and recursion. Since we are still determining the full scope of our analysis, it is unclear whether or not these features will be included. However, we will keep them in mind when finalizing the scope. 
+The user also had some suggestions on how we could potentially expand our analysis. One idea was to include information about the program state alongside the call graph, akin to the functionality provided by a debugger. This would help the programmer visualize a particular input as it moved through the program. Another suggestion was to allow for the comparison of GCFGs across different commits so developers could analyze the effects their changes had. Again, when finalizing the scope of our analysis, we will make sure to keep these suggestions in mind. 
+
+## Any changes to original design.
+Original design was a call graph, which was changed to a global control-flow graph (GCFG).
+We wanted to add further useful information to our analysis and also to our  visualization, so we decided to add dynamic analysis which highlights different code blocks in our GCFG with information about potentially problematic areas of code or code which can be investigated from an optimization perspective. The additional measures we will be highlighting are execution time, number of times run, memory usage, CPU usage etc.
+A new challenge from these changes is creating the global control flow graph, which may require some more complex calculation.
+
+
+## Progress against the timeline planned for your team, including the specific goals you defined (as part of Check-in 2) for Check-in 3; any revisions to future Check-in goals.
+In check-in 2, we expected us to meet the following targets for check-in 3:
+#### *1. Decide on the additional analysis component to complement the control-flow graph (e.g., data-flow analysis, complexity metrics, etc.). (Entire team)*
+
+We have met this goal and come up with ideas for additional analysis (mentioned above) to complement our control-flow graph.
+
+#### *2. Prepare code examples that demonstrate different control structures and function calls to be used for testing the analysis tool. (1 person: Backend developer)*
+
+Since we were still working on finalizing our idea and a back-and-forth exchange of ideas with the TA we did not get to a stage where we can implement it and have code example ready. We did decide that we will be working with JAVA and have set up the repo with the boiler-plate code needed to start working.
+
+#### *3. Test the selected libraries and tools to ensure they meet the requirements for generating and analyzing the control-flow graph. (1 person: Backend developer)*
+
+We have found some useful libraries: Spoon and JavaParser for generating the AST, Byte Buddy for profiling the program during exection
+
+----------------------------------------
+
 # Project 2 - Check-In 2
 ## Brief description of your planned program analysis (and visualization, if applicable) ideas.
 - Given a code, we can generate a graph connected by edges that shows the execution flow.
