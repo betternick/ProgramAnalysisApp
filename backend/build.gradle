@@ -18,8 +18,14 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    agentCompile.extendsFrom implementation
+}
+
 dependencies {
-    // implementation libs.guava
+    // Byte Buddy to monitor the exection 
+    implementation 'net.bytebuddy:byte-buddy:1.14.12'
+    implementation 'net.bytebuddy:byte-buddy-agent:1.14.12'
 
     // Spoon is a library to analyze and transform Java source code.
     implementation 'fr.inria.gforge.spoon:spoon-core:10.4.1'
@@ -28,6 +34,7 @@ dependencies {
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // Spring Boot 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation "org.springframework.boot:spring-boot-starter-web" 
@@ -42,10 +49,39 @@ java {
     // }
 }
 
+sourceSets {
+    agent {
+        java {
+            srcDir 'src/main/java'
+            include '**/profile/ProfilingAgent.java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+        compileClasspath += configurations.agentCompile
+    }
+}
+
+task agentJar(type: Jar) {
+    archiveClassifier = 'agent'
+    from sourceSets.agent.output
+    manifest {
+        attributes(
+            'Premain-Class': 'org.profile.ProfilingAgent',
+            'Can-Redefine-Classes': true,
+            'Can-Retransform-Classes': true,
+            'Agent-Class': 'org.profile.ProfilingAgent'
+        )
+    }
+}
+
+build.dependsOn agentJar
+
+
 application {
     // Define the main class for the application.
-    // mainClass = 'org.App'
-    mainClass = 'org.servlet.Application'
+    // mainClass = 'org.parser.Parser'
+    mainClass = 'org.profile.Executor'
 }
 
 jacocoTestReport {

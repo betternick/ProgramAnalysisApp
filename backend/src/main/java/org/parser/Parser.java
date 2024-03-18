@@ -1,3 +1,5 @@
+package org.parser;
+
 import spoon.Launcher;
 import spoon.reflect.CtModel;
 import spoon.reflect.declaration.CtClass;

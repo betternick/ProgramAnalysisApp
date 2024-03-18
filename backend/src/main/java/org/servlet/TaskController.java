@@ -15,8 +15,8 @@ public class TaskController {
     @GetMapping("/api/tasks")
     public List<Task> getAllTasks() {
         return Arrays.asList(
-                new Task(1, "Task 1", "Description of Task 1"),
-                new Task(2, "Task 2", "Description of Task 2"));
+                new Task(1, "Task 1", "Description of Task 1 is here"),
+                new Task(2, "Task 2", "Description of Task 2 is there"));
     }
 
     static class Task {
