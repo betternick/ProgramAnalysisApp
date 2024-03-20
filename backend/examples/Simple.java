@@ -6,6 +6,14 @@ public class Simple {
         int a = 5;
         int b = 10;
 
+        if (a > b) {
+            calculateSum(a, b);
+            System.out.println("a is greater than b");
+        } else {
+            isEvenNumber(a);
+            System.out.println("b is greater than a");
+        }
+
         // Function call to calculate sum
         int sum = calculateSum(a, b);
         System.out.println("The sum of " + a + " and " + b + " is: " + sum);
@@ -17,7 +25,12 @@ public class Simple {
 
     // Function to calculate the sum of two integers
     public static int calculateSum(int num1, int num2) {
+        // nestedFunction();
         return num1 + num2;
+    }
+
+    public static void nestedFunction() {
+        System.out.println("This is a nested function");
     }
 
     // Function to check if a number is even
