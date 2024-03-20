@@ -10,7 +10,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class Executor {
-    public void executeJavaFileWithAgent(String filePath, String agentJarPath, String jarToRun, String fullClassName) throws Exception {
+    public void executeJavaFileWithAgent(String filePath, String agentJarPath, String jarToRun, String fullClassName)
+            throws Exception {
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
@@ -48,22 +49,22 @@ public class Executor {
         System.out.println("Running the Java application with the agent...");
 
         // ProcessBuilder builder = new ProcessBuilder(
-        //     "java", 
-        //     "-javaagent:build/libs/backend-agent.jar", // Your agent
-        //     "-javaagent:byte-buddy-agent-1.14.12.jar", // Byte Buddy agent
-        //     "-cp", "examples/Simple.jar:byte-buddy-1.14.12.jar", // Classpath
-        //     "Simple" // The main class name of your application
+        // "java",
+        // "-javaagent:build/libs/backend-agent.jar", // Your agent
+        // "-javaagent:byte-buddy-agent-1.14.12.jar", // Byte Buddy agent
+        // "-cp", "examples/Simple.jar:byte-buddy-1.14.12.jar", // Classpath
+        // "Simple" // The main class name of your application
         // );
 
         ProcessBuilder builder = new ProcessBuilder(
-            "java", 
-            // "-javaagent:" + agentJarPath, 
-            "-javaagent:" + "build/libs/backend-agent.jar",
-            "-javaagent:" + "byte-buddy-agent-1.14.12.jar",
-            "-cp", "examples/Simple.jar:" + "byte-buddy-1.14.12.jar",
-            // fullClassName,
-            "Simple"
-        );
+                "java",
+                // "-javaagent:" + agentJarPath,
+                "-javaagent:" + "build/libs/backend-agent.jar",
+                // "-javaagent:" + "byte-buddy-agent-1.14.12.jar",
+                "-cp", "examples/Simple.jar" + ":byte-buddy-1.14.12.jar"
+                        + ":asm-9.6.jar" + ":asm-commons-9.6.jar",
+                // fullClassName,
+                "Simple");
         builder.inheritIO();
         Process process = builder.start();
         process.waitFor();
@@ -108,6 +109,7 @@ public class Executor {
 
     public static void main(String[] args) throws Exception {
         // new Executor().executeJavaFile("examples/Simple.java");
-        new Executor().executeJavaFileWithAgent("examples/Simple.java", "build/libs/backend-agent.jar", "examples/Simple.jar", "Simple");
+        new Executor().executeJavaFileWithAgent("examples/Simple.java", "build/libs/backend-agent.jar",
+                "examples/Simple.jar", "Simple");
     }
 }

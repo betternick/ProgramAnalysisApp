@@ -27,6 +27,10 @@ dependencies {
     implementation 'net.bytebuddy:byte-buddy:1.14.12'
     implementation 'net.bytebuddy:byte-buddy-agent:1.14.12'
 
+    // direct access to ASM, not just through Byte Buddy
+    implementation 'org.ow2.asm:asm:9.6'
+    implementation 'org.ow2.asm:asm-commons:9.6'
+
     // Spoon is a library to analyze and transform Java source code.
     implementation 'fr.inria.gforge.spoon:spoon-core:10.4.1'
 
