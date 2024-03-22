@@ -34,6 +34,11 @@ dependencies {
     // Spoon is a library to analyze and transform Java source code.
     implementation 'fr.inria.gforge.spoon:spoon-core:10.4.1'
 
+    // Soot
+    implementation 'org.soot-oss:soot:4.3.0'
+    implementation 'org.ow2.asm:asm:9.3'
+
+
     // Use JUnit Jupiter for testing.
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -85,7 +90,8 @@ build.dependsOn agentJar
 application {
     // Define the main class for the application.
     // mainClass = 'org.parser.Parser'
-    mainClass = 'org.profile.Executor'
+   // mainClass = 'org.profile.Executor'
+    mainClass = 'org.graph.SimpleSootExample'
 }
 
 jacocoTestReport {
