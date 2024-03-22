@@ -2,13 +2,10 @@ Use this file to commit information clearly documenting your check-ins' content.
 
 # Project 2 - Check-In 4
 ## Status of implementation so far.
-- Frontend
-Started implementing base functionality to allow users to upload Java program files 
-- API
-Designed API to accept zip files and have begun implementing/testing it
+- **Frontend:** Started implementing base functionality to allow users to upload Java program files 
+- **API:** Designed API to accept zip files and have begun implementing/testing it
 API design to expose graph to frontend depends on the backend implementation of the graph, which is still in progress
-- Custom CFG
-Implemented structure of CFG and nodes.
+- **Custom CFG:** Implemented structure of CFG and nodes.
 Implemented CFGBuilder. This makes Control Flow Graphs for all methods in the given file. It handles branching arising out of IF, While-loop, For-loop, and Return statements.
 
 ## Plans for final user study.
