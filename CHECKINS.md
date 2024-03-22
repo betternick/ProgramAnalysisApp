@@ -12,8 +12,8 @@ Implemented structure of CFG and nodes.
 Implemented CFGBuilder. This makes Control Flow Graphs for all methods in the given file. It handles branching arising out of IF, While-loop, For-loop, and Return statements.
 
 ## Plans for final user study.
-Run the MVP tool for the users and get their feedback
-See which metrics the users think are helpful and which could be changed/added
+- Run the MVP tool for the users and get their feedback.
+- See which metrics the users think are helpful and which could be changed/added
 
 ## Planned timeline for the remaining days.
 - Mar 29, Check-in 5
