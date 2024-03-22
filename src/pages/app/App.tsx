@@ -1,11 +1,14 @@
 import React from 'react'
-import UploadFiles from '../../components/UploadFiles'
+import Uploader from '../../components/Uploader'
 import {Container} from '@chakra-ui/react'
 
 function App() {
     return (
-        <Container minW="100vw" centerContent>
-            <UploadFiles />
+        <Container
+            minW="100vw"
+            centerContent
+        >
+            <Uploader />
         </Container>
     )
 }

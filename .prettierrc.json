@@ -4,5 +4,6 @@
     "printWidth": 160,
     "bracketSpacing": false,
     "singleQuote": true,
-    "semi": false
+    "semi": false,
+    "singleAttributePerLine": true
 }
