@@ -1,10 +1,10 @@
-//package org.graph;
+// package org.graph;
 //
-//import soot.G;
+// import soot.G;
 //
-//public class SootTest {
-//    public static void main(String[] args) {
-//        G.reset();
-//        System.out.println("Soot is installed successfully!");
-//    }
-//}
+// public class SootTest {
+// public static void main(String[] args) {
+// G.reset();
+// System.out.println("Soot is installed successfully!");
+// }
+// }
