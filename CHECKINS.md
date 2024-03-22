@@ -1,6 +1,37 @@
 Use this file to commit information clearly documenting your check-ins' content. If you want to store more information/details besides what's required for the check-ins that's fine too. Make sure that your TA has had a chance to sign off on your check-in each week (before the deadline); typically you should discuss your material with them before finalizing it here.
 
+# Project 2 - Check-In 4
+## Status of implementation so far.
+- Frontend
+Started implementing base functionality to allow users to upload Java program files 
+- API
+Designed API to accept zip files and have begun implementing/testing it
+API design to expose graph to frontend depends on the backend implementation of the graph, which is still in progress
+- Custom CFG
+Implemented structure of CFG and nodes.
+Implemented CFGBuilder. This makes Control Flow Graphs for all methods in the given file. It handles branching arising out of IF, While-loop, For-loop, and Return statements.
 
+## Plans for final user study.
+Run the MVP tool for the users and get their feedback
+See which metrics the users think are helpful and which could be changed/added
+
+## Planned timeline for the remaining days.
+- Mar 29, Check-in 5
+Extend the analysis tool to handle more complex code structures and incorporate the additional analysis component.
+Develop the interaction elements for the frontend, allowing users to navigate and explore the control-flow graph.
+Start integrating the backend analysis tool with the frontend visualization.
+- Apr 5, Check-in 6
+Finalize the integration between the backend analysis tool and the frontend visualization. 
+Conduct thorough testing of the analysis tool and visualization with various code examples to ensure accuracy and usability.
+Document the usage instructions and limitations of the tool, and prepare for the final presentation.
+
+## Progress against the timeline planned for your team, including the specific goals you defined (originally as part of Check-in 2) for Check-in 4; any revisions to Check-in 5 goals.
+We are on track since we met all the goals set for check-in 4 which were:  
+- Initialize the repository and set up the development environment for the backend and frontend. (1 person: Backend developer, 1 person: Frontend developer)
+- Implement a basic version of the analysis tool that can generate a control-flow graph for simple code examples. (2 people: Backend developers)
+- Design the initial layout and structure of the graph visualization in the React frontend. (1 person: Frontend developer)
+
+----------------------------------------
 
 # Project 2 - Check-In 3
 ## Mockup of how your project is planned to operate (as used for your first user study). Include any sketches/examples/scenarios.
