@@ -64,22 +64,21 @@ public class Simple {
     // }
     //
     //
-//    public static int sampleForLoop(int num1, int num2) {
-//        // nestedFunction();
-//        int g = 123;
-//        String h = "fgh";
-//        for (int g = 0; g < 10; g++) {
-//            int myNumber = 10;
-//            String what = "whatString";
-//        }
-//        if (h == "gh") {
-//            return 25;
-//        }
-//        int someInt = 200;
-//        int endInt = 5;
-//        return 6;
-//    }
-
+    // public static int sampleForLoop(int num1, int num2) {
+    // // nestedFunction();
+    // int g = 123;
+    // String h = "fgh";
+    // for (int g = 0; g < 10; g++) {
+    // int myNumber = 10;
+    // String what = "whatString";
+    // }
+    // if (h == "gh") {
+    // return 25;
+    // }
+    // int someInt = 200;
+    // int endInt = 5;
+    // return 6;
+    // }
 
     public static int sampleForLoopInsideIF(int num1, int num2) {
         // nestedFunction();
