@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
-import {IoIosRemove} from 'react-icons/io'
-import {Tooltip, Button, Box, Flex, SimpleGrid, Spinner, Heading, Text, IconButton} from '@chakra-ui/react'
+import {PiNumberCircleOneFill} from 'react-icons/pi'
+import {Tooltip, Button, Box, Flex, Code, CloseButton, Spinner, Heading, Text, Alert, AlertIcon, AlertDescription, Icon, AlertTitle} from '@chakra-ui/react'
 import Dropzone from './Dropzone'
+import {FileRejection} from 'react-dropzone'
 
 declare module 'react' {
     interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -10,28 +11,40 @@ declare module 'react' {
 }
 
 const Uploader = () => {
-    const [fileNames, setFileNames] = useState<string[]>([])
-    const [files, setFiles] = useState<File[]>([])
+    const [file, setFile] = useState<File | null>(null)
     const [isUploading, setIsUploading] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
 
-    const handleDrop = (droppedFiles: Array<File>) => {
-        const javaFiles: File[] = droppedFiles.filter((file) => file.name.endsWith('.java') && !fileNames.includes(file.name))
-        setFileNames((prev) => [...prev, ...javaFiles.map((file) => file.name)])
-        setFiles((prev) => [...prev, ...javaFiles])
+    const errorMessage = () => {
+        switch (error) {
+            case 'too-many-files':
+                return 'Too many files selected. Please upload a singular .zip'
+            case 'upload-error':
+                return "An error occurred while uploading your file. Please try again'"
+            default:
+                return 'An unknown error occurred. Please try again'
+        }
     }
 
-    const handleRemove = (fileName: string) => {
-        setFileNames((prev) => prev.filter((file) => file !== fileName))
-        setFiles((prev) => prev.filter((file) => file.name !== fileName))
+    const handleDrop = (accepted: Array<File>, rejected: Array<FileRejection>) => {
+        if (rejected.length > 0) {
+            setError(rejected[0].errors[0].code)
+            setFile(null)
+        } else {
+            setFile(accepted[0])
+            setError(null)
+        }
+    }
+
+    const handleRemove = () => {
+        setFile(null)
     }
 
     const handleSubmit = async () => {
-        if (files.length === 0) return
+        if (!file) return
         const fd = new FormData()
-        files.forEach((file, idx) => {
-            fd.append(`file_${idx}`, file)
-        })
-        const url = 'http://httpbin.org/post'
+        fd.append(`file`, file)
+        const url = 'http://localhost:8080/upload'
         setIsUploading(true)
         const results = await fetch(url, {
             method: 'POST',
@@ -39,13 +52,17 @@ const Uploader = () => {
         })
             .then((res) => {
                 if (res.ok) {
-                    setFiles([])
-                    setFileNames([])
+                    setFile(null)
                     setIsUploading(false)
+                    setError(null)
                     return res.json()
+                } else {
+                    setError('upload-error')
                 }
             })
             .catch((err) => {
+                setIsUploading(false)
+                setError(err)
                 console.log(err)
             })
         console.log(results)
@@ -61,44 +78,56 @@ const Uploader = () => {
             direction="column"
             gap={2}
         >
-            <Heading size="md">Step 1: Upload your program files</Heading>
+            <Flex
+                alignItems="center"
+                gap={1}
+            >
+                <Icon
+                    as={PiNumberCircleOneFill}
+                    boxSize={6}
+                />
+                <Heading size="md">Upload your program</Heading>
+            </Flex>
+            <Text>
+                Please upload your <Code>.java</Code> program files as a single <Code>.zip</Code>
+            </Text>
             <Box>
-                {fileNames.length > 0 ? (
-                    <Box>
-                        <Text fontWeight="bold">Selected Files: </Text>
-                        <SimpleGrid
-                            columns={2}
-                            spacing={1}
-                            m={2}
-                        >
-                            {fileNames.map((name, key) => (
-                                <Box key={key}>
-                                    <Tooltip
+                {file ? (
+                    <Flex
+                        direction="column"
+                        gap={1}
+                    >
+                        <Flex>
+                            <Text
+                                fontWeight="bold"
+                                mr={3}
+                            >
+                                Selected File:{' '}
+                            </Text>
+                            <Flex>
+                                {file.name}
+                                <Tooltip
+                                    aria-label="Remove file"
+                                    label="Remove file"
+                                    placement="auto"
+                                >
+                                    <CloseButton
                                         aria-label="Remove file"
-                                        label="Remove file"
-                                        placement="auto"
-                                    >
-                                        <IconButton
-                                            aria-label="Remove file"
-                                            icon={<IoIosRemove />}
-                                            isRound={true}
-                                            variant="ghost"
-                                            size="xs"
-                                            mr={1}
-                                            onClick={() => handleRemove(name)}
-                                        />
-                                    </Tooltip>
-                                    {name}
-                                </Box>
-                            ))}
-                        </SimpleGrid>
+                                        size="sm"
+                                        mr={1}
+                                        onClick={handleRemove}
+                                    />
+                                </Tooltip>
+                            </Flex>
+                        </Flex>
                         <Box>
                             <Dropzone
                                 dropHandler={handleDrop}
-                                text={'Upload additional files'}
+                                text={'Drag or click to select a different file'}
+                                padding={3}
                             />
                         </Box>
-                    </Box>
+                    </Flex>
                 ) : (
                     <Box>
                         <Dropzone dropHandler={handleDrop} />
@@ -118,6 +147,13 @@ const Uploader = () => {
                 >
                     <Spinner />
                 </Box>
+            )}
+            {error && (
+                <Alert status="error">
+                    <AlertIcon />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{errorMessage()}</AlertDescription>
+                </Alert>
             )}
         </Flex>
     )
