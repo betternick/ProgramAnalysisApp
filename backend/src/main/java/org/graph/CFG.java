@@ -40,11 +40,11 @@ public class CFG {
         for (Node node : nodes) {
             sb.append(node.codeBlock.toString()).append(" (ID: ").append(node.id).append(")\n");
             for (Node successor : node.next) {
-                sb.append("  |---> ").append(successor.codeBlock.toString()).append(" (ID: ").append(successor.id).append(")\n");
+                sb.append("  |---> ").append(successor.codeBlock.toString()).append(" (ID: ").append(successor.id)
+                        .append(")\n");
             }
             sb.append("\n");
         }
         return sb.toString();
     }
 }
-

@@ -83,7 +83,7 @@ public class CFGBuilder {
     }
 
     private Node addStatementAndCreateNode(CtStatement statement, Node currentNode, CFG cfg, Node exitNode) {
-        String[] code = { statement.toString() };
+        String[] code = {statement.toString()};
         String fileName = currentNode.codeBlock.fileName;
         int lineStart = statement.getPosition().getLine();
         CodeBlock codeBlock = new CodeBlock(code, fileName, lineStart);
@@ -103,7 +103,8 @@ public class CFGBuilder {
             exitNode.addPrevious(newNode);
             return newNode;
         } else {
-            // For simple statements, just move to the next
+            // Prepend "Statement:" label for simple statements
+            newNode.codeBlock.code[0] = "Statement: " + newNode.codeBlock.code[0];
             return newNode;
         }
     }
@@ -143,8 +144,6 @@ public class CFGBuilder {
 
         return afterIfNode;
     }
-
-
 
     private Node handleLoopStatement(CtLoop loopStmt, Node currentNode, CFG cfg, String fileName, Node exitNode) {
         String loopType = loopStmt instanceof CtWhile ? "While loop"
