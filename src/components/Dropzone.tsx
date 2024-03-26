@@ -12,9 +12,6 @@ const Dropzone = ({dropHandler, text, padding}: DropzoneProps) => {
     const onDrop = useCallback(dropHandler, [dropHandler])
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
-        accept: {
-            'application/zip': ['.zip'],
-        },
         maxFiles: 1,
     })
 
@@ -31,14 +28,16 @@ const Dropzone = ({dropHandler, text, padding}: DropzoneProps) => {
         >
             <input {...getInputProps({webkitdirectory: 'true'})} />
             {isDragActive ? (
-                <p>Drop your .zip file here...</p>
+                <p>
+                    Drop your <em>.java</em> file here...
+                </p>
             ) : (
                 <Flex
                     flexDirection="column"
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Text fontStyle="italic">{text ? text : 'Drag & drop your .zip file here, or click or to select'}</Text>
+                    <Text fontStyle="italic">{text ? text : 'Drag & drop your .java file here, or click or to select'}</Text>
                 </Flex>
             )}
         </Box>
