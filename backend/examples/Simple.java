@@ -62,7 +62,6 @@ public class Simple {
         }
     }
 
-
     public static int sampleForLoop(int num1, int num2) {
         // nestedFunction();
         int g = 123;
