@@ -1,5 +1,4 @@
 package org.graph;
-
 import spoon.Launcher;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtMethod;
@@ -24,13 +23,6 @@ public class CFGBuilder {
 
     }
 
-    // public void printGlobalCFGMap() {
-    // for (Map.Entry<String, CFG> entry : globalCFGMap.entrySet()) {
-    // System.out.println("CFG for method: " + entry.getKey());
-    // entry.getValue().print();
-    // System.out.println();
-    // }
-    // }
 
     public void printGlobalCFGMap() {
         for (Map.Entry<String, CFG> entry : globalCFGMap.entrySet()) {
@@ -97,10 +89,12 @@ public class CFGBuilder {
             return handleIfStatement((CtIf) statement, newNode, cfg, fileName, exitNode);
         } else if (statement instanceof CtLoop) {
             return handleLoopStatement((CtLoop) statement, newNode, cfg, fileName, exitNode);
-        } else if (statement instanceof CtReturn) {
-            // For return statements, connect directly to the exit node
+        } else if (statement instanceof CtReturn || statement instanceof CtBreak) {
+            // For return and break statements, connect directly to the exit node
             newNode.addNext(exitNode);
             exitNode.addPrevious(newNode);
+            // Prepend "Statement:" label for return and break statements
+            newNode.codeBlock.code[0] = "Statement: " + newNode.codeBlock.code[0];
             return newNode;
         } else {
             // Prepend "Statement:" label for simple statements
@@ -108,7 +102,6 @@ public class CFGBuilder {
             return newNode;
         }
     }
-
 
     private Node handleIfStatement(CtIf ifStmt, Node currentNode, CFG cfg, String fileName, Node exitNode) {
         // Prepend the words "If-Else statement:" to the code block of the existing
@@ -126,7 +119,7 @@ public class CFGBuilder {
                 ifStmt.getThenStatement().getPosition().getLine()));
         ifConditionNode.addNext(trueBranchNode);
         trueBranchNode.addPrevious(ifConditionNode);
-        buildCFGForBlock(ifStmt.getThenStatement(), trueBranchNode, cfg, exitNode);
+        buildCFGForBlockIf(ifStmt.getThenStatement(), trueBranchNode, cfg, exitNode);
 
         // False branch (if present)
         if (ifStmt.getElseStatement() != null) {
@@ -134,7 +127,7 @@ public class CFGBuilder {
                     ifStmt.getElseStatement().getPosition().getLine()));
             ifConditionNode.addNext(falseBranchNode);
             falseBranchNode.addPrevious(ifConditionNode);
-            buildCFGForBlock(ifStmt.getElseStatement(), falseBranchNode, cfg, exitNode);
+            buildCFGForBlockIf(ifStmt.getElseStatement(), falseBranchNode, cfg, exitNode);
         }
 
         // Connect both branches to the after-if node
@@ -151,17 +144,17 @@ public class CFGBuilder {
         String loopCondition = loopStmt instanceof CtWhile
                 ? "while (" + ((CtWhile) loopStmt).getLoopingExpression().toString() + ")"
                 : loopStmt instanceof CtFor
-                        ? "for ("
-                                + String.join("; ",
-                                        ((CtFor) loopStmt).getForInit().stream().map(CtElement::toString)
-                                                .collect(Collectors.toList()))
-                                + "; " + ((CtFor) loopStmt).getExpression().toString()
-                                + "; "
-                                + String.join(", ",
-                                        ((CtFor) loopStmt).getForUpdate().stream().map(CtElement::toString)
-                                                .collect(Collectors.toList()))
-                                + ")"
-                        : "Unknown loop condition";
+                ? "for ("
+                + String.join("; ",
+                ((CtFor) loopStmt).getForInit().stream().map(CtElement::toString)
+                        .collect(Collectors.toList()))
+                + "; " + ((CtFor) loopStmt).getExpression().toString()
+                + "; "
+                + String.join(", ",
+                ((CtFor) loopStmt).getForUpdate().stream().map(CtElement::toString)
+                        .collect(Collectors.toList()))
+                + ")"
+                : "Unknown loop condition";
 
         // Prepend the loop type to the code block of the existing loop node
         currentNode.codeBlock.code[0] = loopType + ": " + currentNode.codeBlock.code[0];
@@ -177,8 +170,7 @@ public class CFGBuilder {
         loopConditionNode.addNext(loopBodyNode);
         loopBodyNode.addPrevious(loopConditionNode);
 
-        // Build the CFG for the loop body
-        buildCFGForBlock(loopStmt.getBody(), loopBodyNode, cfg, exitNode);
+
 
         // Connect the loop body back to the loop condition to represent the looping
         loopBodyNode.addNext(loopConditionNode);
@@ -189,18 +181,114 @@ public class CFGBuilder {
         loopConditionNode.addNext(afterLoopNode);
         afterLoopNode.addPrevious(loopConditionNode);
 
+        // Build the CFG for the loop body
+        buildCFGForBlockLoop(loopStmt.getBody(), loopBodyNode, cfg, exitNode, afterLoopNode);
+
         return afterLoopNode;
     }
 
-    private Node buildCFGForBlock(CtStatement block, Node currentNode, CFG cfg, Node exitNode) {
+
+    private Node buildCFGForBlockIf(CtStatement block, Node currentNode, CFG cfg, Node exitNode) {
         if (block instanceof CtBlock) {
             for (CtStatement stmt : ((CtBlock<?>) block).getStatements()) {
                 currentNode = addStatementAndCreateNode(stmt, currentNode, cfg, exitNode);
+            }
+            return currentNode; // Return the last node in the block
+        }
+        return currentNode; // Return the last node in the block
+    }
+
+    private Node handleIfStatementForNestedLoop(CtIf ifStmt, Node currentNode, CFG cfg, String fileName, Node exitNode, Node afterLoopNode) {
+        // Create a new node for the if-else statement
+        String ifElseStatement = "If-Else statement: " + ifStmt.toString();
+        Node ifElseNode = cfg.createNode(new CodeBlock(new String[]{ifElseStatement}, fileName, ifStmt.getPosition().getLine()));
+        currentNode.addNext(ifElseNode);
+        ifElseNode.addPrevious(currentNode);
+
+        Node ifConditionNode = cfg.createNode(new CodeBlock(new String[]{"If condition: " + ifStmt.getCondition().toString()}, fileName, ifStmt.getPosition().getLine()));
+        ifElseNode.addNext(ifConditionNode);
+        ifConditionNode.addPrevious(ifElseNode);
+
+        // True branch
+        Node trueBranchNode = cfg.createNode(new CodeBlock(new String[]{"True branch"}, fileName, ifStmt.getThenStatement().getPosition().getLine()));
+        ifConditionNode.addNext(trueBranchNode);
+        trueBranchNode.addPrevious(ifConditionNode);
+        buildCFGForBlockIfNestedLoop(ifStmt.getThenStatement(), trueBranchNode, cfg, exitNode, afterLoopNode);
+
+        // False branch (if present)
+        Node falseBranchNode = null;
+        if (ifStmt.getElseStatement() != null) {
+            falseBranchNode = cfg.createNode(new CodeBlock(new String[]{"False branch"}, fileName, ifStmt.getElseStatement().getPosition().getLine()));
+            ifConditionNode.addNext(falseBranchNode);
+            falseBranchNode.addPrevious(ifConditionNode);
+            buildCFGForBlockIfNestedLoop(ifStmt.getElseStatement(), falseBranchNode, cfg, exitNode, afterLoopNode);
+        }
+
+        // Connect both branches to the after-if node
+        Node afterIfNode = cfg.createNode(new CodeBlock(new String[]{"After If-Else"}, fileName, -1));
+        trueBranchNode.addNext(afterIfNode);
+        afterIfNode.addPrevious(trueBranchNode);
+        if (falseBranchNode != null) {
+            falseBranchNode.addNext(afterIfNode);
+            afterIfNode.addPrevious(falseBranchNode);
+        }
+
+        return afterIfNode;
+    }
+
+
+
+    private Node buildCFGForBlockIfNestedLoop(CtStatement block, Node currentNode, CFG cfg, Node exitNode, Node afterLoopNode) {
+        if (block instanceof CtBlock) {
+            for (CtStatement stmt : ((CtBlock<?>) block).getStatements()) {
+                if (stmt instanceof CtBreak) {
+                    // For a break statement inside an if-else block within a loop, connect directly to the afterLoopNode
+                    Node breakStatementNode = cfg.createNode(new CodeBlock(new String[]{"Statement: break"}, currentNode.codeBlock.fileName, stmt.getPosition().getLine()));
+                    currentNode.addNext(breakStatementNode);
+                    breakStatementNode.addPrevious(currentNode);
+                    breakStatementNode.addNext(afterLoopNode);
+                    afterLoopNode.addPrevious(breakStatementNode);
+                } else {
+                    currentNode = addStatementAndCreateNode(stmt, currentNode, cfg, exitNode);
+                }
+            }
+        } else {
+            currentNode = addStatementAndCreateNode(block, currentNode, cfg, exitNode);
+        }
+        return currentNode;
+    }
+
+    private Node buildCFGForBlockLoop(CtStatement block, Node currentNode, CFG cfg, Node exitNode, Node afterLoopNode) {
+        String fileName = currentNode.codeBlock.fileName;  // Add this line to define fileName
+        boolean breakEncountered = false; // Flag to indicate if a break statement has been encountered
+        if (block instanceof CtBlock) {
+            for (CtStatement stmt : ((CtBlock<?>) block).getStatements()) {
+                if (stmt instanceof CtBreak) {
+                    // For a break statement, connect directly to the after loop node
+                    if (!breakEncountered) {
+                        Node breakStatementNode = cfg.createNode(new CodeBlock(new String[]{"Statement: break"}, currentNode.codeBlock.fileName, stmt.getPosition().getLine()));
+                        currentNode.addNext(breakStatementNode);
+                        breakStatementNode.addPrevious(currentNode);
+                        breakStatementNode.addNext(afterLoopNode);
+                        afterLoopNode.addPrevious(breakStatementNode);
+                        currentNode = breakStatementNode;  // Continue building the CFG from the break statement node
+                    }
+                    breakEncountered = true; // Set the flag to indicate that a break statement has been encountered
+                } else if (stmt instanceof CtIf) {
+
+                    // If the statement is an if-else block, use the specialized method to handle nested loops
+                    currentNode = handleIfStatementForNestedLoop((CtIf) stmt, currentNode, cfg, fileName, exitNode, afterLoopNode);
+                } else if (!breakEncountered) {
+                    currentNode = addStatementAndCreateNode(stmt, currentNode, cfg, exitNode);
+                } else {
+                    // If a break statement was encountered, create new nodes without connecting them to the previous nodes in the loop
+                    currentNode = cfg.createNode(new CodeBlock(new String[]{stmt.toString()}, currentNode.codeBlock.fileName, stmt.getPosition().getLine()));
+                }
             }
         } else {
             currentNode = addStatementAndCreateNode(block, currentNode, cfg, exitNode);
         }
         return currentNode; // Return the last node in the block
     }
-
 }
+
