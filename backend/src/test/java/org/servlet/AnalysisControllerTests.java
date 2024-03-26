@@ -5,9 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -33,18 +35,22 @@ public class AnalysisControllerTests {
     @Autowired
     private AnalysisController fileUploadController;
 
+    @MockBean
+    private AnalysisService service;
+
 
     @TempDir
     Path tempDir;
 
     @BeforeEach
     public void changeDir() {
-        AnalysisController.UPLOAD_DIR = tempDir.toAbsolutePath().toString();
+        AnalysisService.UPLOAD_DIR = tempDir.toAbsolutePath().toString();
     }
     @Test
     public void testUploadFile_Success() throws Exception{
         Resource resource = new ClassPathResource("testUpload.txt");
         MultipartFile multipartFile = new MockMultipartFile("testUpload.txt", resource.getInputStream());
+        Mockito.when(service.uploadFile(Mockito.any())).thenReturn(true);
         ResponseEntity<Boolean> response = fileUploadController.uploadFile(multipartFile);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(true, response.getBody());
@@ -54,6 +60,7 @@ public class AnalysisControllerTests {
     public void testPostFile_Success() throws Exception {
         byte[] fileContent = "Hello, World!".getBytes();
         MockMultipartFile file = new MockMultipartFile("file", "test.txt", "multipart/form-data", fileContent);
+        Mockito.when(service.uploadFile(Mockito.any())).thenReturn(true);
 
         mockMvc.perform(multipart("/upload")
                         .file(file))
@@ -64,6 +71,7 @@ public class AnalysisControllerTests {
 
     @Test
     public void testPostFile_NoFile() throws Exception {
+        Mockito.when(service.uploadFile(Mockito.any())).thenReturn(false);
         mockMvc.perform(multipart("/upload"))
                 .andExpect(status().isBadRequest());
     }

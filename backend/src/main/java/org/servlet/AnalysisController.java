@@ -1,5 +1,6 @@
 package org.servlet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -17,19 +18,15 @@ import java.nio.file.StandardCopyOption;
 @RestController
 public class AnalysisController {
 
-    public static String UPLOAD_DIR = "backend/src/main/resources";
+    @Autowired
+    AnalysisService service;
 
     @PostMapping("/upload")
     public ResponseEntity<Boolean> uploadFile(@RequestParam("file") MultipartFile file) {
-        String fileName = StringUtils.cleanPath((file.getOriginalFilename()));
-
-        Path uploadPath = Paths.get(UPLOAD_DIR, fileName);
-
-        try {
-            Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+        Boolean result = service.uploadFile(file);
+        if (result)
             return ResponseEntity.ok(true);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
     }
 }
