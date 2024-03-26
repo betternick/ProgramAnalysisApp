@@ -1,11 +1,11 @@
 package org.servlet;
 
+import org.graph.CFGBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.reflect.InaccessibleObjectException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +22,7 @@ public class AnalysisService {
         Path uploadPath = Paths.get(UPLOAD_DIR, fileName);
         try {
             Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+            CFGBuilder.main(null);
             return true;
         } catch (IOException e) {
             return false;
