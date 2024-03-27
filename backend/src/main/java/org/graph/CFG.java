@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CFG {
-    private List<Node> nodes = new ArrayList<>();
+    List<Node> nodes = new ArrayList<>();
     private Node entryNode;
     private Node exitNode;
 

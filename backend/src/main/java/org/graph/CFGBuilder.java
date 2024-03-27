@@ -13,16 +13,18 @@ import java.util.stream.Collectors;
 // The CFG, Node and CFG Builder were made with the help of ChatGPT 4.0
 public class CFGBuilder {
     // Global map to store CFGs for each method
-    private Map<String, CFG> globalCFGMap = new HashMap<>();
+    public Map<String, CFG> globalCFGMap = new HashMap<>();
 
     public static void main(String[] args) {
         CFGBuilder builder = new CFGBuilder();
         builder.buildCFGs("backend/examples/Simple.java");
-
         // Print the global CFG map
         builder.printGlobalCFGMap();
 
     }
+
+
+
 
     public void printGlobalCFGMap() {
         for (Map.Entry<String, CFG> entry : globalCFGMap.entrySet()) {
@@ -70,7 +72,7 @@ public class CFGBuilder {
 
         // Connect the last statement to the exit node only if it's not a return
         // statement
-        if (!(currentNode.codeBlock.code[0].startsWith("return"))) {
+        if (!(currentNode.codeBlock.code[0].startsWith("Statement: return"))) {
             currentNode.addNext(exitNode);
             exitNode.addPrevious(currentNode);
         }
