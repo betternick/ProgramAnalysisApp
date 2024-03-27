@@ -20,6 +20,7 @@ class CFGBuilderTest {
         builder.getGlobalCFGMap();
 
         // Verify that a CFG was created for the method calculateSum
-        assertTrue(builder.getGlobalCFGMap().containsKey("calculateSum(int,int)"), "CFG should contain 'calculateSum()'");
+        assertTrue(builder.getGlobalCFGMap().containsKey("calculateSum(int,int)"),
+                "CFG should contain 'calculateSum()'");
     }
 }
