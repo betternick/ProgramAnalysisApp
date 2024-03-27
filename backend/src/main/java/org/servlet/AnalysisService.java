@@ -1,6 +1,7 @@
 package org.servlet;
 
 import org.graph.CFGBuilder;
+import org.graph.CFGConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,16 +17,17 @@ import java.util.Objects;
 public class AnalysisService {
     public static String UPLOAD_DIR = "backend/src/main/resources";
 
-    public Boolean uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath((Objects.requireNonNull(file.getOriginalFilename())));
 
         Path uploadPath = Paths.get(UPLOAD_DIR, fileName);
         try {
             Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
-            CFGBuilder.main(null);
-            return true;
+            CFGBuilder builder = new CFGBuilder();
+            builder.buildCFGs(uploadPath.toString());
+            return CFGConverter.convertAllCFGs(builder.globalCFGMap);
         } catch (IOException e) {
-            return false;
+            throw e;
         }
     }
 }
