@@ -14,7 +14,7 @@ class CFGTest {
     @BeforeEach
     void setUp() {
         cfg = new CFG();
-        String[] codeLines = {"int x = 0;", "x++;", "return x;"};
+        String[] codeLines = { "int x = 0;", "x++;", "return x;" };
         codeBlock = new CodeBlock(codeLines, "MyClass.java", 1);
         entryNode = cfg.createNode(codeBlock);
         cfg.setEntryNode(entryNode);
@@ -24,7 +24,8 @@ class CFGTest {
     @Test
     @DisplayName("Create node adds a new node to the CFG")
     void testCreateNode() {
-        CodeBlock newCodeBlock = new CodeBlock(new String[]{"System.out.println(\"Hello World\");"}, "Main.java", 10);
+        CodeBlock newCodeBlock = new CodeBlock(new String[] { "System.out.println(\"Hello World\");" }, "Main.java",
+                10);
         Node newNode = cfg.createNode(newCodeBlock);
         assertNotNull(newNode, "createNode should return a non-null node");
         assertTrue(cfg.getNodes().contains(newNode), "New node should be added to the nodes list");
@@ -45,8 +46,10 @@ class CFGTest {
     @Test
     @DisplayName("ToTextRepresentation should return the correct textual representation of the CFG")
     void testToTextRepresentation() {
-    String expectedOutput = "CodeBlock{code=int x = 0;\nx++;\nreturn x;, fileName='MyClass.java', lineStart=1} (ID: " + entryNode.getId() + ")\n\n";
-    String actualOutput = cfg.toTextRepresentation();
-    assertEquals(expectedOutput, actualOutput, "The textual representation of CFG should match the expected format.");
+        String expectedOutput = "CodeBlock{code=int x = 0;\nx++;\nreturn x;, fileName='MyClass.java', lineStart=1} (ID: "
+                + entryNode.getId() + ")\n\n";
+        String actualOutput = cfg.toTextRepresentation();
+        assertEquals(expectedOutput, actualOutput,
+                "The textual representation of CFG should match the expected format.");
     }
 }

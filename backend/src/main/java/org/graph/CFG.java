@@ -37,8 +37,7 @@ public class CFG {
     }
 
     public List<Node> getNodes() {
-        // This returns an unmodifiable view of the nodes list to prevent external modifications.
-        // If you want to allow modifications, you can return a new ArrayList<>(nodes) instead.
+        // returns an unmodifiable view of the nodes list
         return Collections.unmodifiableList(nodes);
     }
 
