@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CFG {
-    private List<Node> nodes = new ArrayList<>();
+    List<Node> nodes = new ArrayList<>();
     private Node entryNode;
     private Node exitNode;
 
@@ -38,13 +38,13 @@ public class CFG {
     public String toTextRepresentation() {
         StringBuilder sb = new StringBuilder();
         for (Node node : nodes) {
-            sb.append(node.codeBlock.toString()).append("\n");
+            sb.append(node.codeBlock.toString()).append(" (ID: ").append(node.id).append(")\n");
             for (Node successor : node.next) {
-                sb.append("  |---> ").append(successor.codeBlock.toString()).append("\n");
+                sb.append("  |---> ").append(successor.codeBlock.toString()).append(" (ID: ").append(successor.id)
+                        .append(")\n");
             }
             sb.append("\n");
         }
         return sb.toString();
     }
-
 }

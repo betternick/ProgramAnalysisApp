@@ -18,7 +18,11 @@ const Uploader = () => {
     const errorMessage = () => {
         switch (error) {
             case 'too-many-files':
-                return 'Too many files selected. Please upload a singular .zip'
+                return 'Too many files selected. Please upload a singular .java file'
+            case 'wrong-file-type':
+                return 'Wrong file type. Please upload a singular .java file'
+            case 'payload-too-large':
+                return 'Max file size exceeded. Please upload a smaller .java file'
             case 'upload-error':
                 return "An error occurred while uploading your file. Please try again'"
             default:
@@ -29,6 +33,9 @@ const Uploader = () => {
     const handleDrop = (accepted: Array<File>, rejected: Array<FileRejection>) => {
         if (rejected.length > 0) {
             setError(rejected[0].errors[0].code)
+            setFile(null)
+        } else if (!accepted[0].name.endsWith('.java')) {
+            setError('wrong-file-type')
             setFile(null)
         } else {
             setFile(accepted[0])
@@ -62,8 +69,14 @@ const Uploader = () => {
             })
             .catch((err) => {
                 setIsUploading(false)
-                setError(err)
-                console.log(err)
+                if (err instanceof TypeError) {
+                    // TODO: change if other errors come up
+                    // right now, assumes payload is too large
+                    setError('payload-too-large')
+                } else {
+                    setError(err)
+                    console.log(err)
+                }
             })
         console.log(results)
     }
@@ -89,7 +102,7 @@ const Uploader = () => {
                 <Heading size="md">Upload your program</Heading>
             </Flex>
             <Text>
-                Please upload your <Code>.java</Code> program files as a single <Code>.zip</Code>
+                Please upload your program as a single <Code>.java</Code> file
             </Text>
             <Box>
                 {file ? (
