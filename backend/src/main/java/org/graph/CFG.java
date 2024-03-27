@@ -1,6 +1,7 @@
 package org.graph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CFG {
@@ -33,6 +34,16 @@ public class CFG {
                 System.out.println("Child -> " + successor);
             }
         }
+    }
+
+    public List<Node> getNodes() {
+        // This returns an unmodifiable view of the nodes list to prevent external modifications.
+        // If you want to allow modifications, you can return a new ArrayList<>(nodes) instead.
+        return Collections.unmodifiableList(nodes);
+    }
+
+    public Node getEntryNode() {
+        return this.entryNode;
     }
 
     public String toTextRepresentation() {

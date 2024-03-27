@@ -26,6 +26,10 @@ public class Node {
         next.add(node);
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Node{" +
