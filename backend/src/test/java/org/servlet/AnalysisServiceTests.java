@@ -1,15 +1,13 @@
 package org.servlet;
 
-import org.graph.CFG;
 import org.graph.CFGBuilder;
 import org.graph.CFGConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mock;
-import org.mockito.MockedConstruction;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -22,8 +20,12 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@ExtendWith(MockitoExtension.class)
 public class AnalysisServiceTests {
+    @Mock
+    private CFGBuilder builder;
 
+    @InjectMocks
     private final AnalysisService service = new AnalysisService();
 
     @TempDir
@@ -40,10 +42,8 @@ public class AnalysisServiceTests {
         MockedStatic<CFGConverter> converter = Mockito.mockStatic(CFGConverter.class);
         converter.when(() -> CFGConverter.convertAllCFGs(Mockito.anyMap())).thenReturn("success");
 
-        MockedConstruction<CFGBuilder> builder = Mockito.mockConstruction(CFGBuilder.class, (mock, context) -> {
-            Mockito.doNothing().when(mock).buildCFGs(Mockito.anyString());
-            mock.globalCFGMap = new HashMap<>();
-        });
+        Mockito.doNothing().when(builder).buildCFGs(Mockito.anyString());
+        builder.globalCFGMap = new HashMap<>();
 
         String response = service.uploadFile(multipartFile);
         assertEquals("success", response);

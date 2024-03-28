@@ -17,13 +17,14 @@ import java.util.Objects;
 public class AnalysisService {
     public static String UPLOAD_DIR = "backend/src/main/resources";
 
+    private CFGBuilder builder = new CFGBuilder();
+
     public String uploadFile(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath((Objects.requireNonNull(file.getOriginalFilename())));
 
         Path uploadPath = Paths.get(UPLOAD_DIR, fileName);
         try {
             Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
-            CFGBuilder builder = new CFGBuilder();
             builder.buildCFGs(uploadPath.toString());
             return CFGConverter.convertAllCFGs(builder.globalCFGMap);
         } catch (IOException e) {
