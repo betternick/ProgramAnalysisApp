@@ -35,6 +35,10 @@ public class CFGBuilder {
         }
     }
 
+    public Map<String, CFG> getGlobalCFGMap() {
+        return new HashMap<>(globalCFGMap);
+    }
+
     public void buildCFGs(String filePath) {
         Launcher launcher = new Launcher();
         launcher.addInputResource(filePath);

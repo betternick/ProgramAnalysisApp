@@ -1,10 +1,8 @@
 package org.servlet;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,10 +27,8 @@ public class AnalysisControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-
     @Autowired
     private AnalysisController fileUploadController;
-
 
     @TempDir
     Path tempDir;
@@ -41,8 +37,9 @@ public class AnalysisControllerTests {
     public void changeDir() {
         AnalysisController.UPLOAD_DIR = tempDir.toAbsolutePath().toString();
     }
+
     @Test
-    public void testUploadFile_Success() throws Exception{
+    public void testUploadFile_Success() throws Exception {
         Resource resource = new ClassPathResource("testUpload.txt");
         MultipartFile multipartFile = new MockMultipartFile("testUpload.txt", resource.getInputStream());
         ResponseEntity<Boolean> response = fileUploadController.uploadFile(multipartFile);
@@ -50,13 +47,14 @@ public class AnalysisControllerTests {
         assertEquals(true, response.getBody());
 
     }
+
     @Test
     public void testPostFile_Success() throws Exception {
         byte[] fileContent = "Hello, World!".getBytes();
         MockMultipartFile file = new MockMultipartFile("file", "test.txt", "multipart/form-data", fileContent);
 
         mockMvc.perform(multipart("/upload")
-                        .file(file))
+                .file(file))
                 .andExpect(status().isOk());
 
         // Additional assertions if needed
