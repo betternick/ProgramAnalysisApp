@@ -30,14 +30,12 @@ public class AnalysisControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-
     @Autowired
     private AnalysisController fileUploadController;
 
     @MockBean
     private AnalysisService service;
-
-
+    
     @TempDir
     Path tempDir;
 
@@ -45,8 +43,9 @@ public class AnalysisControllerTests {
     public void changeDir() {
         AnalysisService.UPLOAD_DIR = tempDir.toAbsolutePath().toString();
     }
+
     @Test
-    public void testUploadFile_Success() throws Exception{
+    public void testUploadFile_Success() throws Exception {
         Resource resource = new ClassPathResource("testUpload.txt");
         MultipartFile multipartFile = new MockMultipartFile("testUpload.txt", resource.getInputStream());
         Mockito.when(service.uploadFile(Mockito.any())).thenReturn("success");
@@ -55,6 +54,7 @@ public class AnalysisControllerTests {
         assertEquals("success", response.getBody());
 
     }
+
     @Test
     public void testPostFile_Success() throws Exception {
         byte[] fileContent = "Hello, World!".getBytes();
@@ -62,7 +62,7 @@ public class AnalysisControllerTests {
         Mockito.when(service.uploadFile(Mockito.any())).thenReturn("success");
 
         mockMvc.perform(multipart("/upload")
-                        .file(file))
+                .file(file))
                 .andExpect(status().isOk());
 
         // Additional assertions if needed
