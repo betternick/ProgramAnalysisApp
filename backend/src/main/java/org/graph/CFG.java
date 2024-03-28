@@ -2,10 +2,11 @@ package org.graph;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CFG implements Serializable {
-    private List<Node> nodes = new ArrayList<>();
+    public List<Node> nodes = new ArrayList<>();
     private Node entryNode;
     private Node exitNode;
 
@@ -34,6 +35,15 @@ public class CFG implements Serializable {
                 System.out.println("Child -> " + successor);
             }
         }
+    }
+
+    public List<Node> getNodes() {
+        // returns an unmodifiable view of the nodes list
+        return Collections.unmodifiableList(nodes);
+    }
+
+    public Node getEntryNode() {
+        return this.entryNode;
     }
 
     public String toTextRepresentation() {

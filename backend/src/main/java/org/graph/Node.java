@@ -25,6 +25,10 @@ public class Node implements Serializable {
         next.add(node);
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Node{" +

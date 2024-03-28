@@ -17,7 +17,7 @@ import java.io.IOException;
 // The CFG, Node and CFG Builder were made with the help of ChatGPT 4.0
 public class CFGBuilder {
     // Global map to store CFGs for each method
-    private static Map<String, CFG> globalCFGMap = new HashMap<>();
+    public static Map<String, CFG> globalCFGMap = new HashMap<>();
 
     public static void main(String[] args) {
         CFGBuilder builder = new CFGBuilder();
@@ -47,6 +47,10 @@ public class CFGBuilder {
             System.out.println(entry.getValue().toTextRepresentation());
             System.out.println();
         }
+    }
+
+    public Map<String, CFG> getGlobalCFGMap() {
+        return new HashMap<>(globalCFGMap);
     }
 
     public void buildCFGs(String filePath) {
@@ -82,7 +86,7 @@ public class CFGBuilder {
 
         // Connect the last statement to the exit node only if it's not a return
         // statement
-        if (!(currentNode.codeBlock.code[0].startsWith("return"))) {
+        if (!(currentNode.codeBlock.code[0].startsWith("Statement: return"))) {
             currentNode.addNext(exitNode);
             exitNode.addPrevious(currentNode);
         }
