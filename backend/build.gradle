@@ -7,6 +7,9 @@ plugins {
     // Spring Boot plugin to simplify working with Spring applications
         id 'org.springframework.boot' version '3.2.3'
         id 'io.spring.dependency-management' version '1.1.4'
+
+    // Create a fat JAR with all dependencies
+    // id 'com.github.johnrengelman.shadow' version '8.1.1' // Check for the latest version on the plugin portal
 }
 
 jacoco {
@@ -36,7 +39,10 @@ dependencies {
 
     // Soot
     implementation 'org.soot-oss:soot:4.3.0'
-    implementation 'org.ow2.asm:asm:9.3'
+
+    // Use Log4j for logging.
+    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
 
 
     // Use JUnit Jupiter for testing.
@@ -63,6 +69,8 @@ sourceSets {
         java {
             srcDir 'src/main/java'
             include '**/profile/ProfilingAgent.java'
+            include '**/profile/Log.java'
+            include '**/graph/*.java'
         }
         resources {
             srcDir 'src/main/resources'
@@ -70,6 +78,26 @@ sourceSets {
         compileClasspath += configurations.agentCompile
     }
 }
+
+// import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+// task agentJar(type: ShadowJar) {
+//     archiveClassifier.set('agent')
+//     configurations = [project.configurations.agentCompile]
+//     from sourceSets.agent.output
+//     
+//     // Filter to include only ProfilingAgent and its dependencies
+//     // include '**/profile/ProfilingAgent.java'
+
+//     manifest {
+//         attributes(
+//             'Premain-Class': 'org.profile.ProfilingAgent',
+//             'Can-Redefine-Classes': 'true',
+//             'Can-Retransform-Classes': 'true',
+//             'Agent-Class': 'org.profile.ProfilingAgent'
+//         )
+//     }
+// }
 
 task agentJar(type: Jar) {
     archiveClassifier = 'agent'
@@ -90,8 +118,9 @@ build.dependsOn agentJar
 application {
     // Define the main class for the application.
     // mainClass = 'org.parser.Parser'
-   // mainClass = 'org.profile.Executor'
-    mainClass = 'org.graph.SimpleSootExample'
+    // mainClass = 'org.profile.Executor'
+    // mainClass = 'org.graph.SimpleSootExample'
+    mainClass = 'org.servlet.Application'
 }
 
 jacocoTestReport {
