@@ -3,10 +3,9 @@ package org.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
-public class Node {
+public class Node implements Serializable {
     public static int nextId = 0; // Static variable to generate unique IDs
     public int id; // Unique ID for each node
     public CodeBlock codeBlock;
