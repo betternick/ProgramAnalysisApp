@@ -107,11 +107,13 @@ public class Executor {
     // This is only for testing purposes
     public static void main(String[] args) throws Exception {
         System.out.println("Executor Initialized");
-        // new Executor().executeJavaFileWithAgent("examples/Simple.java", "build/libs/backend-agent.jar",
-        //         "examples/Simple.jar", "Simple");
+        // new Executor().executeJavaFileWithAgent("examples/Simple.java",
+        // "build/libs/backend-agent.jar",
+        // "examples/Simple.jar", "Simple");
     }
 
-    private void executeJavaFileWithAgent(String filePath, String agentJarPath, String jarToRun, String graphPath, String fullClassName)
+    private void executeJavaFileWithAgent(String filePath, String agentJarPath, String jarToRun, String graphPath,
+            String fullClassName)
             throws Exception {
 
         System.out.println("Running the Java application with the agent...");
@@ -119,7 +121,7 @@ public class Executor {
         ProcessBuilder builder = new ProcessBuilder(
                 "java",
                 "-javaagent:" + agentJarPath + "=" + graphPath,
-                "-cp",  jarToRun 
+                "-cp", jarToRun
                         + ":byte-buddy-1.14.12.jar"
                         + ":asm-9.6.jar" + ":asm-commons-9.6.jar"
                         + ":log4j-api-2.23.1.jar" + ":log4j-core-2.23.1.jar" + ":log4j-1.2-api-2.23.1.jar",
