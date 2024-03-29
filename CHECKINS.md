@@ -1,5 +1,26 @@
 Use this file to commit information clearly documenting your check-ins' content. If you want to store more information/details besides what's required for the check-ins that's fine too. Make sure that your TA has had a chance to sign off on your check-in each week (before the deadline); typically you should discuss your material with them before finalizing it here.
 
+# Project 2 - Check-In 5
+
+## Status of final user study; any feedback and changes planned:
+Made a paper mock-up of the tool and ran user studies to gather feedback. Users found the tool helpful for understanding code flow but suggested improvements in the visualization for better clarity. We plan to refine the graph visualization based on user feedback, such as adding color coding for different types of nodes and attaching analysis results as an expandable pop-up for each node instead of only at the end.
+ 
+## Plans for final video (possible draft version): 
+Outline the structure of the video, including an introduction to the tool, a demonstration of its features, and a summary of user feedback and future improvements. The video should focus on the tool's functionality and how it can be used to analyze Java code. Create a draft version of the video for review and feedback from the team.
+ 
+## Planned timeline for the remaining days:
+Apr 5, Check-in 6: Finalize the integration between the backend analysis tool and the frontend visualization. Conduct thorough testing of the analysis tool and visualization with various code examples to ensure accuracy and usability. Document the usage instructions and limitations of the tool, and prepare for the final presentation.
+Apr 12, Final Presentation: Present the completed tool, demonstrate its features, and discuss the feedback received from users. Highlight the team's accomplishments and future directions for the project.
+ 
+## Progress against the timeline planned for your team, including the specific goals you defined (originally as part of Check-in 2) for Check-in 5:
+- CFG: Extended the CFGBuilder tool to handle more complex code structures such as Breaks and nested breaks as well as converting the graph into a format needed for frontend graph visualization library.
+- Analysis: Incorporated dynamic analysis components. Integrating the CFGBuilder class with the Analyzer class as a singleton, and added logging of dynamically gathered data in the graph data structure.
+- Frontend: Developing interaction elements for the frontend, allowing users to navigate and explore the control-flow graph.
+- API: Integrated the backend CFGBuilder tool with the frontend so that the Java file sent by the frontend is now processed by backend and the graph file sent to frontend as a JSON. We are on track with the planned timeline, with all goals for Check-in 5 met.
+- Tests: Added tests for CFG builder.
+
+----------------------------------------
+
 # Project 2 - Check-In 4
 
 ```C
