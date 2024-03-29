@@ -9,8 +9,8 @@ Made a paper mock-up of the tool and ran user studies to gather feedback. Users 
 Outline the structure of the video, including an introduction to the tool, a demonstration of its features, and a summary of user feedback and future improvements. The video should focus on the tool's functionality and how it can be used to analyze Java code. Create a draft version of the video for review and feedback from the team.
  
 ## Planned timeline for the remaining days:
-Apr 5, Check-in 6: Finalize the integration between the backend analysis tool and the frontend visualization. Conduct thorough testing of the analysis tool and visualization with various code examples to ensure accuracy and usability. Document the usage instructions and limitations of the tool, and prepare for the final presentation.
-Apr 12, Final Presentation: Present the completed tool, demonstrate its features, and discuss the feedback received from users. Highlight the team's accomplishments and future directions for the project.
+- Apr 5, Check-in 6: Finalize the integration between the backend analysis tool and the frontend visualization. Conduct thorough testing of the analysis tool and visualization with various code examples to ensure accuracy and usability. Document the usage instructions and limitations of the tool, and prepare for the final presentation.
+- Apr 12, Final Presentation: Present the completed tool, demonstrate its features, and discuss the feedback received from users. Highlight the team's accomplishments and future directions for the project.
  
 ## Progress against the timeline planned for your team, including the specific goals you defined (originally as part of Check-in 2) for Check-in 5:
 - CFG: Extended the CFGBuilder tool to handle more complex code structures such as Breaks and nested breaks as well as converting the graph into a format needed for frontend graph visualization library.
