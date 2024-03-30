@@ -35,7 +35,7 @@ public class AnalysisControllerTests {
 
     @MockBean
     private AnalysisService service;
-    
+
     @TempDir
     Path tempDir;
 

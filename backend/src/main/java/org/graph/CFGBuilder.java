@@ -10,21 +10,35 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import java.io.ObjectOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 // The CFG, Node and CFG Builder were made with the help of ChatGPT 4.0
 public class CFGBuilder {
     // Global map to store CFGs for each method
-    public Map<String, CFG> globalCFGMap = new HashMap<>();
+    public static Map<String, CFG> globalCFGMap = new HashMap<>();
 
     public static void main(String[] args) {
         CFGBuilder builder = new CFGBuilder();
-        builder.buildCFGs("backend/examples/Simple.java");
+        builder.buildCFGs("examples/Simple.java");
+
+        builder.serializeMap("cfgMap.ser");
+
         // Print the global CFG map
         builder.printGlobalCFGMap();
-
     }
 
-
-
+    // Method to serialize a Map<String, CFG> to a file
+    // So the Instrumentation module can use it
+    public void serializeMap(String filename) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(globalCFGMap);
+        } catch (IOException e) {
+            System.err.println("Error serializing map: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void printGlobalCFGMap() {
         for (Map.Entry<String, CFG> entry : globalCFGMap.entrySet()) {

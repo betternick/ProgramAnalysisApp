@@ -30,12 +30,14 @@ public class AnalysisServiceTests {
 
     @TempDir
     Path tempDir;
+
     @BeforeEach
     public void changeDir() {
         AnalysisService.UPLOAD_DIR = tempDir.toAbsolutePath().toString();
     }
+
     @Test
-    public void testUploadFile_Success() throws Exception{
+    public void testUploadFile_Success() throws Exception {
         Resource resource = new ClassPathResource("testUpload.txt");
         MultipartFile multipartFile = new MockMultipartFile("testUpload.txt", resource.getInputStream());
 
@@ -51,7 +53,7 @@ public class AnalysisServiceTests {
     }
 
     @Test
-    public void testUploadFile_Fail() throws Exception{
+    public void testUploadFile_Fail() throws Exception {
         MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
         Mockito.when(multipartFile.getOriginalFilename()).thenReturn("test.txt");
         Mockito.when(multipartFile.getInputStream()).thenThrow(new IOException());
@@ -59,10 +61,9 @@ public class AnalysisServiceTests {
             String response = service.uploadFile(multipartFile);
             fail();
         } catch (IOException e) {
-             // expected
+            // expected
         }
 
     }
-
 
 }

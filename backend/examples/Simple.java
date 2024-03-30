@@ -1,25 +1,6 @@
+package examples;
+
 public class Simple {
-
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-
-        int g = 123;
-        String h = "fgh";
-
-        for (int i = 0; i < 10; i++) {
-            int myNumber = 10;
-            String what = "whatString";
-            if (g > myNumber) {
-                String gh = "fgghgh";
-                // return; // Adding a return statement here
-            } else {
-                boolean even = isEvenNumber(g);
-            }
-            int waaa = 98;
-        }
-
-        int someInt = 200;
-    }
 
     public static void main(String[] args) {
         System.out.println("Hello, World!");
@@ -55,18 +36,18 @@ public class Simple {
         // nestedFunction();
         int g = 123;
         String h = "fgh";
-        return num1 + num2;
         while (g > 100) {
             g--;
             int myNumber = 10;
         }
+        return num1 + num2;
     }
 
     public static int sampleForLoop(int num1, int num2) {
         // nestedFunction();
         int g = 123;
         String h = "fgh";
-        for (int g = 0; g < 10; g++) {
+        for (g = 0; g < 10; g++) {
             int myNumber = 10;
             String what = "whatString";
         }
@@ -83,7 +64,7 @@ public class Simple {
         int g = 123;
         String h = "fgh";
         if (h != "f") {
-            for (int g = 0; g < 10; g++) {
+            for (g = 0; g < 10; g++) {
                 int myNumber = 10;
                 String what = "whatString";
             }
@@ -115,9 +96,10 @@ public class Simple {
             b++;
         } else {
             b--;
-            return;
+            return a;
         }
         System.out.println("Yay");
+        return b;
     }
 
     int sampleForLoopProgram(int a) {
@@ -126,24 +108,26 @@ public class Simple {
             b++;
         }
         System.out.println("Yay");
+        return b;
     }
 
     int sampleWhileLoopProgram(int a) {
-        // int b = a;
+        int b = a;
         while (b > 10) {
             b--;
         }
         System.out.println("Yay");
+        return b;
     }
 
     int sampleWhileLoopWithBreakProgram(int a) {
-        // int b = a;
+        int b = a;
         while (b > 10) {
             b--;
             break;
-            b++;
         }
         System.out.println("Yay");
+        return a;
     }
 
     int sampleWhileLoopWithBreakInsideNestedIFProgram(int a) {
@@ -157,9 +141,8 @@ public class Simple {
                 b = b + 2;
             }
             break;
-            b = b + 5;
         }
         System.out.println("Yay");
+        return b;
     }
-
 }

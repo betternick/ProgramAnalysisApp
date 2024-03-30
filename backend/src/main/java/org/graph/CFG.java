@@ -1,11 +1,12 @@
 package org.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CFG {
-    List<Node> nodes = new ArrayList<>();
+public class CFG implements Serializable {
+    public List<Node> nodes = new ArrayList<>();
     private Node entryNode;
     private Node exitNode;
 

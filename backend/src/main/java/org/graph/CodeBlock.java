@@ -1,6 +1,8 @@
 package org.graph;
 
-public class CodeBlock {
+import java.io.Serializable;
+
+public class CodeBlock implements Serializable {
     public String[] code;
     public String fileName;
     public int lineStart;

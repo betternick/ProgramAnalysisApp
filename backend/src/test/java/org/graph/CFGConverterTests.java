@@ -15,8 +15,8 @@ class CFGConverterTest {
     @BeforeEach
     void setUp() {
         cfg = new CFG();
-        CodeBlock cb1 = new CodeBlock(new String[] {"code1"}, "File1.java", 1);
-        CodeBlock cb2 = new CodeBlock(new String[] {"code2"}, "File1.java", 2);
+        CodeBlock cb1 = new CodeBlock(new String[] { "code1" }, "File1.java", 1);
+        CodeBlock cb2 = new CodeBlock(new String[] { "code2" }, "File1.java", 2);
 
         node1 = cfg.createNode(cb1);
         node2 = cfg.createNode(cb2);
@@ -39,4 +39,3 @@ class CFGConverterTest {
         assertNotNull(json, "The JSON string should not be null");
     }
 }
-
