@@ -14,26 +14,21 @@ function App() {
 
     return (
         <Flex
-            minW="100vw"
-            minH="100vh"
+            width="100vw"
+            height="100vh"
         >
+            <title>Control Flow Graph Generator</title>
             <Flex
-                minW="30vw"
-                minH="100vh"
+                width="30vw"
+                height="100vh"
                 justifyContent="center"
                 flexDirection="column"
-                overflowX="hidden"
                 boxShadow="rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px"
             >
-                <Flex
-                    minW="25vw"
-                    p={2}
-                >
-                    <Uploader handleResponse={setGraph} />
-                </Flex>
+                <Uploader handleResponse={setGraph} />t
             </Flex>
             <Flex
-                minW="70vw"
+                width="70vw"
                 justifyContent="center"
             >
                 <ControlFlowGraph graph={controlFlowGraph()} />

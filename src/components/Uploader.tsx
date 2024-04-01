@@ -92,11 +92,11 @@ const Uploader = ({ handleResponse }: UploaderProps) => {
             m={3}
         >
             <Flex gap={1}>
-                <Icon
+                {/* <Icon
                     as={PiNumberCircleOneFill}
                     boxSize={6}
-                />
-                <Heading size="md">Upload your program</Heading>
+                /> */}
+                <Heading size="md">Control Flow Graph Generator</Heading>
             </Flex>
             <Text>
                 Please upload your program as a single <Code>.java</Code> file
