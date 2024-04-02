@@ -68,7 +68,9 @@ public class CFGBuilder {
     }
 
     public void buildCFGs(String filePath) {
+        // Clear the global CFG map before building new CFGs
         globalCFGMap.clear();
+
         Launcher launcher = new Launcher();
         launcher.addInputResource(filePath);
         CtType<?> ctType = launcher.buildModel().getAllTypes().iterator().next();
