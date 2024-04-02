@@ -28,6 +28,12 @@ public class CFG implements Serializable {
         return this.exitNode;
     }
 
+    // Traverse all nodes
+    public List<Integer> getAllLines() {
+        List<Integer> lines = new ArrayList<>();
+        return lines;
+    }
+
     public void print() {
         for (Node node : nodes) {
             System.out.println(node);

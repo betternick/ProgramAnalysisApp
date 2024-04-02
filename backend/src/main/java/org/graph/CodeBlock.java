@@ -13,6 +13,10 @@ public class CodeBlock implements Serializable {
         this.lineStart = lineStart;
     }
 
+    public int getLineStart() {
+        return lineStart;
+    }
+
     @Override
     public String toString() {
         return "CodeBlock{" +

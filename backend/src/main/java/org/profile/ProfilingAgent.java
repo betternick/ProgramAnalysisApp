@@ -1,16 +1,16 @@
 package org.profile;
 
+// Instrumentation
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
-
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.AdviceAdapter;
 
-// Deserialization
 import org.graph.*;
 import java.io.*;
-import java.util.Map;
+import java.util.*;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class ProfilingAgent {
 
@@ -21,35 +21,27 @@ public class ProfilingAgent {
         return agentPath;
     }
 
-    private static String targetClassName;
-    private static String targetMethodName;
-    private static int targetLineNumber;
-
+    // The map of functions names to their CFGs
     private static Map<String, CFG> cfgMap;
+
+    private static List<String> classToInstrument;
 
     // We can't create the agent dynamically, so we need to read the file passed
     // from graph-generation module
-    private static void parseAgentArguments(String graphPath) {
-        cfgMap = ProfilingAgent.deserializeMap(graphPath);
-        targetLineNumber = 3;
-    }
-
-    private static Map<String, CFG> deserializeMap(String fileName) {
-
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
-            return (Map<String, CFG>) ois.readObject();
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found: " + e.getMessage());
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            System.err.println("Class not found: " + e.getMessage());
-        } catch (ClassCastException e) {
-            System.err.println("Error casting to Map<String, CFG>: " + e.getMessage());
+    private static void parseAgentArguments(String graphPathAndClass) {
+        // The argument is in the format "graphPath:class1:class2:class3"
+        // The graphPath is compulsory, the classes are optional
+        String[] parts = graphPathAndClass.split(":");
+        if (parts.length < 1) {
+            throw new IllegalArgumentException("Invalid agent arguments" + graphPathAndClass);
         }
-        return null; // Return null if deserialization failed
+        cfgMap = CFGBuilder.deserializeMap(parts[0]);
+        classToInstrument = Arrays.asList(parts).subList(1, parts.length);
     }
 
+    // The method description is different from the CFG format, we need to convert
+    // e.g. (I)V to int
+    // e.g. (Ljava/lang/String;I)V to java.lang.String,int
     public static String transformNameAndDescToCfgFormat(String name, String desc) {
         StringBuilder result = new StringBuilder(name);
 
@@ -141,11 +133,10 @@ public class ProfilingAgent {
                 if (className == null) {
                     return null; // Primitive types do not have a class loader, class name, etc.
                 }
-                // Ensure we only transform our target classes to avoid unnecessary processing
-                if (!className.replace("/", ".").contains("examples.Simple")) {
+                // Ensure we only transform our target classes (claaToInstrument)
+                if (!classToInstrument.contains(className.replace("/", "."))) {
                     return null;
                 }
-                System.out.println("Class Name: " + className);
 
                 try {
                     ClassReader reader = new ClassReader(classfileBuffer);
@@ -179,36 +170,77 @@ public class ProfilingAgent {
     static class MethodAdapter extends AdviceAdapter {
         private String className;
         private String methodName;
+        private String cfgName;
         private CFG cfg;
+
+        private List<Pair<Integer, Integer>> lineAndId = new ArrayList<>();
 
         protected MethodAdapter(int api, MethodVisitor mv, int access, String name, String desc, String className) {
             super(api, mv, access, name, desc);
             this.className = className;
             this.methodName = name;
 
-            String transformed = transformNameAndDescToCfgFormat(name, desc);
+            cfgName = transformNameAndDescToCfgFormat(name, desc);
             // Get the corresponding CFG for the method
-            CFG functionCFG = cfgMap.get(transformed);
+            CFG functionCFG = cfgMap.get(cfgName);
             if (functionCFG == null) {
                 // Do nothing if the CFG is not found
                 return;
             }
+
+            collectInjectPlaces(functionCFG);
+        }
+
+        private void collectInjectPlaces(CFG cfg) {
+            for (Node node : cfg.nodes) {
+                lineAndId.add(node.getLineAndId());
+            }
+        }
+
+        private Optional<Integer> getIdForLine(int lineNumber) {
+            for (Pair<Integer, Integer> pair : lineAndId) {
+                if (pair.getLeft().equals(lineNumber)) {
+                    return Optional.of(pair.getRight());
+                }
+            }
+            return Optional.empty();
         }
 
         @Override
         public void visitLineNumber(int line, Label start) {
             super.visitLineNumber(line, start);
-            // if (line == targetLineNumber) {
-            injectAction(line);
-            // }
+
+            Optional<Integer> id = getIdForLine(line);
+
+            if (id.isPresent()) {
+                injectAction(line);
+            }
         }
 
-        private void injectAction(int line) {
-            String identifier = className + "." + methodName + ":" + line;
+        @Override
+        protected void onMethodEnter() {
+            super.onMethodEnter();
+            // Print a message upon entering the method
+            mv.visitLdcInsn(cfgName);
+            mv.visitMethodInsn(INVOKESTATIC, "org/profile/Log", "enter", "(Ljava/lang/String;)V", false);
+        }
+
+        protected void onMethodExit(int opcode) {
+            // We don't handle exception exits,
+            // if (opcode != ATHROW) {
+            mv.visitLdcInsn(cfgName);
+            mv.visitMethodInsn(INVOKESTATIC, "org/profile/Log", "exit", "(Ljava/lang/String;)V", false);
+
+            super.onMethodExit(opcode);
+        }
+
+        private void injectAction(int nodeID) {
+            String identifier = String.valueOf(nodeID);
 
             // Call MonitoringService.logTime
             mv.visitLdcInsn(identifier);
             mv.visitMethodInsn(INVOKESTATIC, "org/profile/Log", "logNormalInfo", "(Ljava/lang/String;)V", false);
         }
+
     }
 }

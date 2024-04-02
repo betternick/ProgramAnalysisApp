@@ -2,6 +2,7 @@ package org.graph;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 
@@ -23,6 +24,14 @@ public class Node implements Serializable {
 
     public void addNext(Node node) {
         next.add(node);
+    }
+
+    public List<Node> getNext() {
+        return next;
+    }
+
+    public Pair<Integer, Integer> getLineAndId() {
+        return Pair.of(codeBlock.getLineStart(), id);
     }
 
     public int getId() {

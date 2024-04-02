@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 // The CFG, Node and CFG Builder were made with the help of ChatGPT 4.0
 public class CFGBuilder {
@@ -27,6 +25,22 @@ public class CFGBuilder {
 
         // Print the global CFG map
         builder.printGlobalCFGMap();
+    }
+
+    public static Map<String, CFG> deserializeMap(String fileName) {
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            return (Map<String, CFG>) ois.readObject();
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class not found: " + e.getMessage());
+        } catch (ClassCastException e) {
+            System.err.println("Error casting to Map<String, CFG>: " + e.getMessage());
+        }
+        return null; // Return null if deserialization failed
     }
 
     // Method to serialize a Map<String, CFG> to a file
