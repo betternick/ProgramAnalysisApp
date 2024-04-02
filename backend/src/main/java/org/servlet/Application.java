@@ -8,12 +8,15 @@ import org.graph.*;
 import org.profile.*;
 import org.analysis.*;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.*;
 
 @SpringBootApplication
 public class Application {
 
     private static CFGBuilder cfg;
+    private static Executor executor = Executor.getInstance();
+    private static Analyser analyser;
 
     public static void main(String[] args) {
         analyzeNewProject("examples/Simple.java");
@@ -28,19 +31,10 @@ public class Application {
         cfg.buildCFGs(projectPath);
         cfg.serializeMap("cfgMap.ser");
 
-        Executor executor = Executor.getInstance();
         executor.execute(projectPath, "examples.Simple", "cfgMap.ser");
 
         String logPath = Log.getLogPath();
-        Analyser analyser = Analyser.getInstance();
-        analyser.analyze("cfgMap.ser", logPath);
-
-        // Delete the log file
-        File file = new File(logPath);
-        if (file.delete()) {
-            System.out.println("Log file deleted successfully");
-        } else {
-            System.out.println("Failed to delete the log file");
-        }
+        analyser = new Analyser("cfgMap.ser");
+        analyser.analyze(logPath);
     }
 }
