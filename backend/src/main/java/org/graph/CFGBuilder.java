@@ -21,7 +21,7 @@ public class CFGBuilder {
 
     public static void main(String[] args) {
         CFGBuilder builder = new CFGBuilder();
-        builder.buildCFGs("examples/Simple.java");
+        builder.buildCFGs("backend/examples/Simple.java");
 
         builder.serializeMap("cfgMap.ser");
 
@@ -53,18 +53,32 @@ public class CFGBuilder {
         return new HashMap<>(globalCFGMap);
     }
 
+
     public void buildCFGs(String filePath) {
         Launcher launcher = new Launcher();
         launcher.addInputResource(filePath);
         CtType<?> ctType = launcher.buildModel().getAllTypes().iterator().next();
 
+        // Create an instance of VariableAnalyzer
+        VariableAnalyzer variableAnalyzer = new VariableAnalyzer();
+        // Create an instance of VariableAnalyzer
+
         // Build CFG for each method in the class
         for (CtMethod<?> method : ctType.getMethods()) {
             CFG cfg = buildCFGForMethod(method);
+
+            // Analyze and annotate the CFG
+            variableAnalyzer.analyzeAndAnnotateCFG(method, cfg);
+
+            // Add the CFG to the global map
             String methodSignature = method.getSignature();
             globalCFGMap.put(methodSignature, cfg);
+         //   variableAnalyzer.doesJavaFileCompile(filePath);
         }
     }
+
+
+
 
     private CFG buildCFGForMethod(CtMethod<?> method) {
         CFG cfg = new CFG();
@@ -320,3 +334,4 @@ public class CFGBuilder {
         return currentNode; // Return the last node in the block
     }
 }
+

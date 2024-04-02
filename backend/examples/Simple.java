@@ -145,4 +145,87 @@ public class Simple {
         System.out.println("Yay");
         return b;
     }
+
+        int sampleDuplicateDeclarationWithinSubScope(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            int b;
+            int b;
+            break;
+        }
+        System.out.println("Yay");
+        int a;
+        return a;
+    }
+
+    int sampleDuplicateDeclaration(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            int b;
+            break;
+            if (1 > 0) {
+                //int b;
+            }
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+    int sampleAssigmentWithoutDeclaration(int a) {
+        int b = 10;
+
+        if (a > 5) {
+            int c = a + b;
+            z = b + 5;
+            System.out.println(c);
+        } else {
+            int d = a - b;
+            System.out.println(d);
+        }
+        return z;
+    }
+
+
+
+    int checkingIfElse (int a) {
+        int g = 56;
+        if (g<56) {
+            String y = "er";
+        } else if (g == 10) {
+            String h = "rty";
+        } else {
+            String u = "qw";
+        }
+        int ty = 8;
+    }
+
+    int sampleDeclarationWithNoUse(int a) {
+//        int unusedVariableA;
+        String d;
+        while (b > 10) {
+            b--;
+            break;
+            int g = 10;
+            String ty = "g";
+//            d = "r";
+            String d;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+    int fixedCodeThatCompiles(int a) {
+        int b = 11;
+        String d;
+        while (b > 10) {
+            b--;
+            break;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+
 }
