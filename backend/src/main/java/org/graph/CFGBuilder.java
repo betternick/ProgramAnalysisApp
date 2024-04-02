@@ -53,18 +53,6 @@ public class CFGBuilder {
         return new HashMap<>(globalCFGMap);
     }
 
-//    public void buildCFGs(String filePath) {
-//        Launcher launcher = new Launcher();
-//        launcher.addInputResource(filePath);
-//        CtType<?> ctType = launcher.buildModel().getAllTypes().iterator().next();
-//
-//        // Build CFG for each method in the class
-//        for (CtMethod<?> method : ctType.getMethods()) {
-//            CFG cfg = buildCFGForMethod(method);
-//            String methodSignature = method.getSignature();
-//            globalCFGMap.put(methodSignature, cfg);
-//        }
-//    }
 
     public void buildCFGs(String filePath) {
         Launcher launcher = new Launcher();
@@ -73,25 +61,19 @@ public class CFGBuilder {
 
         // Create an instance of VariableAnalyzer
         VariableAnalyzer variableAnalyzer = new VariableAnalyzer();
+        // Create an instance of VariableAnalyzer
 
         // Build CFG for each method in the class
         for (CtMethod<?> method : ctType.getMethods()) {
             CFG cfg = buildCFGForMethod(method);
 
-            // Perform variable analysis for the method
-            Map<Integer, String> variableIssues = variableAnalyzer.analyzeVariables(method, cfg);
-
-
-            // Add comments to nodes in the CFG based on the variable analysis results
-            for (Node node : cfg.getNodes()) {
-                if (variableIssues.containsKey(node.codeBlock.lineStart)) {
-                    node.addComment(variableIssues.get(node.codeBlock.lineStart));
-                }
-            }
+            // Analyze and annotate the CFG
+            variableAnalyzer.analyzeAndAnnotateCFG(method, cfg);
 
             // Add the CFG to the global map
             String methodSignature = method.getSignature();
             globalCFGMap.put(methodSignature, cfg);
+         //   variableAnalyzer.doesJavaFileCompile(filePath);
         }
     }
 

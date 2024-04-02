@@ -210,10 +210,22 @@ public class Simple {
 //            int g = 10;
 //            String ty = "g";
 ////            d = "r";
+//            String d;
 //        }
 //        System.out.println("Yay");
 //        return a;
 //    }
+
+    int fixedSampleDeclarationWithNoUse(int a) {
+        int b = 11;
+        String d;
+        while (b > 10) {
+            b--;
+            break;
+        }
+        System.out.println("Yay");
+        return a;
+    }
 
 
 }
