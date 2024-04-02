@@ -12,6 +12,7 @@ public class Node implements Serializable {
     public CodeBlock codeBlock;
     public List<Node> prev = new ArrayList<>();
     public List<Node> next = new ArrayList<>();
+    public List<String> comments = new ArrayList<>(); // List to store comments
 
     public Node(CodeBlock codeBlock) {
         this.id = nextId++; // Assign a unique ID and increment the counter
@@ -38,11 +39,22 @@ public class Node implements Serializable {
         return id;
     }
 
+    public void addComment(String comment) {
+        if (!comments.contains(comment)) {
+            comments.add(comment);
+        }
+    }
+
+
+
+
+
     @Override
     public String toString() {
         return "Node{" +
                 "id=" + id +
                 ", codeBlock=" + codeBlock +
+                ", comments=" + comments +
                 '}';
     }
 }
