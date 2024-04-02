@@ -21,7 +21,7 @@ public class CFGBuilder {
 
     public static void main(String[] args) {
         CFGBuilder builder = new CFGBuilder();
-        builder.buildCFGs("examples/Simple.java");
+        builder.buildCFGs("backend/examples/Simple.java");
 
         builder.serializeMap("cfgMap.ser");
 
@@ -53,18 +53,50 @@ public class CFGBuilder {
         return new HashMap<>(globalCFGMap);
     }
 
+//    public void buildCFGs(String filePath) {
+//        Launcher launcher = new Launcher();
+//        launcher.addInputResource(filePath);
+//        CtType<?> ctType = launcher.buildModel().getAllTypes().iterator().next();
+//
+//        // Build CFG for each method in the class
+//        for (CtMethod<?> method : ctType.getMethods()) {
+//            CFG cfg = buildCFGForMethod(method);
+//            String methodSignature = method.getSignature();
+//            globalCFGMap.put(methodSignature, cfg);
+//        }
+//    }
+
     public void buildCFGs(String filePath) {
         Launcher launcher = new Launcher();
         launcher.addInputResource(filePath);
         CtType<?> ctType = launcher.buildModel().getAllTypes().iterator().next();
 
+        // Create an instance of VariableAnalyzer
+        VariableAnalyzer variableAnalyzer = new VariableAnalyzer();
+
         // Build CFG for each method in the class
         for (CtMethod<?> method : ctType.getMethods()) {
             CFG cfg = buildCFGForMethod(method);
+
+            // Perform variable analysis for the method
+            Map<Integer, String> variableIssues = variableAnalyzer.analyzeVariables(method, cfg);
+
+
+            // Add comments to nodes in the CFG based on the variable analysis results
+            for (Node node : cfg.getNodes()) {
+                if (variableIssues.containsKey(node.codeBlock.lineStart)) {
+                    node.addComment(variableIssues.get(node.codeBlock.lineStart));
+                }
+            }
+
+            // Add the CFG to the global map
             String methodSignature = method.getSignature();
             globalCFGMap.put(methodSignature, cfg);
         }
     }
+
+
+
 
     private CFG buildCFGForMethod(CtMethod<?> method) {
         CFG cfg = new CFG();
@@ -320,3 +352,4 @@ public class CFGBuilder {
         return currentNode; // Return the last node in the block
     }
 }
+
