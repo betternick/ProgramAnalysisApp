@@ -67,7 +67,6 @@ public class CFGBuilder {
         return new HashMap<>(globalCFGMap);
     }
 
-
     public void buildCFGs(String filePath) {
         Launcher launcher = new Launcher();
         launcher.addInputResource(filePath);
@@ -87,12 +86,9 @@ public class CFGBuilder {
             // Add the CFG to the global map
             String methodSignature = method.getSignature();
             globalCFGMap.put(methodSignature, cfg);
-         //   variableAnalyzer.doesJavaFileCompile(filePath);
+            // variableAnalyzer.doesJavaFileCompile(filePath);
         }
     }
-
-
-
 
     private CFG buildCFGForMethod(CtMethod<?> method) {
         CFG cfg = new CFG();
@@ -348,4 +344,3 @@ public class CFGBuilder {
         return currentNode; // Return the last node in the block
     }
 }
-

@@ -146,7 +146,7 @@ public class Simple {
         return b;
     }
 
-        int sampleDuplicateDeclarationWithinSubScope(int a) {
+    int sampleDuplicateDeclarationWithinSubScope(int a) {
         int b = a;
         while (b > 10) {
             b--;
@@ -166,7 +166,7 @@ public class Simple {
             int b;
             break;
             if (1 > 0) {
-                //int b;
+                // int b;
             }
         }
         System.out.println("Yay");
@@ -187,11 +187,9 @@ public class Simple {
         return z;
     }
 
-
-
-    int checkingIfElse (int a) {
+    int checkingIfElse(int a) {
         int g = 56;
-        if (g<56) {
+        if (g < 56) {
             String y = "er";
         } else if (g == 10) {
             String h = "rty";
@@ -202,14 +200,14 @@ public class Simple {
     }
 
     int sampleDeclarationWithNoUse(int a) {
-//        int unusedVariableA;
+        // int unusedVariableA;
         String d;
         while (b > 10) {
             b--;
             break;
             int g = 10;
             String ty = "g";
-//            d = "r";
+            // d = "r";
             String d;
         }
         System.out.println("Yay");
@@ -226,6 +224,5 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-
 
 }
