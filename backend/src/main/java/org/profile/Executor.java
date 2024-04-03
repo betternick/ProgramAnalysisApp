@@ -6,9 +6,6 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.JavaFileObject;
 import java.io.*;
 import java.util.jar.*;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 public class Executor {
     private static Executor instance = null;
@@ -104,14 +101,6 @@ public class Executor {
         }
     }
 
-    // This is only for testing purposes
-    public static void main(String[] args) throws Exception {
-        System.out.println("Executor Initialized");
-        // new Executor().executeJavaFileWithAgent("examples/Simple.java",
-        // "build/libs/backend-agent.jar",
-        // "examples/Simple.jar", "Simple");
-    }
-
     private void executeJavaFileWithAgent(String filePath, String agentJarPath, String jarToRun, String graphPath,
             String fullClassName)
             throws Exception {
@@ -120,51 +109,17 @@ public class Executor {
 
         ProcessBuilder builder = new ProcessBuilder(
                 "java",
-                "-javaagent:" + agentJarPath + "=" + graphPath,
+                "-javaagent:" + agentJarPath + "=" + graphPath + ":" + fullClassName,
                 "-cp", jarToRun
-                        + ":byte-buddy-1.14.12.jar"
-                        + ":asm-9.6.jar" + ":asm-commons-9.6.jar"
-                        + ":log4j-api-2.23.1.jar" + ":log4j-core-2.23.1.jar" + ":log4j-1.2-api-2.23.1.jar",
+                        + ":libs/byte-buddy-1.14.12.jar"
+                        + ":libs/asm-9.6.jar" + ":libs/asm-commons-9.6.jar"
+                        + ":libs/log4j-api-2.23.1.jar" + ":libs/log4j-core-2.23.1.jar"
+                        + ":libs/log4j-1.2-api-2.23.1.jar"
+                        + ":libs/commons-lang3-3.14.0.jar",
                 fullClassName);
         builder.inheritIO();
         Process process = builder.start();
         process.waitFor();
         System.out.println("Java application with the agent finished.");
-    }
-
-    private void executeJavaFile(String filePath) throws Exception {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        int compilationResult = compiler.run(null, null, null, filePath);
-        if (compilationResult == 0) {
-            System.out.println("Compilation is successful");
-        } else {
-            System.out.println("Compilation Failed");
-            return;
-        }
-
-        // Load the class
-        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { new File("examples").toURI().toURL() });
-        System.out.println("classLoader: " + classLoader.getURLs());
-
-        String className = extractClassNameFromFilePath(filePath);
-        Class<?> cls = Class.forName(className, true, classLoader);
-        System.out.println("Loaded class name: " + cls.getName());
-
-        Method main = cls.getMethod("main", String[].class);
-        String[] args = null; // Arguments to pass to the main method, if any
-        main.invoke(null, (Object) args); // Static method doesn't have an instance
-    }
-
-    // Convert file path to class name
-    // examples/Simple.java -> examples.Simple
-    private String extractClassNameFromFilePath(String filePath) {
-        // filePath = filePath.replaceAll("[/\\\\]", "."); // Replace file separators
-        // with dots
-        // filePath = filePath.replaceAll(".class$", ""); // Remove the .class extension
-        // if (filePath.startsWith(".")) {
-        // filePath = filePath.substring(1); // Remove leading dot, if exists
-        // }
-        // return filePath;
-        return "Simple";
     }
 }

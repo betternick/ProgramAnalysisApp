@@ -47,9 +47,10 @@ class CFGTest {
     @DisplayName("ToTextRepresentation should return the correct textual representation of the CFG")
     void testToTextRepresentation() {
         String expectedOutput = "CodeBlock{code=int x = 0;\nx++;\nreturn x;, fileName='MyClass.java', lineStart=1} (ID: "
-                + entryNode.getId() + ")\n\n";
+                + entryNode.getId() + ", Comments: [])\n\n";
         String actualOutput = cfg.toTextRepresentation();
+        System.out.println(actualOutput);
         assertEquals(expectedOutput, actualOutput,
-                "The textual representation of CFG should match the expected format.");
+                "The textual representation of CFG should match the expected format." + actualOutput);
     }
 }
