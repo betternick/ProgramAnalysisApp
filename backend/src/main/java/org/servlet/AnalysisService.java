@@ -9,7 +9,6 @@ import org.profile.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import polyglot.frontend.Pass;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +27,7 @@ import java.util.Scanner;
 public class AnalysisService {
     public static String UPLOAD_DIR = "src/main/resources";
 
-    private String filePath = "";
+    public String filePath = "";
 
     private CFGBuilder builder = new CFGBuilder();
 
@@ -42,7 +41,7 @@ public class AnalysisService {
         return CFGConverter.convertAllCFGs(CFGBuilder.globalCFGMap);
     }
 
-    public Map<Integer, ExecTreeStats> executeFile() throws RuntimeException{
+    public Map<Integer, ExecTreeStats> executeFile() throws RuntimeException {
         String graphPath = "cfgMap.ser";
         String className = getClassName(filePath);
         String logPath = Log.getLogPath();
@@ -67,6 +66,8 @@ public class AnalysisService {
         return nodeStats;
     }
 
+
+    // This method written by ChatGPT 3.5 with slight edits
     public String getClassName(String filePath) {
         String packageName = null;
         String className = null;
@@ -78,8 +79,8 @@ public class AnalysisService {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 if (line.startsWith("package")) {
-                        modifiedContent.append("package ").append(customPackageName).append(";\n");
-                        packageName = customPackageName;
+                    modifiedContent.append("package ").append(customPackageName).append(";\n");
+                    packageName = customPackageName;
                 } else if (line.startsWith("public class")) {
                     className = line.substring(line.indexOf("class") + 6, line.lastIndexOf("{")).trim();
                     modifiedContent.append(line).append("\n");

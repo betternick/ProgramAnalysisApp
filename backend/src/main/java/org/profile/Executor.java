@@ -69,7 +69,8 @@ public class Executor {
         }
     }
 
-    public void execute(String filePath, String fullClassName, String graphPath, String logPath) throws RuntimeException {
+    public void execute(String filePath, String fullClassName, String graphPath, String logPath)
+            throws RuntimeException {
         // Delete the old log file
         try {
             Files.deleteIfExists(Paths.get(logPath));
