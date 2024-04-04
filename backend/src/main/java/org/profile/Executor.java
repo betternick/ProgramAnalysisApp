@@ -6,6 +6,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.JavaFileObject;
 import java.io.*;
 import java.util.jar.*;
+import java.nio.file.*;
 
 public class Executor {
     private static Executor instance = null;
@@ -68,7 +69,14 @@ public class Executor {
         }
     }
 
-    public void execute(String filePath, String fullClassName, String graphPath) throws RuntimeException {
+    public void execute(String filePath, String fullClassName, String graphPath, String logPath) {
+        // Delete the old log file
+        try {
+            Files.deleteIfExists(Paths.get(logPath));
+        } catch (IOException e) {
+            System.out.println("Can't delete the old log file" + e);
+        }
+
         String agentPath = ProfilingAgent.getAgentPath();
 
         try {
@@ -117,7 +125,7 @@ public class Executor {
                         + ":libs/log4j-1.2-api-2.23.1.jar"
                         + ":libs/commons-lang3-3.14.0.jar",
                 fullClassName);
-        builder.inheritIO();
+        // builder.inheritIO();
         Process process = builder.start();
         process.waitFor();
         System.out.println("Java application with the agent finished.");

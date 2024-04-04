@@ -88,7 +88,7 @@ public class Analyser {
         ExecTree currExecNode = root;
 
         // It assumes the last log line is "Exit:main(java.lang.String[])"
-        while (parts[0].equals("Exit") && parts[1].equals("main(java.lang.String[])")) {
+        while (!(parts[0].equals("Exit") && parts[1].equals("main(java.lang.String[])"))) {
 
             if (line.startsWith("Enter:")) {
                 execStack.push(currExecNode);
@@ -103,7 +103,6 @@ public class Analyser {
 
                 parentNode.addChild(currExecNode);
             }
-            System.out.println(line);
 
             line = reader.readLine();
             parts = line.split(":");
@@ -113,14 +112,6 @@ public class Analyser {
         assert (currExecNode == root);
         // This will calculate the execution times for all nodes recursively
         currExecNode.calculateExecutionTimes(endTimeInNano);
-    }
-
-    // In the second traverse, we update the statistics
-    private void secondTraverse(ExecTree root) {
-        for (ExecTree child : root.getChildren()) {
-            System.out.println(child);
-            secondTraverse(child);
-        }
     }
 
     public void analyze(String logPath) {
@@ -166,5 +157,13 @@ public class Analyser {
         double averageCpuUsage = executionTimes > 0 ? (double) totalCpuUsage / executionTimes : 0;
 
         return new ExecTreeStats(executionTimes, averageExecutionTime, averageMemoryUsage, averageCpuUsage);
+    }
+
+    public String getExecTreeAsJson() {
+        if (root == null) {
+            // Handle the case where the tree has not been initialized
+            return "{}";
+        }
+        return root.toJSON().toString();
     }
 }

@@ -12,6 +12,8 @@ out/
 bin/
 
 logs/
+*.ser
+*.class
 
 # Ignore Gradle build output directory
 build/
