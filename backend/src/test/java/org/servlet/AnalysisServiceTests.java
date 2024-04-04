@@ -66,4 +66,9 @@ public class AnalysisServiceTests {
 
     }
 
+    @Test
+    public void testGetClassName_Success() {
+        String className = service.getClassName("examples/Simple.java");
+        assertEquals("examples.Simple", className);
+    }
 }
