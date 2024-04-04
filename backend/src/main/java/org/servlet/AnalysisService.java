@@ -45,6 +45,7 @@ public class AnalysisService {
     public Map<Integer, ExecTreeStats> executeFile() throws RuntimeException{
         String graphPath = "cfgMap.ser";
         String className = getClassName(filePath);
+        String logPath = Log.getLogPath();
 
         builder.serializeMap(graphPath);
         var IDs = builder.getAllNodeIds();
@@ -53,8 +54,7 @@ public class AnalysisService {
         System.out.println(filePath);
         System.out.println(className);
         System.out.println(graphPath);
-        executor.execute(filePath, className, graphPath);
-        String logPath = Log.getLogPath();
+        executor.execute(filePath, className, graphPath, logPath);
         Analyser analyser = new Analyser(graphPath);
         analyser.analyze(logPath);
 

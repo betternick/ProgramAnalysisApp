@@ -30,7 +30,7 @@ public class Application {
         cfg.buildCFGs(projectPath);
         cfg.serializeMap("cfgMap.ser");
 
-        executor.execute(projectPath, "examples.ShouldPass", "cfgMap.ser");
+        executor.execute(projectPath, "examples.ShouldPass", "cfgMap.ser", Log.getLogPath());
 
         String logPath = Log.getLogPath();
         analyser = new Analyser("cfgMap.ser");

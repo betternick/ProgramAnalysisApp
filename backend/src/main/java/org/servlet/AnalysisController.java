@@ -34,6 +34,7 @@ public class AnalysisController {
             Map<Integer, ExecTreeStats> result = service.executeFile();
             return ResponseEntity.ok(result);
         } catch (RuntimeException e){
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
