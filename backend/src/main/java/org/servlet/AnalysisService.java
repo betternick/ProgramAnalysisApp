@@ -13,6 +13,7 @@ import polyglot.frontend.Pass;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,17 +36,13 @@ public class AnalysisService {
         String fileName = StringUtils.cleanPath((Objects.requireNonNull(file.getOriginalFilename())));
 
         Path uploadPath = Paths.get(UPLOAD_DIR, fileName);
-        try {
-            Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
-            filePath = uploadPath.toString();
-            builder.buildCFGs(filePath);
-            return CFGConverter.convertAllCFGs(builder.globalCFGMap);
-        } catch (IOException e) {
-            throw e;
-        }
+        Files.copy(file.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+        filePath = uploadPath.toString();
+        builder.buildCFGs(filePath);
+        return CFGConverter.convertAllCFGs(CFGBuilder.globalCFGMap);
     }
 
-    public Map<Integer, ExecTreeStats> executeFile() {
+    public Map<Integer, ExecTreeStats> executeFile() throws RuntimeException{
         String graphPath = "cfgMap.ser";
         String className = getClassName(filePath);
 
@@ -53,8 +50,10 @@ public class AnalysisService {
         var IDs = builder.getAllNodeIds();
 
         Executor executor = Executor.getInstance();
+        System.out.println(filePath);
+        System.out.println(className);
+        System.out.println(graphPath);
         executor.execute(filePath, className, graphPath);
-
         String logPath = Log.getLogPath();
         Analyser analyser = new Analyser(graphPath);
         analyser.analyze(logPath);
@@ -71,20 +70,31 @@ public class AnalysisService {
     public String getClassName(String filePath) {
         String packageName = null;
         String className = null;
+        String customPackageName = "src.main.resources";
         try {
             File file = new File(filePath);
             Scanner scanner = new Scanner(file);
+            StringBuilder modifiedContent = new StringBuilder();
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 if (line.startsWith("package")) {
-                    packageName = line.substring(line.indexOf("package") + 8, line.lastIndexOf(";")).trim();
+                        modifiedContent.append("package ").append(customPackageName).append(";\n");
+                        packageName = customPackageName;
                 } else if (line.startsWith("public class")) {
                     className = line.substring(line.indexOf("class") + 6, line.lastIndexOf("{")).trim();
-                    break;
+                    modifiedContent.append(line).append("\n");
+                } else {
+                    modifiedContent.append(line).append("\n");
                 }
             }
             scanner.close();
+            // Rewrite the file with modified content if necessary
+            FileWriter writer = new FileWriter(file);
+            writer.write(modifiedContent.toString());
+            writer.close();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         if (packageName != null && className != null) {

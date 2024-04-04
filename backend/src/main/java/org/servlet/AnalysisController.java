@@ -30,7 +30,11 @@ public class AnalysisController {
 
     @PostMapping("/execute")
     public ResponseEntity<Map<Integer, ExecTreeStats>> executeFile() {
-        Map<Integer, ExecTreeStats> result = service.executeFile();
-        return ResponseEntity.ok(result);
+        try {
+            Map<Integer, ExecTreeStats> result = service.executeFile();
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 }

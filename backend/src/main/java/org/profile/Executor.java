@@ -68,7 +68,7 @@ public class Executor {
         }
     }
 
-    public void execute(String filePath, String fullClassName, String graphPath) {
+    public void execute(String filePath, String fullClassName, String graphPath) throws RuntimeException {
         String agentPath = ProfilingAgent.getAgentPath();
 
         try {
@@ -82,7 +82,7 @@ public class Executor {
 
             if (!compilationResult) {
                 System.out.println("Compilation Failed");
-                return;
+                throw new RuntimeException();
             }
             System.out.println("Compilation is successful");
             fileManager.close();
