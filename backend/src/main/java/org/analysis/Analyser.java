@@ -115,14 +115,6 @@ public class Analyser {
         currExecNode.calculateExecutionTimes(endTimeInNano);
     }
 
-    // In the second traverse, we update the statistics
-    private void secondTraverse(ExecTree root) {
-        for (ExecTree child : root.getChildren()) {
-            System.out.println(child);
-            secondTraverse(child);
-        }
-    }
-
     public void analyze(String logPath) {
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(logPath))) {
             // Traverse the log file and build the execution tree
