@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import ReactFlow, { Edge, useReactFlow, useNodesInitialized, applyNodeChanges, MiniMap, Controls, Node, Position } from 'reactflow'
+import ReactFlow, { Edge, useReactFlow, useNodesInitialized, applyNodeChanges, MiniMap, Controls, Node, Position, applyEdgeChanges } from 'reactflow'
 import Dagre from '@dagrejs/dagre'
 import { nodeTypes } from '../lib/nodeTypes'
 
@@ -54,7 +54,7 @@ export default function Flow({ nodes, edges }: FlowProps) {
         })
         setLayoutedNodes(nodes)
         setLayoutedEdges(edges)
-    }, [nodes, edges])
+    }, [nodes, edges, reactFlow])
 
     useEffect(() => {
         if (nodesInitialized) {
@@ -64,17 +64,21 @@ export default function Flow({ nodes, edges }: FlowProps) {
         }
     }, [nodesInitialized, reactFlow])
 
-    useEffect(() => {
-        reactFlow.fitView()
-    }, [layoutedNodes, layoutedEdges, reactFlow])
+    // useEffect(() => {
+    //     reactFlow.fitView()
+    // }, [layoutedNodes, layoutedEdges, reactFlow])
 
     const onNodesChange = useCallback((changes) => setLayoutedNodes((nds) => applyNodeChanges(changes, nds)), [])
+    const onEdgesChange = useCallback((changes) => setLayoutedEdges((eds) => applyEdgeChanges(changes, eds)), [setLayoutedEdges])
+
     return (
         <ReactFlow
             nodes={layoutedNodes}
             edges={layoutedEdges}
             onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
             nodeTypes={nodeTypes}
+            fitView
         >
             <MiniMap
                 zoomable

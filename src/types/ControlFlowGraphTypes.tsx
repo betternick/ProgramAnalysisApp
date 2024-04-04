@@ -7,6 +7,7 @@ export interface ResponseGraph {
 export type ResponseNode = {
     codeBlock: ResponseCodeBlock
     id: string
+    comments: string[]
 }
 
 export type ResponseEdge = {

@@ -20,6 +20,18 @@ import {
     STATEMENT,
     TRUE_BRANCH,
     WHILE_LOOP,
+    afterIfElseNode,
+    afterLoopNode,
+    entryNode,
+    exitNode,
+    falseBranchNode,
+    ifConditionNode,
+    ifElseNode,
+    loopBodyNode,
+    loopConditionNode,
+    loopNode,
+    statementNode,
+    trueBranchNode,
 } from '../lib/nodeTypes'
 
 const processResponseNodes = (cfg: ResponseGraph): Node[] => {
@@ -31,56 +43,77 @@ const processResponseEdges = (cfg: ResponseGraph): Edge[] => {
 }
 
 const createNode = (responseNode: ResponseNode): Node => {
+    const { data, type } = determineNodeTypeAndData(responseNode.codeBlock.code[0], responseNode.comments)
     return {
         id: responseNode.id,
         position: { x: 0, y: 0 }, // dagre will determine pos
-        data: { label: responseNode.codeBlock.code[0] },
-        type: determineNodeType(responseNode.codeBlock.code[0]),
+        data,
+        type,
     }
 }
 
 const determineEdgeHandle = (edge: Edge, nodeList: Node[]) => {
     const source = nodeList.find((n) => n.id === edge.source)
     const target = nodeList.find((n) => n.id === edge.target)
-    if (source?.type === NodeType.LOOP_BODY_NODE && target?.type === NodeType.LOOP_CONDITION_NODE) {
+    if (source?.data.label === LOOP_BODY && target?.data.label === LOOP_CONDITION) {
         edge.sourceHandle = 'c'
         edge.targetHandle = 'c'
-    } else if (source?.type === NodeType.LOOP_CONDITION_NODE && target?.type === NodeType.LOOP_BODY_NODE) {
+    } else if (source?.data.label === LOOP_CONDITION && target?.data.label === LOOP_BODY) {
         edge.sourceHandle = 'b'
         edge.targetHandle = 'a'
-    } else if (source?.type === NodeType.LOOP_CONDITION_NODE && target?.type === NodeType.AFTER_LOOP_NODE) {
+    } else if (source?.data.label === LOOP_CONDITION && target?.data.label === AFTER_LOOP) {
         edge.sourceHandle = 'b'
         edge.targetHandle = 'a'
+    } else if ((source?.data.label === TRUE_BRANCH || source?.data.label === FALSE_BRANCH) && target?.data.label !== AFTER_IF_ELSE) {
+        edge.sourceHandle = 'c'
+        edge.targetHandle = 'c'
     }
 }
 
-const determineNodeType = (code: string): string | undefined => {
+const determineNodeTypeAndData = (code: string, comments: string[]) => {
+    let type = NodeType.BASIC_NODE
+    let finalCode = code
+    let nodeData
     if (code === ENTRY) {
-        return NodeType.ENTRY_NODE
+        nodeData = entryNode
     } else if (code === EXIT) {
-        return NodeType.EXIT_NODE
-    } else if (code.startsWith(STATEMENT)) {
-        return NodeType.STATEMENT_NODE
-    } else if (code.startsWith(IF_ELSE)) {
-        return NodeType.IF_ELSE_NODE
-    } else if (code.startsWith(IF_CONDITION)) {
-        return NodeType.IF_CONDITION_NODE
+        nodeData = exitNode
     } else if (code === TRUE_BRANCH) {
-        return NodeType.TRUE_BRANCH_NODE
+        type = NodeType.BRANCH_NODE
+        nodeData = trueBranchNode
     } else if (code === FALSE_BRANCH) {
-        return NodeType.FALSE_BRANCH_NODE
+        type = NodeType.BRANCH_NODE
+        nodeData = falseBranchNode
     } else if (code === AFTER_IF_ELSE) {
-        return NodeType.AFTER_IF_ELSE_NODE
-    } else if (code.startsWith(FOR_LOOP) || code.startsWith(WHILE_LOOP)) {
-        return NodeType.LOOP_NODE
-    } else if (code.startsWith(LOOP_CONDITION)) {
-        return NodeType.LOOP_CONDITION_NODE
+        nodeData = afterIfElseNode
     } else if (code === LOOP_BODY) {
-        return NodeType.LOOP_BODY_NODE
+        nodeData = loopBodyNode
     } else if (code === AFTER_LOOP) {
-        return NodeType.AFTER_LOOP_NODE
+        nodeData = afterLoopNode
+    } else if (code.startsWith(IF_CONDITION)) {
+        type = NodeType.CONDITION_NODE
+        nodeData = ifConditionNode
+        finalCode = code.substring(IF_CONDITION.length)
+    } else if (code.startsWith(LOOP_CONDITION)) {
+        type = NodeType.CONDITION_NODE
+        nodeData = loopConditionNode
+        finalCode = code.substring(LOOP_CONDITION.length)
+    } else if (code.startsWith(FOR_LOOP) || code.startsWith(WHILE_LOOP)) {
+        type = NodeType.COLLAPSIBLE_NODE
+        nodeData = loopNode
+        nodeData.label = code.startsWith(FOR_LOOP) ? FOR_LOOP : WHILE_LOOP
+    } else if (code.startsWith(IF_ELSE)) {
+        type = NodeType.COLLAPSIBLE_NODE
+        nodeData = ifElseNode
+        finalCode = code.substring(IF_ELSE.length)
     } else {
-        return undefined
+        type = NodeType.STATEMENT_NODE
+        nodeData = statementNode
+        finalCode = code.startsWith(STATEMENT) ? code.substring(STATEMENT.length) : code
+    }
+    return {
+        data: { code: finalCode, comments, ...nodeData },
+        type,
     }
 }
 

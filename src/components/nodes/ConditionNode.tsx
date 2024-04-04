@@ -1,35 +1,33 @@
+import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
 import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
-import { Card, CardBody, Code, Flex, Heading } from '@chakra-ui/react'
 import { HandleInfo } from '../../types/MiscTypes'
-import Comments from '../Comments'
-import Comments2 from '../Comments2'
 
-export type StatementNodeProps = {
-    borderColor: string
+export type ConditionNodeProps = {
+    background: string
     label: string
     code: string
     handles: HandleInfo[]
     comments: string[]
 }
 
-export default function StatementNode({ data }: NodeProps<StatementNodeProps>) {
-    const { borderColor, label, code, handles, comments } = data
-
+export default function ConditionNode({ data }: NodeProps<ConditionNodeProps>) {
+    const { label, code, background, handles, comments } = data
     return (
         <Card
-            variant="outline"
-            borderColor={borderColor}
+            variant="solid"
+            background={background}
+            color="white"
         >
             <CardBody>
                 <Heading size="sm">{label}</Heading>
                 <Code
                     display="block"
-                    variant="subtle"
+                    variant="solid"
                     whiteSpace="pre"
+                    colorScheme="whiteAlpha"
                     children={code}
                 />
-                {comments.length > 0 && <Comments comments={comments} />}
             </CardBody>
             {handles.map((h, key) => (
                 <Handle

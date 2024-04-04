@@ -1,11 +1,9 @@
-import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
-import { Card, CardBody, Code, Flex, Heading } from '@chakra-ui/react'
 import { HandleInfo } from '../../types/MiscTypes'
-import Comments from '../Comments'
-import Comments2 from '../Comments2'
+import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
+import React from 'react'
 
-export type StatementNodeProps = {
+export type CollapsibleNodeProps = {
     borderColor: string
     label: string
     code: string
@@ -13,9 +11,9 @@ export type StatementNodeProps = {
     comments: string[]
 }
 
-export default function StatementNode({ data }: NodeProps<StatementNodeProps>) {
+export default function CollapsibleNode({ data }: NodeProps<CollapsibleNodeProps>) {
     const { borderColor, label, code, handles, comments } = data
-
+    const codeLines = code.split('\n')
     return (
         <Card
             variant="outline"
@@ -23,13 +21,15 @@ export default function StatementNode({ data }: NodeProps<StatementNodeProps>) {
         >
             <CardBody>
                 <Heading size="sm">{label}</Heading>
-                <Code
-                    display="block"
-                    variant="subtle"
-                    whiteSpace="pre"
-                    children={code}
-                />
-                {comments.length > 0 && <Comments comments={comments} />}
+                {codeLines.map((line, key) => (
+                    <Code
+                        display="block"
+                        variant="subtle"
+                        whiteSpace="pre"
+                        children={line}
+                        key={key}
+                    />
+                ))}
             </CardBody>
             {handles.map((h, key) => (
                 <Handle

@@ -25,7 +25,7 @@ function App() {
                 flexDirection="column"
                 boxShadow="rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px"
             >
-                <Uploader handleResponse={setGraph} />t
+                <Uploader handleResponse={setGraph} />
             </Flex>
             <Flex
                 width="70vw"
