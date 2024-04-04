@@ -18,7 +18,7 @@ public class Application {
     private static Analyser analyser;
 
     public static void main(String[] args) {
-        analyzeNewProject("examples/Correct.java");
+        // analyzeNewProject("examples/ShouldPass.java");
 
         System.out.println("Application, Start!");
         SpringApplication.run(Application.class, args);
@@ -30,7 +30,7 @@ public class Application {
         cfg.buildCFGs(projectPath);
         cfg.serializeMap("cfgMap.ser");
 
-        executor.execute(projectPath, "examples.Correct", "cfgMap.ser");
+        executor.execute(projectPath, "examples.ShouldPass", "cfgMap.ser", Log.getLogPath());
 
         String logPath = Log.getLogPath();
         analyser = new Analyser("cfgMap.ser");

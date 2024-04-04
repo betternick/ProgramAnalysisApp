@@ -6,7 +6,9 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtType;
 import spoon.reflect.declaration.CtElement;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -345,5 +347,15 @@ public class CFGBuilder {
             currentNode = addStatementAndCreateNode(block, currentNode, cfg, exitNode);
         }
         return currentNode; // Return the last node in the block
+    }
+
+    public List<Integer> getAllNodeIds() {
+        List<Integer> nodeIds = new ArrayList<>();
+        for (CFG cfg : globalCFGMap.values()) {
+            for (Node node : cfg.getNodes()) {
+                nodeIds.add(node.getId());
+            }
+        }
+        return nodeIds;
     }
 }

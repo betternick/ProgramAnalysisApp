@@ -1,5 +1,7 @@
 package org.servlet;
 
+import org.analysis.Analyser;
+import org.analysis.ExecTreeStats;
 import org.graph.CFGBuilder;
 import org.graph.CFGConverter;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.profile.Executor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -48,6 +52,7 @@ public class AnalysisServiceTests {
         builder.globalCFGMap = new HashMap<>();
 
         String response = service.uploadFile(multipartFile);
+        converter.close();
         assertEquals("success", response);
 
     }
@@ -66,4 +71,56 @@ public class AnalysisServiceTests {
 
     }
 
+    @Test
+    public void testExecute_Success() {
+        Mockito.doNothing().when(builder).serializeMap(Mockito.anyString());
+        Mockito.doReturn(List.of(1)).when(builder).getAllNodeIds();
+        Executor mockexe = Mockito.mock(Executor.class);
+        MockedStatic<Executor> executor = Mockito.mockStatic(Executor.class);
+        executor.when(Executor::getInstance).thenReturn(mockexe);
+
+        ExecTreeStats stats = new ExecTreeStats(1, 1.0, 2.0, 3.0);
+
+        try (MockedConstruction<Analyser> mockPaymentService = Mockito.mockConstruction(Analyser.class,
+                (mock, context) -> {
+                    Mockito.doNothing().when(mock).analyze(Mockito.anyString());
+                    Mockito.doReturn(stats).when(mock).getStat(Mockito.anyInt());
+                })) {
+
+            service.filePath = "examples/Simple.java";
+            var map = service.executeFile();
+            executor.close();
+            assertEquals(1, map.size());
+            assertEquals(stats, map.get(1));
+        }
+
+    }
+
+    @Test
+    public void testExecute_Fail() {
+        Mockito.doNothing().when(builder).serializeMap(Mockito.anyString());
+        Mockito.doReturn(List.of(1)).when(builder).getAllNodeIds();
+        Executor mockexe = Mockito.mock(Executor.class);
+        MockedStatic<Executor> executor = Mockito.mockStatic(Executor.class);
+        executor.when(() -> Executor.getInstance()).thenReturn(mockexe);
+        Mockito.doThrow(new RuntimeException()).when(mockexe).execute(Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString(), Mockito.anyString());
+
+        try {
+            service.filePath = "examples/Simple.java";
+            service.executeFile();
+            executor.close();
+            fail();
+        } catch (RuntimeException e) {
+            // expected
+            executor.close();
+        }
+
+    }
+
+    @Test
+    public void testGetClassName_Success() {
+        String className = service.getClassName("examples/Simple.java");
+        assertEquals("src.main.resources.Simple", className);
+    }
 }

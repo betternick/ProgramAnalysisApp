@@ -69,7 +69,8 @@ public class Executor {
         }
     }
 
-    public void execute(String filePath, String fullClassName, String graphPath, String logPath) {
+    public void execute(String filePath, String fullClassName, String graphPath, String logPath)
+            throws RuntimeException {
         // Delete the old log file
         try {
             Files.deleteIfExists(Paths.get(logPath));
@@ -90,7 +91,7 @@ public class Executor {
 
             if (!compilationResult) {
                 System.out.println("Compilation Failed");
-                return;
+                throw new RuntimeException();
             }
             System.out.println("Compilation is successful");
             fileManager.close();

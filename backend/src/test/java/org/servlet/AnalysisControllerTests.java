@@ -1,5 +1,6 @@
 package org.servlet;
 
+import org.analysis.ExecTreeStats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -18,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -73,5 +76,23 @@ public class AnalysisControllerTests {
         Mockito.when(service.uploadFile(Mockito.any())).thenThrow(new IOException());
         mockMvc.perform(multipart("/upload"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testExecute_Success() throws Exception {
+        Mockito.when(service.executeFile()).thenReturn(new HashMap<Integer, ExecTreeStats>());
+
+        mockMvc.perform(post("/execute"))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testExecute_Fail() throws Exception {
+        Mockito.when(service.executeFile()).thenThrow(new RuntimeException());
+
+        mockMvc.perform(post("/execute"))
+                .andExpect(status().isBadRequest());
+
     }
 }
