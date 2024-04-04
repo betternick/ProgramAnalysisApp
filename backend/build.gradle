@@ -40,6 +40,9 @@ dependencies {
     // Soot
     implementation 'org.soot-oss:soot:4.3.0'
 
+    // JSON serialization and deserialization.
+    implementation 'org.json:json:20240303'
+
     // Use Log4j for logging.
     implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
     implementation 'org.apache.logging.log4j:log4j-api:2.23.1'

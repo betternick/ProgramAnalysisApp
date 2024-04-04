@@ -4,6 +4,9 @@ import org.graph.*;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+import org.json.JSONArray;
+
 public class ExecTree {
     // What codeNode this one represents
     private Node codeNode;
@@ -75,5 +78,28 @@ public class ExecTree {
 
     public List<ExecTree> getChildren() {
         return children;
+    }
+
+    // Convert this ExecTree to a JSON object
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        if (this.getCodeNode() != null) {
+            json.put("id", this.getCodeNode().getId());
+        }
+        json.put("startTimeInNano", this.startTimeInNano);
+        json.put("executionTimeInNano", this.executionTimeInNano);
+        json.put("memoryUsage", this.memoryUsage);
+        json.put("cpuUsage", this.cpuUsage);
+
+        // If this node has children, add them as a JSON array
+        if (!isLeaf()) {
+            JSONArray childrenJSON = new JSONArray();
+            for (ExecTree child : getChildren()) {
+                childrenJSON.put(child.toJSON()); // Recursive call
+            }
+            json.put("children", childrenJSON);
+        }
+
+        return json;
     }
 }
