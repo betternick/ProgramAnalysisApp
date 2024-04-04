@@ -3,7 +3,6 @@ package org.servlet;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
 
-import org.parser.*;
 import org.graph.*;
 import org.profile.*;
 import org.analysis.*;
@@ -19,7 +18,7 @@ public class Application {
     private static Analyser analyser;
 
     public static void main(String[] args) {
-        analyzeNewProject("examples/Simple.java");
+        analyzeNewProject("examples/Correct.java");
 
         System.out.println("Application, Start!");
         SpringApplication.run(Application.class, args);
@@ -31,7 +30,7 @@ public class Application {
         cfg.buildCFGs(projectPath);
         cfg.serializeMap("cfgMap.ser");
 
-        executor.execute(projectPath, "examples.Simple", "cfgMap.ser");
+        executor.execute(projectPath, "examples.Correct", "cfgMap.ser");
 
         String logPath = Log.getLogPath();
         analyser = new Analyser("cfgMap.ser");

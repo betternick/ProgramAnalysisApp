@@ -150,6 +150,7 @@ public class ProfilingAgent {
                 }
             }
         });
+
     }
 
     static class ClassAdapter extends ClassVisitor {
@@ -213,7 +214,7 @@ public class ProfilingAgent {
             Optional<Integer> id = getIdForLine(line);
 
             if (id.isPresent()) {
-                injectAction(line);
+                injectAction(id.get());
             }
         }
 
