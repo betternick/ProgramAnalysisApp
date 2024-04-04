@@ -18,7 +18,7 @@ public class Application {
     private static Analyser analyser;
 
     public static void main(String[] args) {
-//        analyzeNewProject("examples/ShouldPass.java");
+        // analyzeNewProject("examples/ShouldPass.java");
 
         System.out.println("Application, Start!");
         SpringApplication.run(Application.class, args);

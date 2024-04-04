@@ -66,7 +66,6 @@ public class AnalysisService {
         return nodeStats;
     }
 
-
     // This method written by ChatGPT 3.5 with slight edits
     public String getClassName(String filePath) {
         String packageName = null;

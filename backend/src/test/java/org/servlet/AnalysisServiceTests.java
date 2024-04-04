@@ -52,6 +52,7 @@ public class AnalysisServiceTests {
         builder.globalCFGMap = new HashMap<>();
 
         String response = service.uploadFile(multipartFile);
+        converter.close();
         assertEquals("success", response);
 
     }
@@ -76,21 +77,22 @@ public class AnalysisServiceTests {
         Mockito.doReturn(List.of(1)).when(builder).getAllNodeIds();
         Executor mockexe = Mockito.mock(Executor.class);
         MockedStatic<Executor> executor = Mockito.mockStatic(Executor.class);
-        executor.when(() -> Executor.getInstance()).thenReturn(mockexe);
+        executor.when(Executor::getInstance).thenReturn(mockexe);
 
         ExecTreeStats stats = new ExecTreeStats(1, 1.0, 2.0, 3.0);
 
-        try(MockedConstruction<Analyser> mockPaymentService = Mockito.mockConstruction(Analyser.class,(mock,context)-> {
-            Mockito.doNothing().when(mock).analyze(Mockito.anyString());
-            Mockito.doReturn(stats).when(mock).getStat(Mockito.anyInt());
-        })) {
+        try (MockedConstruction<Analyser> mockPaymentService = Mockito.mockConstruction(Analyser.class,
+                (mock, context) -> {
+                    Mockito.doNothing().when(mock).analyze(Mockito.anyString());
+                    Mockito.doReturn(stats).when(mock).getStat(Mockito.anyInt());
+                })) {
 
             service.filePath = "examples/Simple.java";
             var map = service.executeFile();
+            executor.close();
             assertEquals(1, map.size());
             assertEquals(stats, map.get(1));
         }
-
 
     }
 
@@ -101,16 +103,18 @@ public class AnalysisServiceTests {
         Executor mockexe = Mockito.mock(Executor.class);
         MockedStatic<Executor> executor = Mockito.mockStatic(Executor.class);
         executor.when(() -> Executor.getInstance()).thenReturn(mockexe);
-        Mockito.doThrow(new RuntimeException()).when(mockexe).execute(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString());
+        Mockito.doThrow(new RuntimeException()).when(mockexe).execute(Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString(), Mockito.anyString());
 
         try {
             service.filePath = "examples/Simple.java";
             service.executeFile();
+            executor.close();
             fail();
         } catch (RuntimeException e) {
             // expected
+            executor.close();
         }
-
 
     }
 
