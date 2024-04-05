@@ -1,4 +1,4 @@
-import { useDisclosure, Alert, AlertIcon, AlertTitle, Flex, ListItem, IconButton, UnorderedList, Grid } from '@chakra-ui/react'
+import { useDisclosure, Alert, AlertIcon, AlertTitle, Flex, ListItem, IconButton, UnorderedList } from '@chakra-ui/react'
 import React from 'react'
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5'
 
@@ -38,7 +38,7 @@ export default function Comments({ comments }) {
                         </Flex>
                         {isVisible && (
                             <UnorderedList flexWrap="wrap">
-                                {comments.map((c, key) => (
+                                {comments.map((c: string, key: number) => (
                                     <ListItem
                                         key={key}
                                         wordBreak="break-all"

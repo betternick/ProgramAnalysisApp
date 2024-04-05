@@ -1,25 +1,16 @@
 import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
-import { Card, CardBody, Code, Flex, Heading } from '@chakra-ui/react'
-import { HandleInfo } from '../../types/MiscTypes'
+import { Card, CardBody, Code, Heading } from '@chakra-ui/react'
+import { CustomNodeWithCodeProps } from '../../types/MiscTypes'
 import Comments from '../Comments'
-import Comments2 from '../Comments2'
 
-export type StatementNodeProps = {
-    borderColor: string
-    label: string
-    code: string
-    handles: HandleInfo[]
-    comments: string[]
-}
-
-export default function StatementNode({ data }: NodeProps<StatementNodeProps>) {
-    const { borderColor, label, code, handles, comments } = data
+export default function StatementNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
+    const { color, label, code, handles, comments } = data
 
     return (
         <Card
             variant="outline"
-            borderColor={borderColor}
+            borderColor={color}
         >
             <CardBody>
                 <Heading size="sm">{label}</Heading>

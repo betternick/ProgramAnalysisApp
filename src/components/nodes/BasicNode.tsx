@@ -1,20 +1,13 @@
 import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
 import { Card, CardHeader, Heading } from '@chakra-ui/react'
-import { HandleInfo } from '../../types/MiscTypes'
+import { CustomNodeProps } from '../../types/MiscTypes'
 
-export type BasicNodeProps = {
-    background: string
-    label: string
-    handles: HandleInfo[]
-    comments: string[]
-}
-
-export default function BasicNode({ data }: NodeProps<BasicNodeProps>) {
-    const { background, label, handles, comments } = data
+export default function BasicNode({ data }: NodeProps<CustomNodeProps>) {
+    const { color, label, handles } = data
     return (
         <Card
-            background={background}
+            background={color}
             color="white"
             variant="filled"
         >

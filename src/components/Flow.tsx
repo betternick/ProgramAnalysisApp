@@ -54,6 +54,7 @@ export default function Flow({ nodes, edges }: FlowProps) {
         })
         setLayoutedNodes(nodes)
         setLayoutedEdges(edges)
+        reactFlow.fitView()
     }, [nodes, edges, reactFlow])
 
     useEffect(() => {
@@ -61,6 +62,7 @@ export default function Flow({ nodes, edges }: FlowProps) {
             const { nodes: newLayoutedNodes, edges: newLayoutedEdges } = getLayoutedElements(reactFlow.getNodes(), reactFlow.getEdges())
             setLayoutedNodes(newLayoutedNodes)
             setLayoutedEdges(newLayoutedEdges)
+            reactFlow.fitView()
         }
     }, [nodesInitialized, reactFlow])
 

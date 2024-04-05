@@ -20,19 +20,19 @@ export const LOOP_BODY = 'Loop body'
 export const AFTER_LOOP = 'After loop'
 
 export const entryNode = {
-    background: '#264653',
+    color: '#264653',
     label: ENTRY,
     handles: [{ type: 'source', position: Position.Bottom, id: 'a' }],
 }
 
 export const exitNode = {
-    background: '#9b2226',
+    color: '#9b2226',
     label: EXIT,
     handles: [{ type: 'target', position: Position.Top, id: 'a' }],
 }
 
 export const trueBranchNode = {
-    background: '#00bf7d',
+    color: '#00bf7d',
     label: TRUE_BRANCH,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -42,7 +42,7 @@ export const trueBranchNode = {
 }
 
 export const falseBranchNode = {
-    background: '#bf0603',
+    color: '#bf0603',
     label: FALSE_BRANCH,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -52,7 +52,7 @@ export const falseBranchNode = {
 }
 
 export const afterIfElseNode = {
-    background: '#2a9d8f',
+    color: '#2a9d8f',
     label: AFTER_IF_ELSE,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -61,7 +61,7 @@ export const afterIfElseNode = {
 }
 
 export const loopBodyNode = {
-    background: '#bb3e03',
+    color: '#bb3e03',
     label: LOOP_BODY,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -71,7 +71,7 @@ export const loopBodyNode = {
 }
 
 export const afterLoopNode = {
-    background: '#e76f51',
+    color: '#e76f51',
     label: AFTER_LOOP,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -80,7 +80,7 @@ export const afterLoopNode = {
 }
 
 export const ifConditionNode = {
-    background: '#2a9d8f',
+    color: '#2a9d8f',
     label: IF_CONDITION,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -89,7 +89,7 @@ export const ifConditionNode = {
 }
 
 export const loopConditionNode = {
-    background: '#e76f51',
+    color: '#e76f51',
     label: LOOP_CONDITION,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -99,7 +99,7 @@ export const loopConditionNode = {
 }
 
 export const loopNode = {
-    borderColor: '#f4a261',
+    color: '#f4a261',
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
         { type: 'source', position: Position.Bottom, id: 'b' },
@@ -107,7 +107,7 @@ export const loopNode = {
 }
 
 export const ifElseNode = {
-    borderColor: '#2a9d8f',
+    color: '#2a9d8f',
     label: IF_ELSE,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },
@@ -116,7 +116,7 @@ export const ifElseNode = {
 }
 
 export const statementNode = {
-    borderColor: '#264653',
+    color: '#264653',
     label: STATEMENT,
     handles: [
         { type: 'target', position: Position.Top, id: 'a' },

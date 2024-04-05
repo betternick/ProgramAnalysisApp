@@ -1,8 +1,8 @@
+import { Flex, Box, Icon, Code, Tooltip, CloseButton, Button, Spinner, Alert, AlertIcon, AlertDescription, Text, Heading } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { PiNumberCircleOneFill } from 'react-icons/pi'
-import { Tooltip, Button, Box, Flex, Code, CloseButton, Spinner, Heading, Text, Alert, AlertIcon, AlertDescription, Icon, AlertTitle } from '@chakra-ui/react'
-import Dropzone from './Dropzone'
 import { FileRejection } from 'react-dropzone'
+import { PiNumberCircleOneFill } from 'react-icons/pi'
+import Dropzone from './Dropzone'
 
 declare module 'react' {
     interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -14,7 +14,7 @@ type UploaderProps = {
     handleResponse: (response: JSON) => void
 }
 
-const Uploader = ({ handleResponse }: UploaderProps) => {
+export default function Uploader({ handleResponse }: UploaderProps) {
     const [file, setFile] = useState<File | null>(null)
     const [isUploading, setIsUploading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
@@ -28,7 +28,7 @@ const Uploader = ({ handleResponse }: UploaderProps) => {
             case 'payload-too-large':
                 return 'Max file size exceeded. Please upload a smaller .java file'
             case 'upload-error':
-                return "An error occurred while uploading your file. Please try again'"
+                return 'An error occurred while uploading your file. Please try again'
             default:
                 return 'An unknown error occurred. Please try again'
         }
@@ -69,6 +69,7 @@ const Uploader = ({ handleResponse }: UploaderProps) => {
                     return res.json()
                 } else {
                     setError('upload-error')
+                    setIsUploading(false)
                 }
             })
             .catch((err) => {
@@ -89,16 +90,20 @@ const Uploader = ({ handleResponse }: UploaderProps) => {
         <Flex
             direction="column"
             gap={2}
-            m={3}
+            // m={3}
+            p={3}
+            // background="#f5f5f5"
+            borderRadius="10px"
+            border="1px solid #e8e8e8"
         >
             <Flex gap={1}>
-                {/* <Icon
+                <Icon
                     as={PiNumberCircleOneFill}
                     boxSize={6}
-                /> */}
-                <Heading size="md">Control Flow Graph Generator</Heading>
+                />
+                <Heading size="md">Upload your file</Heading>
             </Flex>
-            <Text>
+            <Text fontSize="sm">
                 Please upload your program as a single <Code>.java</Code> file
             </Text>
             <Box>
@@ -161,12 +166,9 @@ const Uploader = ({ handleResponse }: UploaderProps) => {
             {error && (
                 <Alert status="error">
                     <AlertIcon />
-                    <AlertTitle>Error</AlertTitle>
                     <AlertDescription>{errorMessage()}</AlertDescription>
                 </Alert>
             )}
         </Flex>
     )
 }
-
-export default Uploader

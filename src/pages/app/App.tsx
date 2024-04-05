@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Uploader from '../../components/Uploader'
+import Sidebar from '../../components/Sidebar'
 import { Flex } from '@chakra-ui/react'
 import ControlFlowGraph from '../../components/ControlFlowGraph'
 import { ResponseGraph } from '../../types/ControlFlowGraphTypes'
@@ -25,7 +25,7 @@ function App() {
                 flexDirection="column"
                 boxShadow="rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px"
             >
-                <Uploader handleResponse={setGraph} />
+                <Sidebar handleResponse={setGraph} />
             </Flex>
             <Flex
                 width="70vw"

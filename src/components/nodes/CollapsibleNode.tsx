@@ -1,23 +1,15 @@
 import { Handle, NodeProps } from 'reactflow'
-import { HandleInfo } from '../../types/MiscTypes'
+import { CustomNodeWithCodeProps } from '../../types/MiscTypes'
 import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
 import React from 'react'
 
-export type CollapsibleNodeProps = {
-    borderColor: string
-    label: string
-    code: string
-    handles: HandleInfo[]
-    comments: string[]
-}
-
-export default function CollapsibleNode({ data }: NodeProps<CollapsibleNodeProps>) {
-    const { borderColor, label, code, handles, comments } = data
+export default function CollapsibleNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
+    const { color, label, code, handles } = data
     const codeLines = code.split('\n')
     return (
         <Card
             variant="outline"
-            borderColor={borderColor}
+            borderColor={color}
         >
             <CardBody>
                 <Heading size="sm">{label}</Heading>

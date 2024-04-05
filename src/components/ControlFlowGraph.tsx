@@ -43,7 +43,7 @@ const processResponseEdges = (cfg: ResponseGraph): Edge[] => {
 }
 
 const createNode = (responseNode: ResponseNode): Node => {
-    const { data, type } = determineNodeTypeAndData(responseNode.codeBlock.code[0], responseNode.comments)
+    const { data, type } = determineNodeTypes(responseNode.codeBlock.code[0], responseNode.comments)
     return {
         id: responseNode.id,
         position: { x: 0, y: 0 }, // dagre will determine pos
@@ -52,25 +52,26 @@ const createNode = (responseNode: ResponseNode): Node => {
     }
 }
 
-const determineEdgeHandle = (edge: Edge, nodeList: Node[]) => {
+const determineEdgeHandles = (edge: Edge, nodeList: Node[]) => {
     const source = nodeList.find((n) => n.id === edge.source)
     const target = nodeList.find((n) => n.id === edge.target)
-    if (source?.data.label === LOOP_BODY && target?.data.label === LOOP_CONDITION) {
+    if (!source || !target) return
+    if (source.data.label === LOOP_BODY && target.data.label === LOOP_CONDITION) {
         edge.sourceHandle = 'c'
         edge.targetHandle = 'c'
-    } else if (source?.data.label === LOOP_CONDITION && target?.data.label === LOOP_BODY) {
+    } else if (source.data.label === LOOP_CONDITION && target.data.label === LOOP_BODY) {
         edge.sourceHandle = 'b'
         edge.targetHandle = 'a'
-    } else if (source?.data.label === LOOP_CONDITION && target?.data.label === AFTER_LOOP) {
+    } else if (source.data.label === LOOP_CONDITION && target.data.label === AFTER_LOOP) {
         edge.sourceHandle = 'b'
         edge.targetHandle = 'a'
-    } else if ((source?.data.label === TRUE_BRANCH || source?.data.label === FALSE_BRANCH) && target?.data.label !== AFTER_IF_ELSE) {
+    } else if ((source.data.label === TRUE_BRANCH || source.data.label === FALSE_BRANCH) && target.data.label !== AFTER_IF_ELSE) {
         edge.sourceHandle = 'c'
         edge.targetHandle = 'c'
     }
 }
 
-const determineNodeTypeAndData = (code: string, comments: string[]) => {
+const determineNodeTypes = (code: string, comments: string[]) => {
     let type = NodeType.BASIC_NODE
     let finalCode = code
     let nodeData
@@ -145,7 +146,7 @@ export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
                 newEdgeList = [...newEdgeList, ...processResponseEdges(cfg)]
             })
             newEdgeList.forEach((edge) => {
-                determineEdgeHandle(edge, newNodeList)
+                determineEdgeHandles(edge, newNodeList)
             })
             return (
                 <Flow

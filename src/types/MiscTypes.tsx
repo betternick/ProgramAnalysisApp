@@ -5,3 +5,19 @@ export type HandleInfo = {
     type: HandleType
     id: string
 }
+
+export type CustomNodeProps = {
+    color: string
+    label: string
+    handles: HandleInfo[]
+    comments: string[]
+    code?: string
+}
+
+export type CustomNodeWithCodeProps = {
+    color: string
+    label: string
+    handles: HandleInfo[]
+    comments: string[]
+    code: string
+}

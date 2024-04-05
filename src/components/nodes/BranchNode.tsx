@@ -1,13 +1,13 @@
 import { Card, CardHeader, Heading } from '@chakra-ui/react'
 import React from 'react'
 import { NodeProps, Handle } from 'reactflow'
-import { BasicNodeProps } from './BasicNode'
+import { CustomNodeProps } from '../../types/MiscTypes'
 
-export default function BranchNode({ data }: NodeProps<BasicNodeProps>) {
-    const { background, label, handles, comments } = data
+export default function BranchNode({ data }: NodeProps<CustomNodeProps>) {
+    const { color, label, handles } = data
     return (
         <Card
-            background={background}
+            background={color}
             color="white"
             variant="filled"
         >
