@@ -2,6 +2,7 @@ package org.servlet;
 
 import org.analysis.Analyser;
 import org.analysis.ExecTreeStats;
+import org.exception.CompilationException;
 import org.graph.CFGBuilder;
 import org.graph.CFGConverter;
 import org.profile.Executor;
@@ -41,7 +42,7 @@ public class AnalysisService {
         return CFGConverter.convertAllCFGs(CFGBuilder.globalCFGMap);
     }
 
-    public Map<Integer, ExecTreeStats> executeFile() throws RuntimeException {
+    public Map<Integer, ExecTreeStats> executeFile() throws CompilationException {
         String graphPath = "cfgMap.ser";
         String className = getClassName(filePath);
         String logPath = Log.getLogPath();
@@ -53,6 +54,7 @@ public class AnalysisService {
         System.out.println(filePath);
         System.out.println(className);
         System.out.println(graphPath);
+
         executor.execute(filePath, className, graphPath, logPath);
         Analyser analyser = new Analyser(graphPath);
         analyser.analyze(logPath);

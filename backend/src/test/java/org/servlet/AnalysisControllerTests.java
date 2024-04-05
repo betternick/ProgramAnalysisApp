@@ -1,6 +1,7 @@
 package org.servlet;
 
 import org.analysis.ExecTreeStats;
+import org.exception.CompilationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -88,11 +89,20 @@ public class AnalysisControllerTests {
     }
 
     @Test
-    public void testExecute_Fail() throws Exception {
-        Mockito.when(service.executeFile()).thenThrow(new RuntimeException());
+    public void testExecute_CompilationFail() throws Exception {
+        Mockito.when(service.executeFile()).thenThrow(new CompilationException());
 
         mockMvc.perform(post("/execute"))
                 .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void testExecute_RuntimeFail() throws Exception {
+        Mockito.when(service.executeFile()).thenThrow(new RuntimeException());
+
+        mockMvc.perform(post("/execute"))
+                .andExpect(status().isIAmATeapot());
 
     }
 }

@@ -1,6 +1,7 @@
 package org.servlet;
 
 import org.analysis.ExecTreeStats;
+import org.exception.CompilationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,10 @@ public class AnalysisController {
         try {
             Map<Integer, ExecTreeStats> result = service.executeFile();
             return ResponseEntity.ok(result);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+        } catch (CompilationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(null);
         }
     }
 }

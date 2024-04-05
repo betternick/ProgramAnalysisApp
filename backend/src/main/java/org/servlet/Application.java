@@ -1,5 +1,6 @@
 package org.servlet;
 
+import org.exception.CompilationException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
 
@@ -25,7 +26,7 @@ public class Application {
         System.out.println("End of Application !");
     }
 
-    public static void analyzeNewProject(String projectPath) {
+    public static void analyzeNewProject(String projectPath) throws CompilationException {
         cfg = new CFGBuilder();
         cfg.buildCFGs(projectPath);
         cfg.serializeMap("cfgMap.ser");
