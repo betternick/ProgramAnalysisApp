@@ -17,6 +17,8 @@ public class CFGConverter {
             Map<String, Object> jsonNode = new HashMap<>();
             jsonNode.put("id", String.valueOf(node.id));
             jsonNode.put("codeBlock", node.codeBlock);
+            // This adds comments
+            jsonNode.put("comments", node.comments);
             nodes.add(jsonNode);
 
             for (Node successor : node.next) {
