@@ -103,7 +103,6 @@ public class Simple {
         int why = 6;
     }
 
-
     int sampleForLoopProgram(int a) {
         int b = a;
         for (int count = 0; count < 10; count++) {
@@ -114,7 +113,6 @@ public class Simple {
         return b;
         String what = "this shouldnt be reached";
     }
-
 
     int sampleWhileLoopWithBreakInsideNestedIFProgram(int a) {
         int b = a;
@@ -135,7 +133,6 @@ public class Simple {
         int impoissible = 45;
     }
 
-
     int Ifstatementafterbreak(int a) {
         int b = a;
         while (b > 10) {
@@ -149,14 +146,13 @@ public class Simple {
         return a;
     }
 
-
     int returnInOuterLoop(int a) {
         int b = a;
         while (b > 10) {
             b--;
             while (1 > 0) {
                 int why = 9;
-                //   return;
+                // return;
                 int y = 999;
             }
             b++;
@@ -177,7 +173,7 @@ public class Simple {
                 int y = 999;
             }
             b++;
-            //   return;
+            // return;
         }
         System.out.println("Yay");
         return a;
@@ -194,10 +190,9 @@ public class Simple {
         return a;
     }
 
-
     int returnInBothBranches(int a) {
         int b = a;
-        if (1>6) {
+        if (1 > 6) {
             int h = 90;
             return;
         } else {
@@ -211,7 +206,7 @@ public class Simple {
 
     int returnInIfElseBranch(int a) {
         int b = a;
-        if (1>6) {
+        if (1 > 6) {
             int h = 90;
         } else {
             return;
@@ -221,17 +216,11 @@ public class Simple {
         return a;
     }
 
-
-
-
     public static void aSimpleTest(String[] var0) {
         byte var1 = 5;
         byte var2 = 10;
         System.out.println(var3);
     }
-
-
-
 
     int AssigmentWithoutDeclaration(int a) {
         int b = 10;
@@ -270,7 +259,7 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-//////////////// TESTS NOT ADDED FOR THE BELOW //////////////////////
+    //////////////// TESTS NOT ADDED FOR THE BELOW //////////////////////
 
     public static int calculateSum(int var0, int var1) {
         int g = 10;
@@ -291,7 +280,7 @@ public class Simple {
         return a;
     }
 
-        public static void main2(String[] var0) {
+    public static void main2(String[] var0) {
         System.out.println("Hello, World!");
         byte var1 = 5;
         byte var2 = 10;
@@ -305,10 +294,9 @@ public class Simple {
         int y = 10;
     }
 
-
-        int returnInIfThenBranch(int a) {
+    int returnInIfThenBranch(int a) {
         int b = a;
-        if (1>6) {
+        if (1 > 6) {
             int h = 90;
             return;
         } else {
@@ -317,7 +305,6 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-
 
     int Loopstatementafterbreak(int a) {
         int b = a;
@@ -347,7 +334,6 @@ public class Simple {
         return a;
     }
 
-
     int sampleWhileLoopProgram(int a) {
         int b = a;
         while (b > 10) {
@@ -367,7 +353,7 @@ public class Simple {
         return a;
     }
 
-        int sampleDuplicateDeclarationWithinSubScope(int a) {
+    int sampleDuplicateDeclarationWithinSubScope(int a) {
         int b = a;
         while (b > 10) {
             b--;
@@ -380,18 +366,17 @@ public class Simple {
         return a;
     }
 
-int otherStatementafterbreak(int a) {
-    int b = a;
-    while (b > 10) {
-        b--;
-        break;
-        int yyy = 34;
-        if (1 > 0) {
+    int otherStatementafterbreak(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            break;
+            int yyy = 34;
+            if (1 > 0) {
+            }
         }
+        System.out.println("Yay");
+        return a;
     }
-    System.out.println("Yay");
-    return a;
-}
-
 
 }

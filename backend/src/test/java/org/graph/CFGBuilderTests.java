@@ -24,7 +24,6 @@ class CFGBuilderTest {
                 "CFG should contain 'calculateSum()'");
     }
 
-
     @Test
     void testReturnInBothBranchesNodeAndEdgeCount() {
         builder.buildCFGs(TEST_FILE_PATH);
@@ -95,7 +94,6 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
     void sampleDeclarationWithNoUse() {
         builder.buildCFGs(TEST_FILE_PATH);
@@ -109,8 +107,6 @@ class CFGBuilderTest {
         int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
-
-
 
     @Test
     void simplewhileReturn() {
@@ -126,9 +122,8 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
-    void  returnInInnerLoop() {
+    void returnInInnerLoop() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("returnInInnerLoop(int)");
         builder.printCFG("returnInInnerLoop(int)");
@@ -141,9 +136,8 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
-    void  returnInOuterLoop() {
+    void returnInOuterLoop() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("returnInOuterLoop(int)");
         builder.printCFG("returnInOuterLoop(int)");
@@ -156,9 +150,8 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
-    void  Ifstatementafterbreak() {
+    void Ifstatementafterbreak() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("Ifstatementafterbreak(int)");
         builder.printCFG("Ifstatementafterbreak(int)");
@@ -171,10 +164,8 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
-
     @Test
-    void  sampleForLoopProgram() {
+    void sampleForLoopProgram() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("sampleForLoopProgram(int)");
         builder.printCFG("sampleForLoopProgram(int)");
@@ -187,9 +178,8 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
-    void  sampleIfProgram() {
+    void sampleIfProgram() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("sampleIfProgram(int)");
         builder.printCFG("sampleIfProgram(int)");
@@ -202,9 +192,8 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
-    void  sampleForLoopInsideIF() {
+    void sampleForLoopInsideIF() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("sampleForLoopInsideIF(int,int)");
         builder.printCFG("sampleForLoopInsideIF(int,int)");
@@ -217,9 +206,8 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
-    void  sampleForLoop() {
+    void sampleForLoop() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("sampleForLoop(int,int)");
         builder.printCFG("sampleForLoop(int,int)");
@@ -233,7 +221,7 @@ class CFGBuilderTest {
     }
 
     @Test
-    void  main() {
+    void main() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("main(java.lang.String[])");
         builder.printCFG("main(java.lang.String[])");
@@ -247,7 +235,7 @@ class CFGBuilderTest {
     }
 
     @Test
-    void  sampleWhileLoopWithBreakInsideNestedIFProgram() {
+    void sampleWhileLoopWithBreakInsideNestedIFProgram() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("sampleWhileLoopWithBreakInsideNestedIFProgram(int)");
         builder.printCFG("sampleWhileLoopWithBreakInsideNestedIFProgram(int)");
@@ -261,7 +249,7 @@ class CFGBuilderTest {
     }
 
     @Test
-    void  singleLineFunction() {
+    void singleLineFunction() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("singleLineFunction()");
         builder.printCFG("singleLineFunction()");
@@ -273,8 +261,9 @@ class CFGBuilderTest {
         int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
+
     @Test
-    void  isEvenNumber() {
+    void isEvenNumber() {
         builder.buildCFGs(TEST_FILE_PATH);
         CFG cfg = builder.getGlobalCFGMap().get("isEvenNumber(int)");
         builder.printCFG("isEvenNumber(int)");
