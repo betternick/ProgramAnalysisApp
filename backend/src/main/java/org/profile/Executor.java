@@ -1,5 +1,7 @@
 package org.profile;
 
+import org.exception.CompilationException;
+
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import javax.tools.StandardJavaFileManager;
@@ -70,7 +72,7 @@ public class Executor {
     }
 
     public void execute(String filePath, String fullClassName, String graphPath, String logPath)
-            throws RuntimeException {
+            throws CompilationException, RuntimeException {
         // Delete the old log file
         try {
             Files.deleteIfExists(Paths.get(logPath));
@@ -91,7 +93,7 @@ public class Executor {
 
             if (!compilationResult) {
                 System.out.println("Compilation Failed");
-                throw new RuntimeException();
+                throw new CompilationException();
             }
             System.out.println("Compilation is successful");
             fileManager.close();
@@ -104,9 +106,14 @@ public class Executor {
             createJar(jarFileName, classFilePath, fullClassName);
 
             // Step 3: Execute the JAR file with the Java agent
-            executeJavaFileWithAgent(filePath, agentPath, jarFileName, graphPath, fullClassName);
-        } catch (Exception e) {
+            try {
+                executeJavaFileWithAgent(filePath, agentPath, jarFileName, graphPath, fullClassName);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

@@ -2,6 +2,7 @@ package org.servlet;
 
 import org.analysis.Analyser;
 import org.analysis.ExecTreeStats;
+import org.exception.CompilationException;
 import org.graph.CFGBuilder;
 import org.graph.CFGConverter;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,12 +93,14 @@ public class AnalysisServiceTests {
             executor.close();
             assertEquals(1, map.size());
             assertEquals(stats, map.get(1));
+        } catch (CompilationException e) {
+            throw new RuntimeException(e);
         }
 
     }
 
     @Test
-    public void testExecute_Fail() {
+    public void testExecute_Fail() throws CompilationException {
         Mockito.doNothing().when(builder).serializeMap(Mockito.anyString());
         Mockito.doReturn(List.of(1)).when(builder).getAllNodeIds();
         Executor mockexe = Mockito.mock(Executor.class);
