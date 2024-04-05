@@ -1,5 +1,7 @@
 package org.graph;
 
+/// CHAT GPT use acknowledgement: It was used at all different stages to write and debug code in the graph package.
+
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtVariable;
