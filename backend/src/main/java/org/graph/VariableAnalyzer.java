@@ -1,5 +1,7 @@
 package org.graph;
 
+/// CHAT GPT use acknowledgement: It was used at all different stages to write and debug code in the graph package.
+
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtVariable;
@@ -51,11 +53,11 @@ public class VariableAnalyzer {
     private void analyzeStatements(List<CtStatement> statements, Deque<Map<String, Integer>> scopeStack,
             Map<Integer, String> variableIssues, Set<String> usedVariables, Set<String> initializedVariables) {
         for (CtStatement statement : statements) {
-            System.out.println("Analyzing statement: " + statement);
-            System.out.println("Current scope: " + scopeStack.peek());
-            System.out.println("Used variables: " + usedVariables);
-            System.out.println("Initialized variables: " + initializedVariables);
-            System.out.println("Variable issues: " + variableIssues);
+            // System.out.println("Analyzing statement: " + statement);
+            // System.out.println("Current scope: " + scopeStack.peek());
+            // System.out.println("Used variables: " + usedVariables);
+            // System.out.println("Initialized variables: " + initializedVariables);
+            // System.out.println("Variable issues: " + variableIssues);
 
             if (statement instanceof CtVariable) {
                 CtVariable<?> variable = (CtVariable<?>) statement;
@@ -81,8 +83,9 @@ public class VariableAnalyzer {
 
                     boolean declared = scopeStack.stream().anyMatch(scope -> scope.containsKey(variableName));
                     if (!declared) {
-                        System.out.println(
-                                "Variable '" + variableName + "' assigned a value without declaration at line " + line);
+                        // System.out.println(
+                        // "Variable '" + variableName + "' assigned a value without declaration at line
+                        // " + line);
                         variableIssues.put(line,
                                 "Variable '" + variableName + "' assigned a value without declaration 1");
                     } else {
@@ -92,48 +95,49 @@ public class VariableAnalyzer {
             } else if (statement instanceof CtLoop) {
                 CtLoop loop = (CtLoop) statement;
                 scopeStack.push(new HashMap<>(scopeStack.peek())); // Copy the current scope
-                System.out.println("Entering new scope for loop");
-                System.out.println("Scope stack after entering loop: " + scopeStack);
+                // System.out.println("Entering new scope for loop");
+                // System.out.println("Scope stack after entering loop: " + scopeStack);
                 CtStatement loopBody = loop.getBody();
                 if (loopBody instanceof CtBlock) {
                     analyzeStatements(((CtBlock<?>) loopBody).getStatements(), scopeStack, variableIssues,
                             usedVariables, initializedVariables);
                 }
                 scopeStack.pop();
-                System.out.println("Exiting scope for loop");
-                System.out.println("Scope stack after exiting loop: " + scopeStack);
+                // System.out.println("Exiting scope for loop");
+                // System.out.println("Scope stack after exiting loop: " + scopeStack);
             } else if (statement instanceof CtIf) {
                 CtIf ctIf = (CtIf) statement;
 
                 // Then branch
                 scopeStack.push(new HashMap<>(scopeStack.peek()));
-                System.out.println("Entering new scope for then branch");
-                System.out.println("Scope stack after entering then branch: " + scopeStack);
+                // System.out.println("Entering new scope for then branch");
+                // System.out.println("Scope stack after entering then branch: " + scopeStack);
                 CtStatement thenStatement = ctIf.getThenStatement();
                 if (thenStatement instanceof CtBlock) {
                     analyzeStatements(((CtBlock<?>) thenStatement).getStatements(), scopeStack, variableIssues,
                             usedVariables, initializedVariables);
                 }
                 scopeStack.pop();
-                System.out.println("Exiting scope for then branch");
-                System.out.println("Scope stack after exiting then branch: " + scopeStack);
+                // System.out.println("Exiting scope for then branch");
+                // System.out.println("Scope stack after exiting then branch: " + scopeStack);
 
                 // Else branch
                 if (ctIf.getElseStatement() != null) {
                     scopeStack.push(new HashMap<>(scopeStack.peek()));
-                    System.out.println("Entering new scope for else branch");
-                    System.out.println("Scope stack after entering else branch: " + scopeStack);
+                    // System.out.println("Entering new scope for else branch");
+                    // System.out.println("Scope stack after entering else branch: " + scopeStack);
                     CtStatement elseStatement = ctIf.getElseStatement();
                     if (elseStatement instanceof CtBlock) {
                         analyzeStatements(((CtBlock<?>) elseStatement).getStatements(), scopeStack, variableIssues,
                                 usedVariables, initializedVariables);
                     }
                     scopeStack.pop();
-                    System.out.println("Exiting scope for else branch");
-                    System.out.println("Scope stack after exiting else branch: " + scopeStack);
+                    // System.out.println("Exiting scope for else branch");
+                    // System.out.println("Scope stack after exiting else branch: " + scopeStack);
                 }
             } else {
-                System.out.println("Unhandled statement type: " + statement.getClass().getSimpleName());
+                // System.out.println("Unhandled statement type: " +
+                // statement.getClass().getSimpleName());
             }
 
         }

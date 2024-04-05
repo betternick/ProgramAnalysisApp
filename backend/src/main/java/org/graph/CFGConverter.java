@@ -1,5 +1,6 @@
 package org.graph;
 
+/// CHAT GPT use acknowledgement: It was used at all different stages to write and debug code in the graph package.
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,8 @@ public class CFGConverter {
             Map<String, Object> jsonNode = new HashMap<>();
             jsonNode.put("id", String.valueOf(node.id));
             jsonNode.put("codeBlock", node.codeBlock);
+            // This adds comments
+            jsonNode.put("comments", node.comments);
             nodes.add(jsonNode);
 
             for (Node successor : node.next) {
