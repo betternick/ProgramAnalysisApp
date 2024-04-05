@@ -15,7 +15,7 @@ This will execute the static and dynamic analysis processes.
 To run the frontend visualization, use the following command:
 `yarn start`
 
-This will start the development server and open the visualization in your default web browser.
+This will start the development server and visualization at **localhost:3000** in your default web browser.
 
 ### User Flow
 The user should begin by uploading the Java file that they want to analyze. After uploading it, a control flow graph (CFG) representation of the 
