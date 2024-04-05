@@ -79,15 +79,15 @@ public class Simple {
         int endInt = 5;
         return 6;
     }
-//
-//    public static void nestedFunction() {
-//        System.out.println("This is a nested function");
-//    }
-//
-//    // Function to check if a number is even
-//    public static boolean isEvenNumber(int num) {
-//        return num % 2 == 0;
-//    }
+
+    public static void singleLineFunction() {
+        System.out.println("This is a nested function");
+    }
+
+    // Function to check if a number is even
+    public static boolean isEvenNumber(int num) {
+        return num % 2 == 0;
+    }
 
     int sampleIfProgram(int a) {
         int b = a;
@@ -103,13 +103,6 @@ public class Simple {
         int why = 6;
     }
 
-//    public static int calculateSum(int var0, int var1) {
-//        int g = 10;
-//        return var0 + var1;
-//        System.out.println("This code should be unreachable");
-//        int y = 12;
-//        int f = 45;
-//    }
 
     int sampleForLoopProgram(int a) {
         int b = a;
@@ -121,26 +114,8 @@ public class Simple {
         return b;
         String what = "this shouldnt be reached";
     }
-    //
-//    int sampleWhileLoopProgram(int a) {
-//        int b = a;
-//        while (b > 10) {
-//            b--;
-//        }
-//        System.out.println("Yay");
-//        return b;
-//    }
-//
-//    int sampleWhileLoopWithBreakProgram(int a) {
-//        int b = a;
-//        while (b > 10) {
-//            b--;
-//            break;
-//        }
-//        System.out.println("Yay");
-//        return a;
-//    }
-//
+
+
     int sampleWhileLoopWithBreakInsideNestedIFProgram(int a) {
         int b = a;
         while (b > 10) {
@@ -160,32 +135,7 @@ public class Simple {
         int impoissible = 45;
     }
 
-    //    int sampleDuplicateDeclarationWithinSubScope(int a) {
-//        int b = a;
-//        while (b > 10) {
-//            b--;
-//            int b;
-//            int b;
-//            break;
-//        }
-//        System.out.println("Yay");
-//        int a;
-//        return a;
-//    }
-//
-//int otherStatementafterbreak(int a) {
-//    int b = a;
-//    while (b > 10) {
-//        b--;
-//        break;
-//        int yyy = 34;
-//        if (1 > 0) {
-//        }
-//    }
-//    System.out.println("Yay");
-//    return a;
-//}
-//
+
     int Ifstatementafterbreak(int a) {
         int b = a;
         while (b > 10) {
@@ -198,34 +148,7 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-//
-//    int Loopstatementafterbreak(int a) {
-//        int b = a;
-//        while (b > 10) {
-//            b--;
-//            break;
-//            while (1 > 0) {
-//                int why = 9;
-//            }
-//        }
-//        System.out.println("Yay");
-//        return a;
-//    }
-//
-//    int breakinInnerLoop(int a) {
-//        int b = a;
-//        while (b > 10) {
-//            b--;
-//            while (1 > 0) {
-//                int why = 9;
-//                break;
-//                int y = 999;
-//            }
-//            b++;
-//        }
-//        System.out.println("Yay");
-//        return a;
-//    }
+
 
     int returnInOuterLoop(int a) {
         int b = a;
@@ -271,17 +194,6 @@ public class Simple {
         return a;
     }
 
-//        int returnInIfThenBranch(int a) {
-//        int b = a;
-//        if (1>6) {
-//            int h = 90;
-//            return;
-//        } else {
-//            int y = 60;
-//        }
-//        System.out.println("Yay");
-//        return a;
-//    }
 
     int returnInBothBranches(int a) {
         int b = a;
@@ -318,21 +230,9 @@ public class Simple {
         System.out.println(var3);
     }
 
-//    public static void main(String[] var0) {
-//        System.out.println("Hello, World!");
-//        byte var1 = 5;
-//        byte var2 = 10;
-//        if (var1 > var2) {
-//            calculateSum(var1, var2);
-//            System.out.println("a is greater than b");
-//        } else {
-//            isEvenNumber(var1);
-//            System.out.println("b is greater than a");
-//        }
-//        int y = 10;
-//    }
 
-    //
+
+
     int AssigmentWithoutDeclaration(int a) {
         int b = 10;
 
@@ -370,17 +270,128 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-//
-//    int fixedCodeThatCompiles(int a) {
-//        int b = 11;
-//        String d;
-//        while (b > 10) {
-//            b--;
-//            break;
-//        }
-//        System.out.println("Yay");
-//        return a;
-//    }
-//
+//////////////// TESTS NOT ADDED FOR THE BELOW //////////////////////
+
+    public static int calculateSum(int var0, int var1) {
+        int g = 10;
+        return var0 + var1;
+        System.out.println("This code should be unreachable");
+        int y = 12;
+        int f = 45;
+    }
+
+    int fixedCodeThatCompiles(int a) {
+        int b = 11;
+        String d;
+        while (b > 10) {
+            b--;
+            break;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+        public static void main2(String[] var0) {
+        System.out.println("Hello, World!");
+        byte var1 = 5;
+        byte var2 = 10;
+        if (var1 > var2) {
+            calculateSum(var1, var2);
+            System.out.println("a is greater than b");
+        } else {
+            isEvenNumber(var1);
+            System.out.println("b is greater than a");
+        }
+        int y = 10;
+    }
+
+
+        int returnInIfThenBranch(int a) {
+        int b = a;
+        if (1>6) {
+            int h = 90;
+            return;
+        } else {
+            int y = 60;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+
+    int Loopstatementafterbreak(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            break;
+            while (1 > 0) {
+                int why = 9;
+            }
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+    int breakinInnerLoop(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            while (1 > 0) {
+                int why = 9;
+                break;
+                int y = 999;
+            }
+            b++;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+
+    int sampleWhileLoopProgram(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+        }
+        System.out.println("Yay");
+        return b;
+    }
+
+    int sampleWhileLoopWithBreakProgram(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            break;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+        int sampleDuplicateDeclarationWithinSubScope(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            int b;
+            int b;
+            break;
+        }
+        System.out.println("Yay");
+        int a;
+        return a;
+    }
+
+int otherStatementafterbreak(int a) {
+    int b = a;
+    while (b > 10) {
+        b--;
+        break;
+        int yyy = 34;
+        if (1 > 0) {
+        }
+    }
+    System.out.println("Yay");
+    return a;
+}
+
 
 }

@@ -259,4 +259,31 @@ class CFGBuilderTest {
         int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
+
+    @Test
+    void  singleLineFunction() {
+        builder.buildCFGs(TEST_FILE_PATH);
+        CFG cfg = builder.getGlobalCFGMap().get("singleLineFunction()");
+        builder.printCFG("singleLineFunction()");
+        // Expected number of nodes and edges
+        int expectedNodeCount = 3; // Update this value based on your actual CFG
+        int expectedEdgeCount = 2; // Update this value based on your actual CFG
+
+        assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
+        int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
+        assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
+    }
+    @Test
+    void  isEvenNumber() {
+        builder.buildCFGs(TEST_FILE_PATH);
+        CFG cfg = builder.getGlobalCFGMap().get("isEvenNumber(int)");
+        builder.printCFG("isEvenNumber(int)");
+        // Expected number of nodes and edges
+        int expectedNodeCount = 3; // Update this value based on your actual CFG
+        int expectedEdgeCount = 2; // Update this value based on your actual CFG
+
+        assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
+        int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
+        assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
+    }
 }
