@@ -288,7 +288,7 @@ public class Simple {
 
     int loopEndWithReturn(int a) {
         int b = a;
-        while (a>b) {
+        while (a > b) {
             b--;
             return 7;
             b++;
@@ -300,7 +300,7 @@ public class Simple {
 
     int nestedLoopEndWithReturn(int a) {
         int b = a;
-        while (a>b) {
+        while (a > b) {
             b--;
             while (b != 10) {
                 return 5;
@@ -310,7 +310,6 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-
 
     //////////////// TESTS NOT ADDED FOR THE BELOW //////////////////////
 
@@ -358,7 +357,6 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-
 
     int breakinInnerLoop(int a) {
         int b = a;
@@ -418,7 +416,7 @@ public class Simple {
 
     int bothIfElseEndWithReturn(int a) {
         int b = a;
-        if (a>b) {
+        if (a > b) {
             return 5;
         } else {
             return 7;
@@ -426,7 +424,5 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
-
-
 
 }

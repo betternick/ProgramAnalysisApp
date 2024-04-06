@@ -7,7 +7,6 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtVariable;
 
 import javax.tools.*;
-import java.io.File;
 import java.util.*;
 
 public class VariableAnalyzer {
@@ -24,7 +23,7 @@ public class VariableAnalyzer {
         }
 
         // Mark unreachable code
-      //  analyzeUnreachableCode(cfg);
+        // analyzeUnreachableCode(cfg);
     }
 
     public Map<Integer, String> analyzeVariables(CtMethod<?> ctMethod, CFG cfg) {
@@ -53,11 +52,11 @@ public class VariableAnalyzer {
     private void analyzeStatements(List<CtStatement> statements, Deque<Map<String, Integer>> scopeStack,
             Map<Integer, String> variableIssues, Set<String> usedVariables, Set<String> initializedVariables) {
         for (CtStatement statement : statements) {
-//             System.out.println("Analyzing statement: " + statement);
-//             System.out.println("Current scope: " + scopeStack.peek());
-//             System.out.println("Used variables: " + usedVariables);
-//             System.out.println("Initialized variables: " + initializedVariables);
-//             System.out.println("Variable issues: " + variableIssues);
+            // System.out.println("Analyzing statement: " + statement);
+            // System.out.println("Current scope: " + scopeStack.peek());
+            // System.out.println("Used variables: " + usedVariables);
+            // System.out.println("Initialized variables: " + initializedVariables);
+            // System.out.println("Variable issues: " + variableIssues);
 
             if (statement instanceof CtVariable) {
                 CtVariable<?> variable = (CtVariable<?>) statement;
@@ -118,22 +117,22 @@ public class VariableAnalyzer {
                             usedVariables, initializedVariables);
                 }
                 scopeStack.pop();
-//                 System.out.println("Exiting scope for then branch");
-//                 System.out.println("Scope stack after exiting then branch: " + scopeStack);
+                // System.out.println("Exiting scope for then branch");
+                // System.out.println("Scope stack after exiting then branch: " + scopeStack);
 
                 // Else branch
                 if (ctIf.getElseStatement() != null) {
                     scopeStack.push(new HashMap<>(scopeStack.peek()));
-//                     System.out.println("Entering new scope for else branch");
-//                     System.out.println("Scope stack after entering else branch: " + scopeStack);
+                    // System.out.println("Entering new scope for else branch");
+                    // System.out.println("Scope stack after entering else branch: " + scopeStack);
                     CtStatement elseStatement = ctIf.getElseStatement();
                     if (elseStatement instanceof CtBlock) {
                         analyzeStatements(((CtBlock<?>) elseStatement).getStatements(), scopeStack, variableIssues,
                                 usedVariables, initializedVariables);
                     }
                     scopeStack.pop();
-//                     System.out.println("Exiting scope for else branch");
-//                     System.out.println("Scope stack after exiting else branch: " + scopeStack);
+                    // System.out.println("Exiting scope for else branch");
+                    // System.out.println("Scope stack after exiting else branch: " + scopeStack);
                 }
             } else {
                 // System.out.println("Unhandled statement type: " +

@@ -290,7 +290,6 @@ class CFGBuilderTest {
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
 
-
     @Test
     void Loopstatementafterbreak() {
         builder.buildCFGs(TEST_FILE_PATH);
@@ -318,8 +317,6 @@ class CFGBuilderTest {
         int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
         assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
     }
-
-
 
     @Test
     void nestedLoopEndWithReturn() {

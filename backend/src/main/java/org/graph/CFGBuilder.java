@@ -181,16 +181,18 @@ public class CFGBuilder {
         }
     }
 
-
     private Node handleIfStatement(CtIf ifStmt, Node currentNode, CFG cfg, String fileName, Node exitNode) {
         currentNode.codeBlock.code[0] = "If-Else statement: " + currentNode.codeBlock.code[0];
 
-        Node ifConditionNode = cfg.createNode(new CodeBlock(new String[] { "If condition: " + ifStmt.getCondition().toString() }, fileName, ifStmt.getPosition().getLine()));
+        Node ifConditionNode = cfg
+                .createNode(new CodeBlock(new String[] { "If condition: " + ifStmt.getCondition().toString() },
+                        fileName, ifStmt.getPosition().getLine()));
         currentNode.addNext(ifConditionNode);
         ifConditionNode.addPrevious(currentNode);
 
         // True branch
-        Node trueBranchNode = cfg.createNode(new CodeBlock(new String[] { "True branch" }, fileName, ifStmt.getThenStatement().getPosition().getLine()));
+        Node trueBranchNode = cfg.createNode(new CodeBlock(new String[] { "True branch" }, fileName,
+                ifStmt.getThenStatement().getPosition().getLine()));
         ifConditionNode.addNext(trueBranchNode);
         trueBranchNode.addPrevious(ifConditionNode);
         Node trueBranchLastNode = buildCFGForBlockIf(ifStmt.getThenStatement(), trueBranchNode, cfg, exitNode);
@@ -200,7 +202,8 @@ public class CFGBuilder {
         Node falseBranchLastNode = null;
         Boolean falseBranchExists = ifStmt.getElseStatement() != null;
         if (ifStmt.getElseStatement() != null) {
-            falseBranchNode = cfg.createNode(new CodeBlock(new String[] { "False branch" }, fileName, ifStmt.getElseStatement().getPosition().getLine()));
+            falseBranchNode = cfg.createNode(new CodeBlock(new String[] { "False branch" }, fileName,
+                    ifStmt.getElseStatement().getPosition().getLine()));
             ifConditionNode.addNext(falseBranchNode);
             falseBranchNode.addPrevious(ifConditionNode);
             falseBranchLastNode = buildCFGForBlockIf(ifStmt.getElseStatement(), falseBranchNode, cfg, exitNode);
@@ -219,8 +222,10 @@ public class CFGBuilder {
         boolean trueBranchEndsWithReturn = trueBranchLastNode == null;
         boolean falseBranchEndsWithReturn = falseBranchLastNode == null && falseBranchExists;
 
-//        System.out.println("True branch ends with return: " + trueBranchEndsWithReturn);
-//        System.out.println("False branch ends with return: " + falseBranchEndsWithReturn);
+        // System.out.println("True branch ends with return: " +
+        // trueBranchEndsWithReturn);
+        // System.out.println("False branch ends with return: " +
+        // falseBranchEndsWithReturn);
 
         if (trueBranchEndsWithReturn && falseBranchEndsWithReturn) {
             System.out.println("Both branches end with return. Returning null.");
@@ -230,8 +235,6 @@ public class CFGBuilder {
 
         return afterIfNode;
     }
-
-
 
     private Node handleLoopStatement(CtLoop loopStmt, Node currentNode, CFG cfg, String fileName, Node exitNode) {
         String loopType = loopStmt instanceof CtWhile ? "While loop"
@@ -317,7 +320,8 @@ public class CFGBuilder {
                 ifStmt.getThenStatement().getPosition().getLine()));
         ifConditionNode.addNext(trueBranchNode);
         trueBranchNode.addPrevious(ifConditionNode);
-        Node trueBranchLastNode = buildCFGForBlockIfNestedLoop(ifStmt.getThenStatement(), trueBranchNode, cfg, exitNode, afterLoopNode);
+        Node trueBranchLastNode = buildCFGForBlockIfNestedLoop(ifStmt.getThenStatement(), trueBranchNode, cfg, exitNode,
+                afterLoopNode);
 
         // False branch (if present)
         Node falseBranchNode = null;
@@ -328,7 +332,8 @@ public class CFGBuilder {
                     ifStmt.getElseStatement().getPosition().getLine()));
             ifConditionNode.addNext(falseBranchNode);
             falseBranchNode.addPrevious(ifConditionNode);
-            falseBranchLastNode = buildCFGForBlockIfNestedLoop(ifStmt.getElseStatement(), falseBranchNode, cfg, exitNode, afterLoopNode);
+            falseBranchLastNode = buildCFGForBlockIfNestedLoop(ifStmt.getElseStatement(), falseBranchNode, cfg,
+                    exitNode, afterLoopNode);
         }
 
         // Connect both branches to the after-if node
@@ -344,8 +349,10 @@ public class CFGBuilder {
         boolean trueBranchEndsWithReturn = trueBranchLastNode == null;
         boolean falseBranchEndsWithReturn = falseBranchLastNode == null && falseBranchExists;
 
-//        System.out.println("True branch ends with return: " + trueBranchEndsWithReturn);
-//        System.out.println("False branch ends with return: " + falseBranchEndsWithReturn);
+        // System.out.println("True branch ends with return: " +
+        // trueBranchEndsWithReturn);
+        // System.out.println("False branch ends with return: " +
+        // falseBranchEndsWithReturn);
 
         if (trueBranchEndsWithReturn && falseBranchEndsWithReturn) {
             System.out.println("Both branches end with return. Returning null.");
@@ -410,7 +417,7 @@ public class CFGBuilder {
                     Node newNode = addStatementAndCreateNode(stmt, currentNode, cfg, exitNode);
                     if (newNode == null) {
                         // A return statement was encountered, stop processing further statements
-                        //break;
+                        // break;
                         return null;
                     } else {
                         currentNode = newNode;
