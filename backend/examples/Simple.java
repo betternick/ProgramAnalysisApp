@@ -416,8 +416,6 @@ public class Simple {
         return a;
     }
 
-
-
     int bothIfElseEndWithReturn(int a) {
         int b = a;
         if (a>b) {
