@@ -11,6 +11,9 @@ export default function BasicNode({ data }: NodeProps<CustomNodeProps>) {
             color="white"
             variant="filled"
         >
+            <CardHeader>
+                <Heading size="sm">{label}</Heading>
+            </CardHeader>
             {handles.map((h, key) => (
                 <Handle
                     type={h.type}
@@ -19,9 +22,6 @@ export default function BasicNode({ data }: NodeProps<CustomNodeProps>) {
                     key={key}
                 />
             ))}
-            <CardHeader>
-                <Heading size="sm">{label}</Heading>
-            </CardHeader>
         </Card>
     )
 }

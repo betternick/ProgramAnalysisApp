@@ -2,16 +2,16 @@ import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
 import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
 import { CustomNodeWithCodeProps } from '../../types/MiscTypes'
+import ExecutionData from '../ExecutionData'
 
 export default function ConditionNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
-    const { label, code, color, handles } = data
+    const { label, code, color, handles, dynamicData } = data
     return (
         <Card
-            variant="solid"
+            variant="outline"
             background={color}
-            color="white"
         >
-            <CardBody>
+            <CardBody color="white">
                 <Heading size="sm">{label}</Heading>
                 <Code
                     display="block"
@@ -21,6 +21,14 @@ export default function ConditionNode({ data }: NodeProps<CustomNodeWithCodeProp
                     children={code}
                 />
             </CardBody>
+            {dynamicData && (
+                <CardBody background="white">
+                    <ExecutionData data={dynamicData} />
+                </CardBody>
+            )}
+            {/* <CardBody background="white">
+                <ExecutionData data={dynamicData} />
+            </CardBody> */}
             {handles.map((h, key) => (
                 <Handle
                     type={h.type}

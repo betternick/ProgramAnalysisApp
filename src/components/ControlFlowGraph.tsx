@@ -1,9 +1,9 @@
 import { Flex } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Node, Edge, ReactFlowProvider } from 'reactflow'
 import { defaultNodes, defaultEdges, edgeFormat } from '../lib/default-nodes-edges'
 import 'reactflow/dist/style.css'
-import { ResponseEdge, ResponseGraph, ResponseNode } from '../types/ControlFlowGraphTypes'
+import { ResponseDynamicData, ResponseEdge, ResponseGraph, ResponseNode } from '../types/ControlFlowGraphTypes'
 import Flow from './Flow'
 import {
     AFTER_IF_ELSE,
@@ -43,7 +43,7 @@ const processResponseEdges = (cfg: ResponseGraph): Edge[] => {
 }
 
 const createNode = (responseNode: ResponseNode): Node => {
-    const { data, type } = determineNodeTypes(responseNode.codeBlock.code[0], responseNode.comments)
+    const { data, type } = determineNodeInfo(responseNode.codeBlock.code[0], responseNode.comments, responseNode.dynamicData)
     return {
         id: responseNode.id,
         position: { x: 0, y: 0 }, // dagre will determine pos
@@ -71,7 +71,7 @@ const determineEdgeHandles = (edge: Edge, nodeList: Node[]) => {
     }
 }
 
-const determineNodeTypes = (code: string, comments: string[]) => {
+const determineNodeInfo = (code: string, comments: string[], dynamicData: ResponseDynamicData | undefined) => {
     let type = NodeType.BASIC_NODE
     let finalCode = code
     let nodeData
@@ -113,7 +113,7 @@ const determineNodeTypes = (code: string, comments: string[]) => {
         finalCode = code.startsWith(STATEMENT) ? code.substring(STATEMENT.length) : code
     }
     return {
-        data: { code: finalCode, comments, ...nodeData },
+        data: { code: finalCode, comments, dynamicData, ...nodeData },
         type,
     }
 }
@@ -130,7 +130,25 @@ type ControlFlowGraphProps = {
 }
 
 export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
-    const controlFlowGraph = (() => {
+    // const [nodes, setNodes] = useState<Node[]>(defaultNodes)
+    // const [edges, setEdges] = useState<Edge[]>(defaultEdges)
+
+    // useEffect(() => {
+    //     console.log('are you creating a new node list?')
+    //     let newNodeList: Node[] = []
+    //     let newEdgeList: Edge[] = []
+    //     graph.forEach((cfg) => {
+    //         newNodeList = [...newNodeList, ...processResponseNodes(cfg)]
+    //         newEdgeList = [...newEdgeList, ...processResponseEdges(cfg)]
+    //     })
+    //     newEdgeList.forEach((edge) => {
+    //         determineEdgeHandles(edge, newNodeList)
+    //     })
+    //     setNodes(newNodeList)
+    //     setEdges(newEdgeList)
+    // }, [graph])
+
+    const controlFlowGraph = () => {
         if (!graph || graph.length === 0) {
             return (
                 <Flow
@@ -155,13 +173,20 @@ export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
                 />
             )
         }
-    })()
+    }
+
     return (
         <Flex
             height="100vh"
             width="100vw"
         >
-            <ReactFlowProvider>{controlFlowGraph}</ReactFlowProvider>
+            <ReactFlowProvider>
+                {/* <Flow
+                    nodes={nodes}
+                    edges={edges}
+                /> */}
+                {controlFlowGraph()}
+            </ReactFlowProvider>
         </Flex>
     )
 }

@@ -2,9 +2,10 @@ import { Handle, NodeProps } from 'reactflow'
 import { CustomNodeWithCodeProps } from '../../types/MiscTypes'
 import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
 import React from 'react'
+import ExecutionData from '../ExecutionData'
 
 export default function CollapsibleNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
-    const { color, label, code, handles } = data
+    const { color, label, code, handles, dynamicData } = data
     const codeLines = code.split('\n')
     return (
         <Card
@@ -22,6 +23,7 @@ export default function CollapsibleNode({ data }: NodeProps<CustomNodeWithCodePr
                         key={key}
                     />
                 ))}
+                {dynamicData && <ExecutionData data={dynamicData} />}
             </CardBody>
             {handles.map((h, key) => (
                 <Handle

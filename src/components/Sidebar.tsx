@@ -2,11 +2,14 @@ import React from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import Uploader from './Uploader'
 import Executor from './Executor'
+import { ResponseGraph } from '../types/ControlFlowGraphTypes'
 
 type SidebarProps = {
-    handleResponse: (response: JSON) => void
+    handleUpload: (response: JSON) => void
+    handleExecute: (response: JSON) => void
+    graph: ResponseGraph[]
 }
-export default function Sidebar({ handleResponse }: SidebarProps) {
+export default function Sidebar({ handleUpload, handleExecute, graph }: SidebarProps) {
     return (
         <Flex
             direction="column"
@@ -17,10 +20,10 @@ export default function Sidebar({ handleResponse }: SidebarProps) {
                 textAlign="center"
                 size="lg"
             >
-                Control Flow Graph Generator
+                Program Analyser
             </Heading>
-            <Uploader handleResponse={handleResponse} />
-            <Executor />
+            <Uploader handleResponse={handleUpload} />
+            {graph.length > 0 && <Executor handleResponse={handleExecute} />}
         </Flex>
     )
 }

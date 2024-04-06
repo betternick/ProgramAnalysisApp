@@ -20,4 +20,12 @@ export type CustomNodeWithCodeProps = {
     handles: HandleInfo[]
     comments: string[]
     code: string
+    dynamicData: DynamicData | undefined
+}
+
+export type DynamicData = {
+    executionTimes: number
+    averageExecutionTime: number
+    averageMemoryUsage: number
+    averageCpuUsage: number
 }

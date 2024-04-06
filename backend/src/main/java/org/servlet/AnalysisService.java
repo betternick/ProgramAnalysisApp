@@ -77,15 +77,14 @@ public class AnalysisService {
             File file = new File(filePath);
             Scanner scanner = new Scanner(file);
             StringBuilder modifiedContent = new StringBuilder();
+            modifiedContent.append("package ").append(customPackageName).append(";\n");
+            packageName = customPackageName;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
-                if (line.startsWith("package")) {
-                    modifiedContent.append("package ").append(customPackageName).append(";\n");
-                    packageName = customPackageName;
-                } else if (line.startsWith("public class")) {
+                if (line.startsWith("public class")) {
                     className = line.substring(line.indexOf("class") + 6, line.lastIndexOf("{")).trim();
                     modifiedContent.append(line).append("\n");
-                } else {
+                } else if (!line.startsWith("package")) {
                     modifiedContent.append(line).append("\n");
                 }
             }

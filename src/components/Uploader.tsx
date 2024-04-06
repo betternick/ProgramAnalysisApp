@@ -62,14 +62,13 @@ export default function Uploader({ handleResponse }: UploaderProps) {
             body: fd,
         })
             .then((res) => {
+                setIsUploading(false)
                 if (res.ok) {
                     setFile(null)
-                    setIsUploading(false)
                     setError(null)
                     return res.json()
                 } else {
                     setError('upload-error')
-                    setIsUploading(false)
                 }
             })
             .catch((err) => {
