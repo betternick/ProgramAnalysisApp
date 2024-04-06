@@ -1,30 +1,34 @@
+import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
 import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
-import { Card, CardBody, Code, Heading } from '@chakra-ui/react'
 import { CustomNodeWithCodeProps } from '../../types/MiscTypes'
-import Comments from '../Comments'
 import ExecutionData from '../ExecutionData'
 
-export default function StatementNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
-    const { color, label, code, handles, comments, dynamicData } = data
-
+export default function ConditionNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
+    const { label, code, color, handles, dynamicData } = data
     return (
         <Card
             variant="outline"
-            borderColor={color}
+            background={color}
         >
-            <CardBody>
+            <CardBody color="white">
                 <Heading size="sm">{label}</Heading>
                 <Code
                     display="block"
-                    variant="subtle"
+                    variant="solid"
                     whiteSpace="pre"
+                    colorScheme="whiteAlpha"
                     children={code}
                 />
-                {comments.length > 0 && <Comments comments={comments} />}
-                {dynamicData && <ExecutionData data={dynamicData} />}
-                {/* <ExecutionData data={dynamicData} /> */}
             </CardBody>
+            {dynamicData && (
+                <CardBody background="white">
+                    <ExecutionData data={dynamicData} />
+                </CardBody>
+            )}
+            {/* <CardBody background="white">
+                <ExecutionData data={dynamicData} />
+            </CardBody> */}
             {handles.map((h, key) => (
                 <Handle
                     type={h.type}

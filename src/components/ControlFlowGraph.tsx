@@ -1,9 +1,9 @@
 import { Flex } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Node, Edge, ReactFlowProvider } from 'reactflow'
 import { defaultNodes, defaultEdges, edgeFormat } from '../lib/default-nodes-edges'
 import 'reactflow/dist/style.css'
-import { ResponseEdge, ResponseGraph, ResponseNode } from '../types/ControlFlowGraphTypes'
+import { ResponseDynamicData, ResponseEdge, ResponseGraph, ResponseNode } from '../types/ControlFlowGraphTypes'
 import Flow from './Flow'
 import {
     AFTER_IF_ELSE,
@@ -20,6 +20,18 @@ import {
     STATEMENT,
     TRUE_BRANCH,
     WHILE_LOOP,
+    afterIfElseNode,
+    afterLoopNode,
+    entryNode,
+    exitNode,
+    falseBranchNode,
+    ifConditionNode,
+    ifElseNode,
+    loopBodyNode,
+    loopConditionNode,
+    loopNode,
+    statementNode,
+    trueBranchNode,
 } from '../lib/nodeTypes'
 
 const processResponseNodes = (cfg: ResponseGraph): Node[] => {
@@ -31,56 +43,78 @@ const processResponseEdges = (cfg: ResponseGraph): Edge[] => {
 }
 
 const createNode = (responseNode: ResponseNode): Node => {
+    const { data, type } = determineNodeInfo(responseNode.codeBlock.code[0], responseNode.comments, responseNode.dynamicData)
     return {
         id: responseNode.id,
         position: { x: 0, y: 0 }, // dagre will determine pos
-        data: { label: responseNode.codeBlock.code[0] },
-        type: determineNodeType(responseNode.codeBlock.code[0]),
+        data,
+        type,
     }
 }
 
-const determineEdgeHandle = (edge: Edge, nodeList: Node[]) => {
+const determineEdgeHandles = (edge: Edge, nodeList: Node[]) => {
     const source = nodeList.find((n) => n.id === edge.source)
     const target = nodeList.find((n) => n.id === edge.target)
-    if (source?.type === NodeType.LOOP_BODY_NODE && target?.type === NodeType.LOOP_CONDITION_NODE) {
+    if (!source || !target) return
+    if (source.data.label === LOOP_BODY && target.data.label === LOOP_CONDITION) {
         edge.sourceHandle = 'c'
         edge.targetHandle = 'c'
-    } else if (source?.type === NodeType.LOOP_CONDITION_NODE && target?.type === NodeType.LOOP_BODY_NODE) {
+    } else if (source.data.label === LOOP_CONDITION && target.data.label === LOOP_BODY) {
         edge.sourceHandle = 'b'
         edge.targetHandle = 'a'
-    } else if (source?.type === NodeType.LOOP_CONDITION_NODE && target?.type === NodeType.AFTER_LOOP_NODE) {
+    } else if (source.data.label === LOOP_CONDITION && target.data.label === AFTER_LOOP) {
         edge.sourceHandle = 'b'
         edge.targetHandle = 'a'
+    } else if ((source.data.label === TRUE_BRANCH || source.data.label === FALSE_BRANCH) && target.data.label !== AFTER_IF_ELSE) {
+        edge.sourceHandle = 'c'
+        edge.targetHandle = 'c'
     }
 }
 
-const determineNodeType = (code: string): string | undefined => {
+const determineNodeInfo = (code: string, comments: string[], dynamicData: ResponseDynamicData | undefined) => {
+    let type = NodeType.BASIC_NODE
+    let finalCode = code
+    let nodeData
     if (code === ENTRY) {
-        return NodeType.ENTRY_NODE
+        nodeData = entryNode
     } else if (code === EXIT) {
-        return NodeType.EXIT_NODE
-    } else if (code.startsWith(STATEMENT)) {
-        return NodeType.STATEMENT_NODE
-    } else if (code.startsWith(IF_ELSE)) {
-        return NodeType.IF_ELSE_NODE
-    } else if (code.startsWith(IF_CONDITION)) {
-        return NodeType.IF_CONDITION_NODE
+        nodeData = exitNode
     } else if (code === TRUE_BRANCH) {
-        return NodeType.TRUE_BRANCH_NODE
+        type = NodeType.BRANCH_NODE
+        nodeData = trueBranchNode
     } else if (code === FALSE_BRANCH) {
-        return NodeType.FALSE_BRANCH_NODE
+        type = NodeType.BRANCH_NODE
+        nodeData = falseBranchNode
     } else if (code === AFTER_IF_ELSE) {
-        return NodeType.AFTER_IF_ELSE_NODE
-    } else if (code.startsWith(FOR_LOOP) || code.startsWith(WHILE_LOOP)) {
-        return NodeType.LOOP_NODE
-    } else if (code.startsWith(LOOP_CONDITION)) {
-        return NodeType.LOOP_CONDITION_NODE
+        nodeData = afterIfElseNode
     } else if (code === LOOP_BODY) {
-        return NodeType.LOOP_BODY_NODE
+        nodeData = loopBodyNode
     } else if (code === AFTER_LOOP) {
-        return NodeType.AFTER_LOOP_NODE
+        nodeData = afterLoopNode
+    } else if (code.startsWith(IF_CONDITION)) {
+        type = NodeType.CONDITION_NODE
+        nodeData = ifConditionNode
+        finalCode = code.substring(IF_CONDITION.length)
+    } else if (code.startsWith(LOOP_CONDITION)) {
+        type = NodeType.CONDITION_NODE
+        nodeData = loopConditionNode
+        finalCode = code.substring(LOOP_CONDITION.length)
+    } else if (code.startsWith(FOR_LOOP) || code.startsWith(WHILE_LOOP)) {
+        type = NodeType.COLLAPSIBLE_NODE
+        nodeData = loopNode
+        nodeData.label = code.startsWith(FOR_LOOP) ? FOR_LOOP : WHILE_LOOP
+    } else if (code.startsWith(IF_ELSE)) {
+        type = NodeType.COLLAPSIBLE_NODE
+        nodeData = ifElseNode
+        finalCode = code.substring(IF_ELSE.length)
     } else {
-        return undefined
+        type = NodeType.STATEMENT_NODE
+        nodeData = statementNode
+        finalCode = code.startsWith(STATEMENT) ? code.substring(STATEMENT.length) : code
+    }
+    return {
+        data: { code: finalCode, comments, dynamicData, ...nodeData },
+        type,
     }
 }
 
@@ -96,7 +130,25 @@ type ControlFlowGraphProps = {
 }
 
 export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
-    const controlFlowGraph = (() => {
+    // const [nodes, setNodes] = useState<Node[]>(defaultNodes)
+    // const [edges, setEdges] = useState<Edge[]>(defaultEdges)
+
+    // useEffect(() => {
+    //     console.log('are you creating a new node list?')
+    //     let newNodeList: Node[] = []
+    //     let newEdgeList: Edge[] = []
+    //     graph.forEach((cfg) => {
+    //         newNodeList = [...newNodeList, ...processResponseNodes(cfg)]
+    //         newEdgeList = [...newEdgeList, ...processResponseEdges(cfg)]
+    //     })
+    //     newEdgeList.forEach((edge) => {
+    //         determineEdgeHandles(edge, newNodeList)
+    //     })
+    //     setNodes(newNodeList)
+    //     setEdges(newEdgeList)
+    // }, [graph])
+
+    const controlFlowGraph = () => {
         if (!graph || graph.length === 0) {
             return (
                 <Flow
@@ -112,7 +164,7 @@ export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
                 newEdgeList = [...newEdgeList, ...processResponseEdges(cfg)]
             })
             newEdgeList.forEach((edge) => {
-                determineEdgeHandle(edge, newNodeList)
+                determineEdgeHandles(edge, newNodeList)
             })
             return (
                 <Flow
@@ -121,13 +173,20 @@ export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
                 />
             )
         }
-    })()
+    }
+
     return (
         <Flex
             height="100vh"
             width="100vw"
         >
-            <ReactFlowProvider>{controlFlowGraph}</ReactFlowProvider>
+            <ReactFlowProvider>
+                {/* <Flow
+                    nodes={nodes}
+                    edges={edges}
+                /> */}
+                {controlFlowGraph()}
+            </ReactFlowProvider>
         </Flex>
     )
 }

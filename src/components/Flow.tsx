@@ -1,5 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import ReactFlow, { Edge, useReactFlow, useNodesInitialized, applyNodeChanges, MiniMap, Controls, Node, Position } from 'reactflow'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
+import ReactFlow, {
+    Edge,
+    useReactFlow,
+    useNodesInitialized,
+    applyNodeChanges,
+    MiniMap,
+    Controls,
+    Node,
+    Position,
+    applyEdgeChanges,
+    NodeChange,
+    EdgeChange,
+    useStore,
+} from 'reactflow'
 import Dagre from '@dagrejs/dagre'
 import { nodeTypes } from '../lib/nodeTypes'
 
@@ -40,7 +53,8 @@ type FlowProps = {
 export default function Flow({ nodes, edges }: FlowProps) {
     const [layoutedNodes, setLayoutedNodes] = useState<Node[]>([])
     const [layoutedEdges, setLayoutedEdges] = useState<Edge[]>([])
-    const reactFlow = useReactFlow()
+
+    const { getNodes, getEdges, getIntersectingNodes, fitView } = useReactFlow()
     const nodesInitialized = useNodesInitialized({
         includeHiddenNodes: false,
     })
@@ -56,25 +70,33 @@ export default function Flow({ nodes, edges }: FlowProps) {
         setLayoutedEdges(edges)
     }, [nodes, edges])
 
+    const intersectingNodes = getNodes()
+        .map((n) => getIntersectingNodes(n).length)
+        .reduce((accum, num) => (accum += num), 0)
+
     useEffect(() => {
-        if (nodesInitialized) {
-            const { nodes: newLayoutedNodes, edges: newLayoutedEdges } = getLayoutedElements(reactFlow.getNodes(), reactFlow.getEdges())
+        if (nodesInitialized && intersectingNodes >= 3) {
+            const { nodes: newLayoutedNodes, edges: newLayoutedEdges } = getLayoutedElements(getNodes(), getEdges())
             setLayoutedNodes(newLayoutedNodes)
             setLayoutedEdges(newLayoutedEdges)
         }
-    }, [nodesInitialized, reactFlow])
+    }, [getEdges, getNodes, nodesInitialized, intersectingNodes])
 
-    useEffect(() => {
-        reactFlow.fitView()
-    }, [layoutedNodes, layoutedEdges, reactFlow])
+    // useEffect(() => {
+    //     fitView()
+    // }, [layoutedNodes, layoutedEdges, fitView])
 
-    const onNodesChange = useCallback((changes) => setLayoutedNodes((nds) => applyNodeChanges(changes, nds)), [])
+    const onNodesChange = useCallback((changes: NodeChange[]) => setLayoutedNodes((nds) => applyNodeChanges(changes, nds)), [])
+    const onEdgesChange = useCallback((changes: EdgeChange[]) => setLayoutedEdges((eds) => applyEdgeChanges(changes, eds)), [setLayoutedEdges])
+
     return (
         <ReactFlow
             nodes={layoutedNodes}
             edges={layoutedEdges}
             onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
             nodeTypes={nodeTypes}
+            fitView
         >
             <MiniMap
                 zoomable

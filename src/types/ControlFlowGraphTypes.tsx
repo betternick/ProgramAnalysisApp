@@ -7,6 +7,8 @@ export interface ResponseGraph {
 export type ResponseNode = {
     codeBlock: ResponseCodeBlock
     id: string
+    comments: string[]
+    dynamicData?: ResponseDynamicData
 }
 
 export type ResponseEdge = {
@@ -19,4 +21,11 @@ export type ResponseCodeBlock = {
     code: string[]
     fileName: string
     lineStart: number
+}
+
+export type ResponseDynamicData = {
+    executionTimes: number
+    averageExecutionTime: number
+    averageMemoryUsage: number
+    averageCpuUsage: number
 }

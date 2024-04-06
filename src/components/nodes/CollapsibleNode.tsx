@@ -1,13 +1,12 @@
-import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
-import { Card, CardBody, Code, Heading } from '@chakra-ui/react'
 import { CustomNodeWithCodeProps } from '../../types/MiscTypes'
-import Comments from '../Comments'
+import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
+import React from 'react'
 import ExecutionData from '../ExecutionData'
 
-export default function StatementNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
-    const { color, label, code, handles, comments, dynamicData } = data
-
+export default function CollapsibleNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
+    const { color, label, code, handles, dynamicData } = data
+    const codeLines = code.split('\n')
     return (
         <Card
             variant="outline"
@@ -15,15 +14,16 @@ export default function StatementNode({ data }: NodeProps<CustomNodeWithCodeProp
         >
             <CardBody>
                 <Heading size="sm">{label}</Heading>
-                <Code
-                    display="block"
-                    variant="subtle"
-                    whiteSpace="pre"
-                    children={code}
-                />
-                {comments.length > 0 && <Comments comments={comments} />}
+                {codeLines.map((line, key) => (
+                    <Code
+                        display="block"
+                        variant="subtle"
+                        whiteSpace="pre"
+                        children={line}
+                        key={key}
+                    />
+                ))}
                 {dynamicData && <ExecutionData data={dynamicData} />}
-                {/* <ExecutionData data={dynamicData} /> */}
             </CardBody>
             {handles.map((h, key) => (
                 <Handle

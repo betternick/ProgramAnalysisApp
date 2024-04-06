@@ -1,4 +1,5 @@
 import { Edge, Node, MarkerType } from 'reactflow'
+import { NodeType, entryNode, exitNode, statementNode } from './nodeTypes'
 
 export const edgeFormat = {
     markerEnd: {
@@ -15,9 +16,14 @@ export const edgeFormat = {
 }
 
 export const defaultNodes: Node[] = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: 'Entry' }, type: 'entryNode' },
-    { id: '2', position: { x: 0, y: 0 }, data: { label: 'Statement: System.out.println("Hello World!")' }, type: 'statementNode' },
-    { id: '3', position: { x: 0, y: 0 }, data: { label: 'Exit' }, type: 'exitNode' },
+    { id: '1', position: { x: 0, y: 0 }, data: entryNode, type: NodeType.BASIC_NODE },
+    {
+        id: '2',
+        position: { x: 0, y: 0 },
+        data: { code: 'System.out.println("Hello World!")', comments: [], ...statementNode },
+        type: NodeType.STATEMENT_NODE,
+    },
+    { id: '3', position: { x: 0, y: 0 }, data: exitNode, type: NodeType.BASIC_NODE },
 ]
 export const defaultEdges: Edge[] = [
     {
