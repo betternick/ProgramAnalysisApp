@@ -30,8 +30,8 @@ class CFGBuilderTest {
         CFG cfg = builder.getGlobalCFGMap().get("returnInBothBranches(int)");
         builder.printCFG("returnInBothBranches(int)");
         // Expected number of nodes and edges
-        int expectedNodeCount = 14; // Update this value based on your actual CFG
-        int expectedEdgeCount = 16; // Update this value based on your actual CFG
+        int expectedNodeCount = 12; // Update this value based on your actual CFG
+        int expectedEdgeCount = 13; // Update this value based on your actual CFG
 
         assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
         int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
@@ -270,6 +270,62 @@ class CFGBuilderTest {
         // Expected number of nodes and edges
         int expectedNodeCount = 3; // Update this value based on your actual CFG
         int expectedEdgeCount = 2; // Update this value based on your actual CFG
+
+        assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
+        int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
+        assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
+    }
+
+    @Test
+    void otherStatementafterbreak() {
+        builder.buildCFGs(TEST_FILE_PATH);
+        CFG cfg = builder.getGlobalCFGMap().get("otherStatementafterbreak(int)");
+        builder.printCFG("otherStatementafterbreak(int)");
+        // Expected number of nodes and edges
+        int expectedNodeCount = 11; // Update this value based on your actual CFG
+        int expectedEdgeCount = 12; // Update this value based on your actual CFG
+
+        assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
+        int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
+        assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
+    }
+
+    @Test
+    void Loopstatementafterbreak() {
+        builder.buildCFGs(TEST_FILE_PATH);
+        CFG cfg = builder.getGlobalCFGMap().get("Loopstatementafterbreak(int)");
+        builder.printCFG("Loopstatementafterbreak(int)");
+        // Expected number of nodes and edges
+        int expectedNodeCount = 11; // Update this value based on your actual CFG
+        int expectedEdgeCount = 12; // Update this value based on your actual CFG
+
+        assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
+        int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
+        assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
+    }
+
+    @Test
+    void loopEndWithReturn() {
+        builder.buildCFGs(TEST_FILE_PATH);
+        CFG cfg = builder.getGlobalCFGMap().get("loopEndWithReturn(int)");
+        builder.printCFG("loopEndWithReturn(int)");
+        // Expected number of nodes and edges
+        int expectedNodeCount = 11; // Update this value based on your actual CFG
+        int expectedEdgeCount = 12; // Update this value based on your actual CFG
+
+        assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
+        int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
+        assertEquals(expectedEdgeCount, actualEdgeCount, "Number of edges should match expected value");
+    }
+
+    @Test
+    void nestedLoopEndWithReturn() {
+        builder.buildCFGs(TEST_FILE_PATH);
+        CFG cfg = builder.getGlobalCFGMap().get("nestedLoopEndWithReturn(int)");
+        builder.printCFG("nestedLoopEndWithReturn(int)");
+        // Expected number of nodes and edges
+        int expectedNodeCount = 15; // Update this value based on your actual CFG
+        int expectedEdgeCount = 17; // Update this value based on your actual CFG
 
         assertEquals(expectedNodeCount, cfg.nodes.size(), "Number of nodes should match expected value");
         int actualEdgeCount = cfg.nodes.stream().mapToInt(node -> node.next.size()).sum();
