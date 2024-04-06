@@ -259,6 +259,59 @@ public class Simple {
         System.out.println("Yay");
         return a;
     }
+
+    int otherStatementafterbreak(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            break;
+            int yyy = 34;
+            if (1 > 0) {
+            }
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+    int Loopstatementafterbreak(int a) {
+        int b = a;
+        while (b > 10) {
+            b--;
+            break;
+            while (1 > 0) {
+                int why = 9;
+            }
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+    int loopEndWithReturn(int a) {
+        int b = a;
+        while (a>b) {
+            b--;
+            return 7;
+            b++;
+            int y = 6;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+    int nestedLoopEndWithReturn(int a) {
+        int b = a;
+        while (a>b) {
+            b--;
+            while (b != 10) {
+                return 5;
+                int y = 6;
+            }
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+
     //////////////// TESTS NOT ADDED FOR THE BELOW //////////////////////
 
     public static int calculateSum(int var0, int var1) {
@@ -306,18 +359,6 @@ public class Simple {
         return a;
     }
 
-    int Loopstatementafterbreak(int a) {
-        int b = a;
-        while (b > 10) {
-            b--;
-            break;
-            while (1 > 0) {
-                int why = 9;
-            }
-        }
-        System.out.println("Yay");
-        return a;
-    }
 
     int breakinInnerLoop(int a) {
         int b = a;
@@ -358,7 +399,6 @@ public class Simple {
         while (b > 10) {
             b--;
             int b;
-            int b;
             break;
         }
         System.out.println("Yay");
@@ -366,17 +406,29 @@ public class Simple {
         return a;
     }
 
-    int otherStatementafterbreak(int a) {
+    int sampleDuplicateDeclarationWithinSameScope(int a) {
         int b = a;
+        int b;
         while (b > 10) {
             b--;
-            break;
-            int yyy = 34;
-            if (1 > 0) {
-            }
         }
         System.out.println("Yay");
         return a;
     }
+
+
+
+    int bothIfElseEndWithReturn(int a) {
+        int b = a;
+        if (a>b) {
+            return 5;
+        } else {
+            return 7;
+        }
+        System.out.println("Yay");
+        return a;
+    }
+
+
 
 }
