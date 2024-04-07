@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CFGBuilderTest {
 
     private CFGBuilder builder;
-    private static final String TEST_FILE_PATH = "examples/Simple.java";
+    private static final String TEST_FILE_PATH = "examples/MasterFileWithErrorCases.java";
 
     @BeforeEach
     void setUp() {
