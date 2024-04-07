@@ -5,11 +5,8 @@ plugins {
     id 'jacoco'
     id 'java'
     // Spring Boot plugin to simplify working with Spring applications
-        id 'org.springframework.boot' version '3.2.3'
-        id 'io.spring.dependency-management' version '1.1.4'
-
-    // Create a fat JAR with all dependencies
-    // id 'com.github.johnrengelman.shadow' version '8.1.1' // Check for the latest version on the plugin portal
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 jacoco {
@@ -37,9 +34,6 @@ dependencies {
     // Spoon is a library to analyze and transform Java source code.
     implementation 'fr.inria.gforge.spoon:spoon-core:10.4.1'
 
-    // Soot
-    implementation 'org.soot-oss:soot:4.3.0'
-
     // JSON serialization and deserialization.
     implementation 'org.json:json:20240303'
 
@@ -47,6 +41,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
     implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
 
+    // Use Pair
     implementation 'org.apache.commons:commons-lang3:3.14.0'
 
     // Use JUnit Jupiter for testing.
@@ -83,26 +78,6 @@ sourceSets {
     }
 }
 
-// import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
-// task agentJar(type: ShadowJar) {
-//     archiveClassifier.set('agent')
-//     configurations = [project.configurations.agentCompile]
-//     from sourceSets.agent.output
-//     
-//     // Filter to include only ProfilingAgent and its dependencies
-//     // include '**/profile/ProfilingAgent.java'
-
-//     manifest {
-//         attributes(
-//             'Premain-Class': 'org.profile.ProfilingAgent',
-//             'Can-Redefine-Classes': 'true',
-//             'Can-Retransform-Classes': 'true',
-//             'Agent-Class': 'org.profile.ProfilingAgent'
-//         )
-//     }
-// }
-
 task agentJar(type: Jar) {
     archiveClassifier = 'agent'
     from sourceSets.agent.output
@@ -118,12 +93,8 @@ task agentJar(type: Jar) {
 
 build.dependsOn agentJar
 
-
 application {
     // Define the main class for the application.
-    // mainClass = 'org.parser.Parser'
-    // mainClass = 'org.profile.Executor'
-    // mainClass = 'org.graph.SimpleSootExample'
     mainClass = 'org.servlet.Application'
 }
 
