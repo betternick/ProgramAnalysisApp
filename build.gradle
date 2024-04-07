@@ -92,6 +92,8 @@ spotless {
         target fileTree('.') {
             include '**/*.java'
             exclude '**/gradle/**'
+            exclude '**/resources/**'
+            exclude '**/examples/**'
         }
         toggleOffOn()
         eclipse().configFile 'config/checkstyle/eclipse-formatter.xml'

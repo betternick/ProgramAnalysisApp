@@ -20,9 +20,9 @@ public class Application {
 
     public static void main(String[] args) {
         // try {
-        //     analyzeNewProject("examples/IfElse.java");
+        // analyzeNewProject("examples/IfElse.java");
         // } catch (CompilationException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
 
         System.out.println("Application, Start!");
