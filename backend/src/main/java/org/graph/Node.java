@@ -2,7 +2,6 @@ package org.graph;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 
@@ -31,8 +30,8 @@ public class Node implements Serializable {
         return next;
     }
 
-    public Pair<Integer, Integer> getLineAndId() {
-        return Pair.of(codeBlock.getLineStart(), id);
+    public int getLineStart() {
+        return codeBlock.getLineStart();
     }
 
     public int getId() {
