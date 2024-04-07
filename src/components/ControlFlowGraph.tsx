@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import React from 'react'
-import { Node, Edge, ReactFlowProvider } from 'reactflow'
+import { Node, Edge, ReactFlowProvider, MarkerType } from 'reactflow'
 import { defaultNodes, defaultEdges, edgeFormat } from '../lib/default-nodes-edges'
 import 'reactflow/dist/style.css'
 import { ResponseDynamicData, ResponseEdge, ResponseGraph, ResponseNode } from '../types/ControlFlowGraphTypes'
@@ -39,7 +39,9 @@ const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
     const groups: Node[][] = branchNodes.map((branchNode) => {
         const group: Node[] = [branchNode]
         const groupIds: string[] = []
-        const traverse = (curr: Node, prev: Node | null) => {
+        const visited: Set<string> = new Set<string>()
+        const traverse = (curr: Node) => {
+            visited.add(curr.id)
             const childrenIds: string[] = edges.filter((e) => e.source === curr.id).map((e) => e.target)
             const children: Node[] = []
             childrenIds.forEach((id) => {
@@ -47,6 +49,7 @@ const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
                 const directEdge = child && edges.find((e) => e.source === branchNode.id && e.target === child.id)
                 if (
                     child &&
+                    !visited.has(child.id) &&
                     (child.data.label !== LOOP_CONDITION || !directEdge) &&
                     (child.data.label !== AFTER_IF_ELSE || !directEdge) &&
                     (child.data.label !== AFTER_LOOP || !directEdge)
@@ -57,10 +60,10 @@ const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
                 child.parentNode = branchNode.id
                 group.push(child)
                 groupIds.push(child.id)
-                traverse(child, curr)
+                traverse(child)
             })
         }
-        traverse(branchNode, null)
+        traverse(branchNode)
         branchNode.data.children = groupIds
         return group
     })
@@ -165,6 +168,14 @@ const createEdge = (responseEdge: ResponseEdge): Edge => {
     }
 }
 
+const determineEdgeStyle = (edge: Edge, nodes: Node[]) => {
+    const source = nodes.find((n) => edge.source === n.id)
+    const target = nodes.find((n) => edge.source === n.id)
+    if (source?.type === NodeType.COLLAPSIBLE_NODE && target?.data.label !== AFTER_IF_ELSE && target?.data.label !== AFTER_LOOP) {
+        edge.markerEnd = undefined
+    }
+}
+
 type ControlFlowGraphProps = {
     graph: ResponseGraph[]
 }
@@ -187,6 +198,7 @@ export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
             })
             newEdgeList.forEach((edge) => {
                 determineEdgeHandles(edge, newNodeList)
+                determineEdgeStyle(edge, newNodeList)
             })
             const finalNodeList: Node[] = processCollapsibleNodes(newNodeList, newEdgeList)
             return (
