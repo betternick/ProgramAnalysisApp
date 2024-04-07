@@ -12,18 +12,25 @@ This Java Analysis Tool provides in-depth insights into Java programs by creatin
 
 ## How to Run the Tool
 
-This toos is divided into two main components: the backend analysis and the frontend visualization. The backend analysis is responsible for static and dynamic analysis of the provided Java file, while the frontend visualization displays the results in an interactive format.
+This tool is divided into two main components: the backend analysis and the frontend visualization. The backend analysis is responsible for static and dynamic analysis of the provided Java file, while the frontend visualization displays the results in an interactive format.
 
 - **Backend Analysis**: The backend analysis is implemented in Java, and it performs static and dynamic analysis of the provided Java file.
 
-To run the backend analysis, use the following command:
-`./gradlew run`
+**Prereqs**: Before running the program for the first time, execute the following commands:
+1. `./gradlew clean` 
+2. `./gradlew :spotlessApply` 
+3. `./gradlew build` 
+
+**Running the program**: `./gradlew run`
+
 This will execute the static and dynamic analysis processes.
 
 - **Frontend Visualization**: The frontend visualization is implemented in React
 
-To run the frontend visualization, use the following command:
-`yarn start`
+**Prereqs**: Before running the frontend for the first time, execute the following command:
+1. `yarn install`
+
+**Running the program**: `yarn start`
 
 This will start the development server and visualization at **localhost:3000** in your default web browser.
 
@@ -38,9 +45,14 @@ execution was successful, the dynamic analysis information will be appended to e
 ## Interpreting the Visualization
 
 The visualization represents a control flow graph of the analyzed Java file's main method, appended with runtime analysis of each node. 
-It consists of the following components:
+Each node contains the following components:
+- **Label**: Describes what type of node it is (i.e. Entry, Statement, etc.)
+- **Code**: If the node is a Statement or Conditional node, it will contain the code that was analysed within that block
+- **Dynamic Info**: Profiling metrics including the number of times the node was executed, its average execution time, its average CPU usage, and its average memory usage. 
+    - The color of this section will vary depending the node's performance compared to other nodes in the execution flow. 
+        - i.e. If the user has selected the "Number of Times Executed" radial button on the sidebar, a node that was executed more often than other nodes will be a deeper red color. If a node wasn't executed at all, it'll be slightly dimmed. 
 
-*DETAILS ON FRONTEND HERE*
+Loop Body nodes and True/False Branch nodes are also expandable. To hide/show the bodies/branches of these nodes, the user can click on them.    
 
 ## Static Analysis Details
 

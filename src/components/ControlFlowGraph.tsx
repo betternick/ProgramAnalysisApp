@@ -37,6 +37,9 @@ import {
 const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
     const branchNodes: Node[] = nodes.filter((n) => n.type === NodeType.COLLAPSIBLE_NODE)
     const groups: Node[][] = branchNodes.map((branchNode) => {
+        const branchNodeParentId = edges.find((e) => e.target && e.target === branchNode.id)?.source
+        const branchNodeParentChildren: string[] = edges.filter((e) => e.source === branchNodeParentId && e.target !== branchNode.id)?.map((e) => e.target)
+
         const group: Node[] = [branchNode]
         const groupIds: string[] = []
         const visited: Set<string> = new Set<string>()
@@ -50,6 +53,7 @@ const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
                 if (
                     child &&
                     !visited.has(child.id) &&
+                    !branchNodeParentChildren.includes(child.id) &&
                     (child.data.label !== LOOP_CONDITION || !directEdge) &&
                     (child.data.label !== AFTER_IF_ELSE || !directEdge) &&
                     (child.data.label !== AFTER_LOOP || !directEdge)
@@ -170,8 +174,8 @@ const createEdge = (responseEdge: ResponseEdge): Edge => {
 
 const determineEdgeStyle = (edge: Edge, nodes: Node[]) => {
     const source = nodes.find((n) => edge.source === n.id)
-    const target = nodes.find((n) => edge.source === n.id)
-    if (source?.type === NodeType.COLLAPSIBLE_NODE && target?.data.label !== AFTER_IF_ELSE && target?.data.label !== AFTER_LOOP) {
+    const target = nodes.find((n) => edge.target === n.id)
+    if (source?.type === NodeType.COLLAPSIBLE_NODE && target?.data.label !== AFTER_IF_ELSE && target?.data.label !== LOOP_CONDITION) {
         edge.markerEnd = undefined
     }
 }
