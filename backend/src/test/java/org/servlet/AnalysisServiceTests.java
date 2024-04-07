@@ -123,7 +123,7 @@ public class AnalysisServiceTests {
 
     @Test
     public void testGetClassName_Success() {
-        String className = service.getClassName("examples/Simple.java");
-        assertEquals("src.main.resources.Simple", className);
+        String className = service.getClassName("examples/ShouldPass.java");
+        assertEquals("src.main.resources.ShouldPass", className);
     }
 }
