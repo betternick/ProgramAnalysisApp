@@ -1,15 +1,41 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Sidebar from '../../components/Sidebar'
-import { Flex } from '@chakra-ui/react'
 import ControlFlowGraph from '../../components/ControlFlowGraph'
 import { ResponseGraph } from '../../types/ControlFlowGraphTypes'
-import { DynamicDataCalc } from '../../types/MiscTypes'
+import { DynamicDataDeviationCalc } from '../../types/MiscTypes'
+import { Flex } from '@chakra-ui/react'
 
 // Written with help from ChatGPT
-const determineDeviations = (nodes: DynamicDataCalc[]) => {
-    const filteredNodes = nodes.filter((n) => n.val !== 0)
-    const average = filteredNodes.reduce((acc, n) => acc + n.val, 0) / filteredNodes.length
-    nodes.forEach((n) => (n.deviation = n.val - average))
+const determineDeviations = (nodes: DynamicDataDeviationCalc[]) => {
+    const executionTimes: number[] = nodes.filter((n) => n.executionTimesDeviation.val !== 0).map((n) => n.executionTimesDeviation.val)
+    const averageExecutionTime: number[] = nodes.filter((n) => n.averageExecutionTimeDeviation.val !== 0).map((n) => n.averageExecutionTimeDeviation.val)
+    const averageMemoryUsage: number[] = nodes.filter((n) => n.averageMemoryUsageDeviation.val !== 0).map((n) => n.averageMemoryUsageDeviation.val)
+    const averageCpuUsage: number[] = nodes.filter((n) => n.averageCpuUsageDeviation.val !== 0).map((n) => n.averageCpuUsageDeviation.val)
+
+    const minExecutionTimes = Math.min(...executionTimes)
+    const maxExecutionTimes = Math.max(...executionTimes)
+    const minAverageExecutionTime = Math.min(...averageExecutionTime)
+    const maxAverageExecutionTime = Math.max(...averageExecutionTime)
+    const minAverageMemoryUsage = Math.min(...averageMemoryUsage)
+    const maxAverageMemoryUsage = Math.max(...averageMemoryUsage)
+    const minAverageCpuUsage = Math.min(...averageCpuUsage)
+    const maxAverageCpuUsage = Math.max(...averageCpuUsage)
+
+    nodes.forEach((n) => {
+        n.executionTimesDeviation.deviation =
+            maxExecutionTimes !== minExecutionTimes ? (n.executionTimesDeviation.val - minExecutionTimes) / (maxExecutionTimes - minExecutionTimes) : 0
+
+        n.averageExecutionTimeDeviation.deviation =
+            maxAverageExecutionTime !== minAverageExecutionTime
+                ? (n.averageExecutionTimeDeviation.val - minAverageExecutionTime) / (maxAverageExecutionTime - minAverageExecutionTime)
+                : 0
+        n.averageMemoryUsageDeviation.deviation =
+            maxAverageMemoryUsage !== minAverageMemoryUsage
+                ? (n.averageMemoryUsageDeviation.val - minAverageMemoryUsage) / (maxAverageMemoryUsage - minAverageMemoryUsage)
+                : 0
+        n.averageCpuUsageDeviation.deviation =
+            maxAverageCpuUsage !== minAverageCpuUsage ? (n.averageCpuUsageDeviation.val - minAverageCpuUsage) / (maxAverageCpuUsage - minAverageCpuUsage) : 0
+    })
 }
 
 function App() {
@@ -22,23 +48,22 @@ function App() {
 
     const handleExecute = (response: JSON) => {
         if (response) {
-            const memoryValues: DynamicDataCalc[] = []
+            const deviationCalcs: DynamicDataDeviationCalc[] = []
             for (let id in response) {
-                if ('averageMemoryUsage' in response[id]) {
-                    memoryValues.push({ id, val: response[id]['averageMemoryUsage'], deviation: 0, scaleFactor: 0 })
-                }
+                deviationCalcs.push({
+                    id,
+                    executionTimesDeviation: { val: response[id]['executionTimes'], deviation: 0 },
+                    averageExecutionTimeDeviation: { val: response[id]['averageExecutionTime'], deviation: 0 },
+                    averageMemoryUsageDeviation: { val: response[id]['averageMemoryUsage'], deviation: 0 },
+                    averageCpuUsageDeviation: { val: response[id]['averageCpuUsage'], deviation: 0 },
+                })
             }
-            // Written with help from ChatGPT
-            determineDeviations(memoryValues)
-            const maxDeviation = Math.max(...memoryValues.map((n) => n.deviation))
-            const scaleFactor = maxDeviation !== 0 ? 1 / maxDeviation : 0
-            memoryValues.forEach((n) => (n.scaleFactor = n.deviation * scaleFactor))
-
+            determineDeviations(deviationCalcs)
             const newGraph: ResponseGraph[] = graph.map((cfg) => {
                 const newNodes = cfg.nodes.map((node) => {
                     if (node.id in response) {
-                        const nodeScaleFactor = memoryValues.find((mv) => mv.id === node.id)?.scaleFactor
-                        node.dynamicData = { ...response[node.id], scaleFactor: nodeScaleFactor }
+                        const nodeDynamicDataCalc = deviationCalcs.find((n) => n.id === node.id)
+                        node.dynamicData = { ...response[node.id], deviations: nodeDynamicDataCalc }
                     }
                     return { ...node }
                 })
@@ -47,6 +72,21 @@ function App() {
             setGraph(newGraph)
         }
     }
+
+    const handleStatChange = useCallback((stat: string) => {
+        setGraph((prev) =>
+            prev.map((cfg) => ({
+                ...cfg,
+                nodes: cfg.nodes.map((n) => {
+                    if (n.dynamicData) {
+                        return { ...n, dynamicData: { ...n.dynamicData, stat } }
+                    } else {
+                        return n
+                    }
+                }),
+            })),
+        )
+    }, [])
 
     return (
         <Flex
@@ -64,6 +104,7 @@ function App() {
                 <Sidebar
                     handleExecute={handleExecute}
                     handleUpload={handleUpload}
+                    handleStatChange={handleStatChange}
                     graph={graph}
                 />
             </Flex>

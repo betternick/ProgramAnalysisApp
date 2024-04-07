@@ -36,12 +36,19 @@ export type DynamicData = {
     averageExecutionTime: number
     averageMemoryUsage: number
     averageCpuUsage: number
-    scaleFactor: number
+    deviations: DynamicDataDeviationCalc
+    stat?: string
 }
 
-export type DynamicDataCalc = {
+export type DynamicDataDeviationCalc = {
     id: string
+    executionTimesDeviation: DynamicDataDeviationPair
+    averageExecutionTimeDeviation: DynamicDataDeviationPair
+    averageMemoryUsageDeviation: DynamicDataDeviationPair
+    averageCpuUsageDeviation: DynamicDataDeviationPair
+}
+
+export type DynamicDataDeviationPair = {
     val: number
     deviation: number
-    scaleFactor: number
 }

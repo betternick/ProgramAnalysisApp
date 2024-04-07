@@ -57,7 +57,7 @@ export default function Executor({ handleResponse }: ExecutorProps) {
             gap={2}
             p={3}
             borderRadius="10px"
-            border="1px solid #e8e8e8"
+            border="1px solid #B2BABB"
             flexDir="column"
         >
             <Flex gap={1}>

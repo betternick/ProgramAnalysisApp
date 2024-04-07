@@ -15,11 +15,6 @@ import ReactFlow, {
 import Dagre from '@dagrejs/dagre'
 import { nodeTypes } from '../lib/nodeTypes'
 
-enum Opacity {
-    HIDDEN = 0,
-    VISIBLE = 1,
-}
-
 const getLayoutedElements = (nodes: Node[], edges: Edge[], intersectingNodes: number) => {
     const dagreGraph = new Dagre.graphlib.Graph()
     dagreGraph.setDefaultEdgeLabel(() => ({}))
@@ -37,7 +32,6 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], intersectingNodes: nu
         node.targetPosition = Position.Top
         node.sourcePosition = Position.Bottom
         const nodeWithPosition = dagreGraph.node(node.id)
-        // let opacity
         if (node.parentNode) {
             const parentNodeWithPosition = dagreGraph.node(node.parentNode)
             node.position = {
@@ -45,33 +39,23 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], intersectingNodes: nu
                 y: nodeWithPosition.y - (parentNodeWithPosition.y - parentNodeWithPosition.height / 2) - (node.height ? node.height : 200) / 2,
             }
             node.hidden = !node.hidden
-            // if (!node.style || node.style.opacity === Opacity.VISIBLE || intersectingNodes) {
-            //     opacity = Opacity.HIDDEN
-            // } else {
-            //     opacity = Opacity.VISIBLE
-            // }
         } else {
             node.position = {
                 x: nodeWithPosition.x - nodeWithPosition.width / 2,
                 y: nodeWithPosition.y - nodeWithPosition.height / 2,
             }
-            // opacity = Opacity.VISIBLE
         }
-        // if (opacity === Opacity.HIDDEN) hiddenNodes.push(node.id)
-        // node.style = { opacity: opacity }
         if (node.hidden) hiddenNodes.push(node.id)
+        node.style = { opacity: 1 }
         return node
     })
     edges.forEach((edge) => {
-        // let opacity
         if (hiddenNodes.includes(edge.source) || hiddenNodes.includes(edge.target)) {
-            // opacity = Opacity.HIDDEN
             edge.hidden = true
         } else {
-            // opacity = Opacity.VISIBLE
             edge.hidden = false
         }
-        // edge.style = { opacity: opacity }
+        edge.style = { opacity: 1 }
     })
     return { nodes, edges }
 }
@@ -91,12 +75,12 @@ export default function Flow({ nodes, edges }: FlowProps) {
     })
 
     useEffect(() => {
-        // nodes.forEach((n) => {
-        //     n.style = { opacity: 0 }
-        // })
-        // edges.forEach((e) => {
-        //     e.style = { opacity: 0 }
-        // })
+        nodes.forEach((n) => {
+            n.style = { opacity: 0 }
+        })
+        edges.forEach((e) => {
+            e.style = { opacity: 0 }
+        })
         setLayoutedNodes(nodes)
         setLayoutedEdges(edges)
     }, [nodes, edges])
@@ -119,8 +103,6 @@ export default function Flow({ nodes, edges }: FlowProps) {
             setLayoutedNodes((prevNodes) =>
                 prevNodes.map((n) => {
                     if (parent.data.children.includes(n.id)) {
-                        // const newOpacity = n.style && n.style.opacity === Opacity.HIDDEN ? Opacity.VISIBLE : Opacity.HIDDEN
-                        // n.style = { opacity: newOpacity }
                         n.hidden = !n.hidden
                     }
                     return n
@@ -129,8 +111,6 @@ export default function Flow({ nodes, edges }: FlowProps) {
             setLayoutedEdges((prevEdges) =>
                 prevEdges.map((e) => {
                     if (parent.data.children.includes(e.source) || parent.data.children.includes(e.target)) {
-                        // let opacity = e.style && e.style.opacity === Opacity.HIDDEN ? Opacity.VISIBLE : Opacity.HIDDEN
-                        // return { ...e, style: { opacity: opacity } }
                         return { ...e, hidden: !e.hidden }
                     }
                     return e
@@ -138,9 +118,6 @@ export default function Flow({ nodes, edges }: FlowProps) {
             )
         }
     }
-    // useEffect(() => {
-    //     fitView()
-    // }, [layoutedNodes, layoutedEdges, fitView])
 
     const onNodesChange = useCallback((changes: NodeChange[]) => setLayoutedNodes((nds) => applyNodeChanges(changes, nds)), [])
     const onEdgesChange = useCallback((changes: EdgeChange[]) => setLayoutedEdges((eds) => applyEdgeChanges(changes, eds)), [setLayoutedEdges])

@@ -6,10 +6,15 @@ type ExecutionDataProps = {
     data: DynamicData
 }
 
+// Written with help from ChatGPT
+const interpolate = (val) => {
+    return 0.9 + val * -0.3
+}
+
 export default function ExecutionData({ data }: ExecutionDataProps) {
-    const { executionTimes, averageExecutionTime, averageMemoryUsage, averageCpuUsage, scaleFactor } = data
-    const scaledColor = executionTimes > 0 ? `hsl(6,54%,${60 + Math.abs(scaleFactor) * 30}%)` : '#f5f5f5'
-    console.log(scaledColor)
+    const { executionTimes, averageExecutionTime, averageMemoryUsage, averageCpuUsage, deviations, stat } = data
+    const key = stat ? stat : 'executionTimesDeviation'
+    const scaledColor = executionTimes > 0 ? `hsl(6,54%,${interpolate(deviations[key].deviation) * 100}%)` : '#f5f5f5'
     return (
         <Flex
             flexDir="column"
@@ -25,7 +30,6 @@ export default function ExecutionData({ data }: ExecutionDataProps) {
                 <ListItem>Average Execution Time: {averageExecutionTime} ns</ListItem>
                 <ListItem>Average Memory Usage: {Math.round(averageMemoryUsage / 1024)} kb</ListItem>
                 <ListItem>Average CPU Usage: {(averageCpuUsage * 100).toFixed(2)}%</ListItem>
-                <ListItem>{data.scaleFactor}</ListItem>
             </List>
         </Flex>
     )

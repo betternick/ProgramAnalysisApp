@@ -93,7 +93,7 @@ export default function Uploader({ handleResponse }: UploaderProps) {
             p={3}
             // background="#f5f5f5"
             borderRadius="10px"
-            border="1px solid #e8e8e8"
+            border="1px solid #B2BABB"
         >
             <Flex gap={1}>
                 <Icon

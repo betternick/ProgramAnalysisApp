@@ -39,21 +39,28 @@ const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
     const groups: Node[][] = branchNodes.map((branchNode) => {
         const group: Node[] = [branchNode]
         const groupIds: string[] = []
-        const traverse = (curr: Node) => {
+        const traverse = (curr: Node, prev: Node | null) => {
             const childrenIds: string[] = edges.filter((e) => e.source === curr.id).map((e) => e.target)
             const children: Node[] = []
             childrenIds.forEach((id) => {
                 const child = nodes.find((n) => n.id === id)
-                if (child && child.data.label !== AFTER_IF_ELSE && child.data.label !== AFTER_LOOP && child.data.label !== LOOP_CONDITION) children.push(child)
+                const directEdge = child && edges.find((e) => e.source === branchNode.id && e.target === child.id)
+                if (
+                    child &&
+                    (child.data.label !== LOOP_CONDITION || !directEdge) &&
+                    (child.data.label !== AFTER_IF_ELSE || !directEdge) &&
+                    (child.data.label !== AFTER_LOOP || !directEdge)
+                )
+                    children.push(child)
             })
             children.forEach((child) => {
                 child.parentNode = branchNode.id
                 group.push(child)
                 groupIds.push(child.id)
-                traverse(child)
+                traverse(child, curr)
             })
         }
-        traverse(branchNode)
+        traverse(branchNode, null)
         branchNode.data.children = groupIds
         return group
     })
@@ -66,15 +73,15 @@ const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
 }
 
 const processResponseNodes = (cfg: ResponseGraph): Node[] => {
-    return cfg.nodes.map((n) => createNode(n))
+    return cfg.nodes.map((n) => createNode(n, cfg.name))
 }
 
 const processResponseEdges = (cfg: ResponseGraph): Edge[] => {
     return cfg.edges.map((e) => createEdge(e))
 }
 
-const createNode = (responseNode: ResponseNode): Node => {
-    const { data, type } = determineNodeInfo(responseNode.codeBlock.code[0], responseNode.comments, responseNode.dynamicData)
+const createNode = (responseNode: ResponseNode, name: string): Node => {
+    const { data, type } = determineNodeInfo(responseNode.codeBlock.code[0], responseNode.comments, responseNode.dynamicData, name)
     return {
         id: responseNode.id,
         position: { x: 0, y: 0 }, // dagre will determine pos
@@ -102,12 +109,13 @@ const determineEdgeHandles = (edge: Edge, nodeList: Node[]) => {
     }
 }
 
-const determineNodeInfo = (code: string, comments: string[], dynamicData: ResponseDynamicData | undefined) => {
+const determineNodeInfo = (code: string, comments: string[], dynamicData: ResponseDynamicData | undefined, name: string) => {
     let type = NodeType.BASIC_NODE
     let finalCode = code
     let nodeData
     if (code === ENTRY) {
         nodeData = entryNode
+        nodeData.label = `${ENTRY}\n${name}`
     } else if (code === EXIT) {
         nodeData = exitNode
     } else if (code === TRUE_BRANCH) {
