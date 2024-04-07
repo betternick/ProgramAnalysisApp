@@ -1,16 +1,26 @@
-# Java File Analysis Tool
+# Java Analysis Tool
 
-This tool is designed to analyze Java files and provide both static and dynamic analysis, along with a visualization of the code structure.
+This Java Analysis Tool provides in-depth insights into Java programs by creating Control Flow Graphs (CFGs), instrumentation, and presenting execution flow analysis. Users can visualize both static and dynamic aspects of their code's execution, making it a valuable resource for optimization and understanding program behavior.
+
+## Features
+
+- **Static Analysis:** The tool generates CFGs for uploaded Java files, outlining the structure and decision-making paths in the code.
+- **Execution Flow Graph (Tree):** A tree structure visualization represents the dynamic call hierarchy and frequency of execution paths, offering insights into the runtime flow.
+- **Instrumentation:** Custom logging is injected into the Java bytecode to monitor the execution flow and capture metrics like execution counts and memory usage for each node in the CFG.
+- **Dynamic Analysis:** After running the Java file, the tool collects and integrates execution data with the CFG, highlighting runtime behavior and performance metrics.
+- **User-friendly Visualization:** Users can interact with the analysis results through an intuitive web interface, gaining a clear understanding of the code's runtime behavior.
 
 ## How to Run the Tool
 
-### Backend
+This toos is divided into two main components: the backend analysis and the frontend visualization. The backend analysis is responsible for static and dynamic analysis of the provided Java file, while the frontend visualization displays the results in an interactive format.
+
+- **Backend Analysis**: The backend analysis is implemented in Java, and it performs static and dynamic analysis of the provided Java file.
 
 To run the backend analysis, use the following command:
 `./gradlew run`
 This will execute the static and dynamic analysis processes.
 
-### Frontend
+- **Frontend Visualization**: The frontend visualization is implemented in React
 
 To run the frontend visualization, use the following command:
 `yarn start`
@@ -33,6 +43,8 @@ It consists of the following components:
 *DETAILS ON FRONTEND HERE*
 
 ## Static Analysis Details
+
+<img src="assets/graph-gen.svg" height="600">
 
 The static analysis component of the Java File Analysis Tool focuses on analyzing the structure and behavior of the provided Java code through the following tasks:
 ### Control Flow Graph (CFG) Generation: 
@@ -57,8 +69,34 @@ The results of the static analysis are used to create a detailed representation 
 
 ## Dynamic Analysis Details
 
-The dynamic analysis component executes the analyzed code and collects runtime information, including:
+<img src="assets/instrumentation.svg" height="600">
 
-*DETAILS ON DYNAMIC FLOW HERE*
+### Instrumentation
 
-The dynamic analysis results are integrated with the static analysis data to provide a more comprehensive understanding of the code's behavior and performance characteristics.
+The dynamic analysis starts with a traversal of the Control Flow Graph (CFG). For each code block identified in the CFG, corresponding snippets are instrumented into the Java program's bytecode. This process involves inserting calls to a logging class at strategic points such as method entry and exit, before and after loops, and around conditional statements. The logging class, built upon the asynchronous logging capabilities of Log4j, captures runtime profiling data like execution times and frequency of execution. This enables the collection of detailed performance metrics while minimizing the impact on the program's runtime behavior.
+
+<img src="assets/analysis.svg" height="600">
+
+### Execution & Analysis
+
+After instrumentation, the analysis phase begins by executing the instrumented Java code and gathering data. This phase is critical in reconstructing the actual execution path taken during the program run.
+
+1. **Execution Flow Reconstruction**:
+    - The dynamic runtime data obtained from logging is utilized to rebuild the execution process.
+    - Each node from the Control Flow Graph (CFG) that represents code execution is mapped onto an Execution Flow Graph (EFG), a tree structure that mirrors the call hierarchy of the program.
+
+2. **Node Execution Tracking**:
+    - Nodes corresponding to loops or recursive function calls that are executed multiple times are accurately recorded, reflecting the dynamic nature of the program’s execution.
+    - Nodes without function calls are leaves in the EFG, indicating straight-line execution without further calls.
+
+3. **Tree Structure Utilization**:
+    - The EFG starts with the `main` method as the root and expands with child nodes representing called functions in the order they were executed.
+    - It provides a chronological narrative of function calls, enabling a granular look at execution flow, including recursion and nested function calls.
+
+4. **Profiling Metrics**:
+    - Each node within the EFG captures key profiling metrics, including execution time, CPU, and memory usage.
+    - This information is vital for identifying performance bottlenecks, inefficient code paths, and optimizing resource utilization.
+
+The culmination of this phase is a richly detailed EFG that gives developers insight into not just the static code structure but also its behavior during execution. This enables a deeper understanding of the code's performance characteristics and potential areas for optimization.
+
+
