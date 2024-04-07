@@ -19,51 +19,51 @@ class AnalyserTests {
 
     private AnalysisService service = new AnalysisService();
     private static final String EXPECTED_JSON = """
-      {
-      "cpuUsage": 0,
-      "executionTimeInNano": 10006291,
-      "memoryUsage": 0,
-      "children": [
-        {
-          "cpuUsage": 0,
-          "executionTimeInNano": 3334208,
-          "memoryUsage": 14502832,
-          "id": 2,
-          "startTimeInNano": 281167215154958
-        },
-        {
-          "cpuUsage": 0.30695337,
-          "executionTimeInNano": 456250,
-          "memoryUsage": 14693024,
-          "id": 3,
-          "startTimeInNano": 281167218489166
-        },
-        {
-          "cpuUsage": 0.25307608,
-          "executionTimeInNano": 128917,
-          "memoryUsage": 14693024,
-          "id": 4,
-          "startTimeInNano": 281167218945416
-        },
-        {
-          "cpuUsage": 0.22979797,
-          "executionTimeInNano": 96000,
-          "memoryUsage": 14693024,
-          "id": 5,
-          "startTimeInNano": 281167219074333
-        },
-        {
-          "cpuUsage": 0.125,
-          "executionTimeInNano": 98833,
-          "memoryUsage": 14693024,
-          "id": 10,
-          "startTimeInNano": 281167219170333
-        }
-      ],
-      "id": -1,
-      "startTimeInNano": 281167209262875
-    }
-    """;; // Expected JSON representation of the exec tree
+              {
+              "cpuUsage": 0,
+              "executionTimeInNano": 10006291,
+              "memoryUsage": 0,
+              "children": [
+                {
+                  "cpuUsage": 0,
+                  "executionTimeInNano": 3334208,
+                  "memoryUsage": 14502832,
+                  "id": 2,
+                  "startTimeInNano": 281167215154958
+                },
+                {
+                  "cpuUsage": 0.30695337,
+                  "executionTimeInNano": 456250,
+                  "memoryUsage": 14693024,
+                  "id": 3,
+                  "startTimeInNano": 281167218489166
+                },
+                {
+                  "cpuUsage": 0.25307608,
+                  "executionTimeInNano": 128917,
+                  "memoryUsage": 14693024,
+                  "id": 4,
+                  "startTimeInNano": 281167218945416
+                },
+                {
+                  "cpuUsage": 0.22979797,
+                  "executionTimeInNano": 96000,
+                  "memoryUsage": 14693024,
+                  "id": 5,
+                  "startTimeInNano": 281167219074333
+                },
+                {
+                  "cpuUsage": 0.125,
+                  "executionTimeInNano": 98833,
+                  "memoryUsage": 14693024,
+                  "id": 10,
+                  "startTimeInNano": 281167219170333
+                }
+              ],
+              "id": -1,
+              "startTimeInNano": 281167209262875
+            }
+            """;; // Expected JSON representation of the exec tree
 
     public static Path createTempFileWithContent(String prefix, String suffix, String content) throws IOException {
         Path tempFile = Files.createTempFile(prefix, suffix);
@@ -120,10 +120,10 @@ class AnalyserTests {
 
         String graphPath = "cfgMap.ser";
         cfg.serializeMap(graphPath);
-         var IDs = cfg.getAllNodeIds();
-         Analyser analyser = new Analyser(graphPath);
-         analyser.analyze("src/test/resources/simpleTarget.log");
-         String actualExecTree = analyser.getExecTreeAsJson();
-         assertTrue(actualExecTree.equals(expectedExecTree));
+        var IDs = cfg.getAllNodeIds();
+        Analyser analyser = new Analyser(graphPath);
+        analyser.analyze("src/test/resources/simpleTarget.log");
+        String actualExecTree = analyser.getExecTreeAsJson();
+        assertTrue(actualExecTree.equals(expectedExecTree));
     }
 }
