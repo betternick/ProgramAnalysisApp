@@ -22,7 +22,7 @@ public class CFGBuilder {
 
     public static void main(String[] args) {
         CFGBuilder builder = new CFGBuilder();
-        builder.buildCFGs("backend/examples/Simple.java");
+        builder.buildCFGs("backend/examples/MasterFileWithErrorCases.java");
 
         // builder.serializeMap("cfgMap.ser");
 
