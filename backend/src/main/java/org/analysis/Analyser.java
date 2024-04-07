@@ -73,18 +73,20 @@ public class Analyser {
 
     // We build the execution tree
     private void traverse(BufferedReader reader) throws IOException {
-        Stack<ExecTree> execStack = new Stack<>();
 
+        // First line should be Entering the main
+        // e.g. Enter:main(java.lang.String[]):1623159740000
         String line = reader.readLine();
         String[] parts = line.split(":");
-
         if (!parts[0].equals("Enter") || !parts[1].equals("main(java.lang.String[])")) {
             throw new IllegalArgumentException(
                     "The first line of the log file should be Enter:main(java.lang.String[]), not: " + line);
         }
 
+        // Parst the start time
         long startTimeInNano = Long.parseLong(parts[2]);
         root = new ExecTree(null, startTimeInNano, 0, 0);
+        Stack<ExecTree> execStack = new Stack<>();
         ExecTree currExecNode = root;
 
         // It assumes the last log line is "Exit:main(java.lang.String[])"
@@ -109,9 +111,8 @@ public class Analyser {
         }
 
         long endTimeInNano = Long.parseLong(parts[2]);
-        assert (currExecNode == root);
         // This will calculate the execution times for all nodes recursively
-        currExecNode.calculateExecutionTimes(endTimeInNano);
+        root.calculateExecutionTimes(endTimeInNano);
     }
 
     public void analyze(String logPath) {
