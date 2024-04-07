@@ -85,6 +85,9 @@ public class ExecTree {
         JSONObject json = new JSONObject();
         if (this.getCodeNode() != null) {
             json.put("id", this.getCodeNode().getId());
+        } else {
+            // This is the root node
+            json.put("id", -1);
         }
         json.put("startTimeInNano", this.startTimeInNano);
         json.put("executionTimeInNano", this.executionTimeInNano);

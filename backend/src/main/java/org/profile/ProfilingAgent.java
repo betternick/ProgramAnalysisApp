@@ -169,17 +169,12 @@ public class ProfilingAgent {
     }
 
     static class MethodAdapter extends AdviceAdapter {
-        private String className;
-        private String methodName;
         private String cfgName;
-        private CFG cfg;
 
         private List<Pair<Integer, Integer>> lineAndId = new ArrayList<>();
 
         protected MethodAdapter(int api, MethodVisitor mv, int access, String name, String desc, String className) {
             super(api, mv, access, name, desc);
-            this.className = className;
-            this.methodName = name;
 
             cfgName = transformNameAndDescToCfgFormat(name, desc);
             // Get the corresponding CFG for the method
@@ -194,6 +189,7 @@ public class ProfilingAgent {
 
         private void collectInjectPlaces(CFG cfg) {
             for (Node node : cfg.nodes) {
+
                 lineAndId.add(node.getLineAndId());
             }
         }
