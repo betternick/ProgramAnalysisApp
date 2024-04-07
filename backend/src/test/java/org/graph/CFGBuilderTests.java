@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CFGBuilderTest {
 
     private CFGBuilder builder;
-    private static final String TEST_FILE_PATH = "examples/Simple.java";
+    private static final String TEST_FILE_PATH = "examples/MasterFileWithErrorCases.java";
 
     @BeforeEach
     void setUp() {
@@ -19,16 +19,20 @@ class CFGBuilderTest {
         builder.buildCFGs(TEST_FILE_PATH);
         builder.getGlobalCFGMap();
 
+        // Print out the keys of the globalCFGMap
+        System.out.println("Keys of globalCFGMap:");
+        builder.globalCFGMap.keySet().forEach(System.out::println);
+
         // Verify that a CFG was created for the method calculateSum
-        assertTrue(builder.getGlobalCFGMap().containsKey("calculateSum(int,int)"),
-                "CFG should contain 'calculateSum()'");
+        assertTrue(builder.getGlobalCFGMap().containsKey("calculateSum(int num1, int num2)"),
+                "CFG should contain 'calculateSum(int num1, int num2)'");
     }
 
     @Test
     void testReturnInBothBranchesNodeAndEdgeCount() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("returnInBothBranches(int)");
-        builder.printCFG("returnInBothBranches(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("returnInBothBranches(int a)");
+        builder.printCFG("returnInBothBranches(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 12; // Update this value based on your actual CFG
         int expectedEdgeCount = 13; // Update this value based on your actual CFG
@@ -41,8 +45,8 @@ class CFGBuilderTest {
     @Test
     void testReturnInIFELSEBranch() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("returnInIfElseBranch(int)");
-        builder.printCFG("returnInIfElseBranch(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("returnInIfElseBranch(int a)");
+        builder.printCFG("returnInIfElseBranch(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 12; // Update this value based on your actual CFG
         int expectedEdgeCount = 13; // Update this value based on your actual CFG
@@ -55,8 +59,8 @@ class CFGBuilderTest {
     @Test
     void aSimpletest() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("aSimpleTest(java.lang.String[])");
-        builder.printCFG("aSimpleTest(java.lang.String[])");
+        CFG cfg = builder.getGlobalCFGMap().get("aSimpleTest(java.lang.String[] var0)");
+        builder.printCFG("aSimpleTest(java.lang.String[] var0)");
         // Expected number of nodes and edges
         int expectedNodeCount = 5; // Update this value based on your actual CFG
         int expectedEdgeCount = 4; // Update this value based on your actual CFG
@@ -69,8 +73,8 @@ class CFGBuilderTest {
     @Test
     void AssigmentWithoutDeclaration() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("AssigmentWithoutDeclaration(int)");
-        builder.printCFG("AssigmentWithoutDeclaration(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("AssigmentWithoutDeclaration(int a)");
+        builder.printCFG("AssigmentWithoutDeclaration(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 14; // Update this value based on your actual CFG
         int expectedEdgeCount = 14; // Update this value based on your actual CFG
@@ -83,8 +87,8 @@ class CFGBuilderTest {
     @Test
     void checkingIfElse() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("checkingIfElse(int)");
-        builder.printCFG("checkingIfElse(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("checkingIfElse(int a)");
+        builder.printCFG("checkingIfElse(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 17; // Update this value based on your actual CFG
         int expectedEdgeCount = 18; // Update this value based on your actual CFG
@@ -97,8 +101,8 @@ class CFGBuilderTest {
     @Test
     void sampleDeclarationWithNoUse() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("sampleDeclarationWithNoUse(int)");
-        builder.printCFG("sampleDeclarationWithNoUse(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("sampleDeclarationWithNoUse(int a)");
+        builder.printCFG("sampleDeclarationWithNoUse(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 12; // Update this value based on your actual CFG
         int expectedEdgeCount = 13; // Update this value based on your actual CFG
@@ -111,8 +115,8 @@ class CFGBuilderTest {
     @Test
     void simplewhileReturn() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("simplewhileReturn(int)");
-        builder.printCFG("simplewhileReturn(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("simplewhileReturn(int a)");
+        builder.printCFG("simplewhileReturn(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 12; // Update this value based on your actual CFG
         int expectedEdgeCount = 13; // Update this value based on your actual CFG
@@ -125,8 +129,8 @@ class CFGBuilderTest {
     @Test
     void returnInInnerLoop() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("returnInInnerLoop(int)");
-        builder.printCFG("returnInInnerLoop(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("returnInInnerLoop(int a)");
+        builder.printCFG("returnInInnerLoop(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 11; // Update this value based on your actual CFG
         int expectedEdgeCount = 12; // Update this value based on your actual CFG
@@ -139,8 +143,8 @@ class CFGBuilderTest {
     @Test
     void returnInOuterLoop() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("returnInOuterLoop(int)");
-        builder.printCFG("returnInOuterLoop(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("returnInOuterLoop(int a)");
+        builder.printCFG("returnInOuterLoop(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 18; // Update this value based on your actual CFG
         int expectedEdgeCount = 20; // Update this value based on your actual CFG
@@ -153,8 +157,8 @@ class CFGBuilderTest {
     @Test
     void Ifstatementafterbreak() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("Ifstatementafterbreak(int)");
-        builder.printCFG("Ifstatementafterbreak(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("Ifstatementafterbreak(int a)");
+        builder.printCFG("Ifstatementafterbreak(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 11; // Update this value based on your actual CFG
         int expectedEdgeCount = 12; // Update this value based on your actual CFG
@@ -167,8 +171,8 @@ class CFGBuilderTest {
     @Test
     void sampleForLoopProgram() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("sampleForLoopProgram(int)");
-        builder.printCFG("sampleForLoopProgram(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("sampleForLoopProgram(int a)");
+        builder.printCFG("sampleForLoopProgram(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 11; // Update this value based on your actual CFG
         int expectedEdgeCount = 12; // Update this value based on your actual CFG
@@ -181,8 +185,8 @@ class CFGBuilderTest {
     @Test
     void sampleIfProgram() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("sampleIfProgram(int)");
-        builder.printCFG("sampleIfProgram(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("sampleIfProgram(int a)");
+        builder.printCFG("sampleIfProgram(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 13; // Update this value based on your actual CFG
         int expectedEdgeCount = 14; // Update this value based on your actual CFG
@@ -195,7 +199,7 @@ class CFGBuilderTest {
     @Test
     void sampleForLoopInsideIF() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("sampleForLoopInsideIF(int,int)");
+        CFG cfg = builder.getGlobalCFGMap().get("sampleForLoopInsideIF(int num1, int num2)");
         builder.printCFG("sampleForLoopInsideIF(int,int)");
         // Expected number of nodes and edges
         int expectedNodeCount = 25; // Update this value based on your actual CFG
@@ -209,7 +213,7 @@ class CFGBuilderTest {
     @Test
     void sampleForLoop() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("sampleForLoop(int,int)");
+        CFG cfg = builder.getGlobalCFGMap().get("sampleForLoop(int num1, int num2)");
         builder.printCFG("sampleForLoop(int,int)");
         // Expected number of nodes and edges
         int expectedNodeCount = 18; // Update this value based on your actual CFG
@@ -223,8 +227,8 @@ class CFGBuilderTest {
     @Test
     void main() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("main(java.lang.String[])");
-        builder.printCFG("main(java.lang.String[])");
+        CFG cfg = builder.getGlobalCFGMap().get("main(java.lang.String[] args)");
+        builder.printCFG("main(java.lang.String[] args)");
         // Expected number of nodes and edges
         int expectedNodeCount = 26; // Update this value based on your actual CFG
         int expectedEdgeCount = 27; // Update this value based on your actual CFG
@@ -237,8 +241,8 @@ class CFGBuilderTest {
     @Test
     void sampleWhileLoopWithBreakInsideNestedIFProgram() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("sampleWhileLoopWithBreakInsideNestedIFProgram(int)");
-        builder.printCFG("sampleWhileLoopWithBreakInsideNestedIFProgram(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("sampleWhileLoopWithBreakInsideNestedIFProgram(int a)");
+        builder.printCFG("sampleWhileLoopWithBreakInsideNestedIFProgram(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 19; // Update this value based on your actual CFG
         int expectedEdgeCount = 22; // Update this value based on your actual CFG
@@ -265,8 +269,8 @@ class CFGBuilderTest {
     @Test
     void isEvenNumber() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("isEvenNumber(int)");
-        builder.printCFG("isEvenNumber(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("isEvenNumber(int num)");
+        builder.printCFG("isEvenNumber(int num)");
         // Expected number of nodes and edges
         int expectedNodeCount = 3; // Update this value based on your actual CFG
         int expectedEdgeCount = 2; // Update this value based on your actual CFG
@@ -279,8 +283,8 @@ class CFGBuilderTest {
     @Test
     void otherStatementafterbreak() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("otherStatementafterbreak(int)");
-        builder.printCFG("otherStatementafterbreak(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("otherStatementafterbreak(int a)");
+        builder.printCFG("otherStatementafterbreak(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 11; // Update this value based on your actual CFG
         int expectedEdgeCount = 12; // Update this value based on your actual CFG
@@ -293,8 +297,8 @@ class CFGBuilderTest {
     @Test
     void Loopstatementafterbreak() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("Loopstatementafterbreak(int)");
-        builder.printCFG("Loopstatementafterbreak(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("Loopstatementafterbreak(int a)");
+        builder.printCFG("Loopstatementafterbreak(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 11; // Update this value based on your actual CFG
         int expectedEdgeCount = 12; // Update this value based on your actual CFG
@@ -307,8 +311,8 @@ class CFGBuilderTest {
     @Test
     void loopEndWithReturn() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("loopEndWithReturn(int)");
-        builder.printCFG("loopEndWithReturn(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("loopEndWithReturn(int a)");
+        builder.printCFG("loopEndWithReturn(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 11; // Update this value based on your actual CFG
         int expectedEdgeCount = 12; // Update this value based on your actual CFG
@@ -321,8 +325,8 @@ class CFGBuilderTest {
     @Test
     void nestedLoopEndWithReturn() {
         builder.buildCFGs(TEST_FILE_PATH);
-        CFG cfg = builder.getGlobalCFGMap().get("nestedLoopEndWithReturn(int)");
-        builder.printCFG("nestedLoopEndWithReturn(int)");
+        CFG cfg = builder.getGlobalCFGMap().get("nestedLoopEndWithReturn(int a)");
+        builder.printCFG("nestedLoopEndWithReturn(int a)");
         // Expected number of nodes and edges
         int expectedNodeCount = 15; // Update this value based on your actual CFG
         int expectedEdgeCount = 17; // Update this value based on your actual CFG

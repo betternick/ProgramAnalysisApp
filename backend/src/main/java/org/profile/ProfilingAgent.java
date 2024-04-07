@@ -12,6 +12,9 @@ import java.io.*;
 import java.util.*;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ProfilingAgent {
 
     // Where is this agent compiled to?
@@ -178,13 +181,32 @@ public class ProfilingAgent {
 
             cfgName = transformNameAndDescToCfgFormat(name, desc);
             // Get the corresponding CFG for the method
-            CFG functionCFG = cfgMap.get(cfgName);
+            CFG functionCFG = findFunctionInCFGMap(cfgName);
             if (functionCFG == null) {
                 // Do nothing if the CFG is not found
                 return;
             }
 
             collectInjectPlaces(functionCFG);
+        }
+
+        public static String removeArgumentNames(String signature) {
+            // This pattern matches argument names in the function signature
+            Pattern pattern = Pattern.compile("\\s+\\w+(,|\\))");
+            Matcher matcher = pattern.matcher(signature);
+
+            // Replace all occurrences of the pattern with just the comma or parenthesis
+            return matcher.replaceAll("$1");
+        }
+
+        private static CFG findFunctionInCFGMap(String cfgName) {
+            for (Map.Entry<String, CFG> entry : cfgMap.entrySet()) {
+                String transformedName = removeArgumentNames(entry.getKey());
+                if (transformedName.equals(cfgName)) {
+                    return entry.getValue();
+                }
+            }
+            return null;
         }
 
         private void collectInjectPlaces(CFG cfg) {

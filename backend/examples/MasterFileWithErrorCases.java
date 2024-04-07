@@ -313,7 +313,7 @@ return a;
 
 //////////////// TESTS NOT ADDED FOR THE BELOW //////////////////////
 
-public static int calculateSum(int var0, int var1) {
+public static int calculateSum2(int var0, int var1) {
 int g = 10;
 return var0 + var1;
 System.out.println("This code should be unreachable");

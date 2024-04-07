@@ -106,8 +106,14 @@ public class CFGBuilder {
             // Analyze and annotate the CFG
             variableAnalyzer.analyzeAndAnnotateCFG(method, cfg);
 
+            // Construct the method signature with parameter names
+            String methodName = method.getSimpleName();
+            String parameters = method.getParameters().stream()
+                    .map(p -> p.getType() + " " + p.getSimpleName())
+                    .collect(Collectors.joining(", ", "(", ")"));
+            String methodSignature = methodName + parameters;
+
             // Add the CFG to the global map
-            String methodSignature = method.getSignature();
             globalCFGMap.put(methodSignature, cfg);
             // variableAnalyzer.doesJavaFileCompile(filePath);
         }
