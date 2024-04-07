@@ -44,7 +44,10 @@ It consists of the following components:
 
 ## Static Analysis Details
 
-<img src="assets/graph-gen.svg" height="600">
+
+<img src="assets/if-else.png" height="300">
+<img src="assets/forloop.png" height="300">
+<img src="assets/whileLoop.png" height="300">
 
 The static analysis component of the Java File Analysis Tool focuses on analyzing the structure and behavior of the provided Java code through the following tasks:
 ### Control Flow Graph (CFG) Generation: 
