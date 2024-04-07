@@ -189,8 +189,23 @@ public class ProfilingAgent {
 
         private void collectInjectPlaces(CFG cfg) {
             for (Node node : cfg.nodes) {
+                String code = String.join("\n", node.codeBlock.code).trim();
 
-                lineAndId.add(node.getLineAndId());
+                if (code.equals(NodeTypes.ENTRY) ||
+                        code.equals(NodeTypes.EXIT) ||
+                        code.startsWith(NodeTypes.FOR_LOOP) ||
+                        code.startsWith(NodeTypes.WHILE_LOOP) ||
+                        code.startsWith(NodeTypes.IF_ELSE)) {
+                    continue;
+                } else if (code.startsWith(NodeTypes.TRUE_BRANCH) || code.startsWith(NodeTypes.FALSE_BRANCH)) {
+                    // TODO: ALARM: bad assumptions
+                    // it assumes that if and else each occupies a single line
+                    lineAndId.add(Pair.of(node.codeBlock.getLineStart() + 1, node.id));
+                } else if (code.startsWith(NodeTypes.IF_CONDITION) || code.startsWith(NodeTypes.LOOP_CONDITION)) {
+                    lineAndId.add(Pair.of(node.codeBlock.getLineStart(), node.id));
+                } else {
+                    lineAndId.add(Pair.of(node.codeBlock.getLineStart(), node.id));
+                }
             }
         }
 
