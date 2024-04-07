@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Node, Edge, ReactFlowProvider } from 'reactflow'
 import { defaultNodes, defaultEdges, edgeFormat } from '../lib/default-nodes-edges'
 import 'reactflow/dist/style.css'
@@ -34,16 +34,54 @@ import {
     trueBranchNode,
 } from '../lib/nodeTypes'
 
+const processCollapsibleNodes = (nodes: Node[], edges: Edge[]) => {
+    const branchNodes: Node[] = nodes.filter((n) => n.type === NodeType.COLLAPSIBLE_NODE)
+    const groups: Node[][] = branchNodes.map((branchNode) => {
+        const group: Node[] = [branchNode]
+        const groupIds: string[] = []
+        const traverse = (curr: Node, prev: Node | null) => {
+            const childrenIds: string[] = edges.filter((e) => e.source === curr.id).map((e) => e.target)
+            const children: Node[] = []
+            childrenIds.forEach((id) => {
+                const child = nodes.find((n) => n.id === id)
+                const directEdge = child && edges.find((e) => e.source === branchNode.id && e.target === child.id)
+                if (
+                    child &&
+                    (child.data.label !== LOOP_CONDITION || !directEdge) &&
+                    (child.data.label !== AFTER_IF_ELSE || !directEdge) &&
+                    (child.data.label !== AFTER_LOOP || !directEdge)
+                )
+                    children.push(child)
+            })
+            children.forEach((child) => {
+                child.parentNode = branchNode.id
+                group.push(child)
+                groupIds.push(child.id)
+                traverse(child, curr)
+            })
+        }
+        traverse(branchNode, null)
+        branchNode.data.children = groupIds
+        return group
+    })
+    const finalNodesList: Node[] = groups.reduce((accum, group) => accum.concat(group), [])
+    nodes.forEach((node) => {
+        const alreadyInList = finalNodesList.find((n) => n.id === node.id)
+        if (!alreadyInList) finalNodesList.push(node)
+    })
+    return finalNodesList
+}
+
 const processResponseNodes = (cfg: ResponseGraph): Node[] => {
-    return cfg.nodes.map((n) => createNode(n))
+    return cfg.nodes.map((n) => createNode(n, cfg.name))
 }
 
 const processResponseEdges = (cfg: ResponseGraph): Edge[] => {
     return cfg.edges.map((e) => createEdge(e))
 }
 
-const createNode = (responseNode: ResponseNode): Node => {
-    const { data, type } = determineNodeInfo(responseNode.codeBlock.code[0], responseNode.comments, responseNode.dynamicData)
+const createNode = (responseNode: ResponseNode, name: string): Node => {
+    const { data, type } = determineNodeInfo(responseNode.codeBlock.code[0], responseNode.comments, responseNode.dynamicData, name)
     return {
         id: responseNode.id,
         position: { x: 0, y: 0 }, // dagre will determine pos
@@ -71,23 +109,25 @@ const determineEdgeHandles = (edge: Edge, nodeList: Node[]) => {
     }
 }
 
-const determineNodeInfo = (code: string, comments: string[], dynamicData: ResponseDynamicData | undefined) => {
+const determineNodeInfo = (code: string, comments: string[], dynamicData: ResponseDynamicData | undefined, name: string) => {
     let type = NodeType.BASIC_NODE
     let finalCode = code
     let nodeData
     if (code === ENTRY) {
         nodeData = entryNode
+        nodeData.label = `${ENTRY}\n${name}`
     } else if (code === EXIT) {
         nodeData = exitNode
     } else if (code === TRUE_BRANCH) {
-        type = NodeType.BRANCH_NODE
+        type = NodeType.COLLAPSIBLE_NODE
         nodeData = trueBranchNode
     } else if (code === FALSE_BRANCH) {
-        type = NodeType.BRANCH_NODE
+        type = NodeType.COLLAPSIBLE_NODE
         nodeData = falseBranchNode
     } else if (code === AFTER_IF_ELSE) {
         nodeData = afterIfElseNode
     } else if (code === LOOP_BODY) {
+        type = NodeType.COLLAPSIBLE_NODE
         nodeData = loopBodyNode
     } else if (code === AFTER_LOOP) {
         nodeData = afterLoopNode
@@ -100,11 +140,11 @@ const determineNodeInfo = (code: string, comments: string[], dynamicData: Respon
         nodeData = loopConditionNode
         finalCode = code.substring(LOOP_CONDITION.length)
     } else if (code.startsWith(FOR_LOOP) || code.startsWith(WHILE_LOOP)) {
-        type = NodeType.COLLAPSIBLE_NODE
+        type = NodeType.STATEMENT_NODE
         nodeData = loopNode
         nodeData.label = code.startsWith(FOR_LOOP) ? FOR_LOOP : WHILE_LOOP
     } else if (code.startsWith(IF_ELSE)) {
-        type = NodeType.COLLAPSIBLE_NODE
+        type = NodeType.STATEMENT_NODE
         nodeData = ifElseNode
         finalCode = code.substring(IF_ELSE.length)
     } else {
@@ -130,24 +170,6 @@ type ControlFlowGraphProps = {
 }
 
 export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
-    // const [nodes, setNodes] = useState<Node[]>(defaultNodes)
-    // const [edges, setEdges] = useState<Edge[]>(defaultEdges)
-
-    // useEffect(() => {
-    //     console.log('are you creating a new node list?')
-    //     let newNodeList: Node[] = []
-    //     let newEdgeList: Edge[] = []
-    //     graph.forEach((cfg) => {
-    //         newNodeList = [...newNodeList, ...processResponseNodes(cfg)]
-    //         newEdgeList = [...newEdgeList, ...processResponseEdges(cfg)]
-    //     })
-    //     newEdgeList.forEach((edge) => {
-    //         determineEdgeHandles(edge, newNodeList)
-    //     })
-    //     setNodes(newNodeList)
-    //     setEdges(newEdgeList)
-    // }, [graph])
-
     const controlFlowGraph = () => {
         if (!graph || graph.length === 0) {
             return (
@@ -166,9 +188,10 @@ export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
             newEdgeList.forEach((edge) => {
                 determineEdgeHandles(edge, newNodeList)
             })
+            const finalNodeList: Node[] = processCollapsibleNodes(newNodeList, newEdgeList)
             return (
                 <Flow
-                    nodes={newNodeList}
+                    nodes={finalNodeList}
                     edges={newEdgeList}
                 />
             )
@@ -180,13 +203,7 @@ export default function ControlFlowGraph({ graph }: ControlFlowGraphProps) {
             height="100vh"
             width="100vw"
         >
-            <ReactFlowProvider>
-                {/* <Flow
-                    nodes={nodes}
-                    edges={edges}
-                /> */}
-                {controlFlowGraph()}
-            </ReactFlowProvider>
+            <ReactFlowProvider>{controlFlowGraph()}</ReactFlowProvider>
         </Flex>
     )
 }

@@ -6,12 +6,12 @@ import Comments from '../Comments'
 import ExecutionData from '../ExecutionData'
 
 export default function StatementNode({ data }: NodeProps<CustomNodeWithCodeProps>) {
-    const { color, label, code, handles, comments, dynamicData } = data
+    const { label, code, handles, comments, dynamicData } = data
 
     return (
         <Card
             variant="outline"
-            borderColor={color}
+            borderColor="darkgray"
         >
             <CardBody>
                 <Heading size="sm">{label}</Heading>

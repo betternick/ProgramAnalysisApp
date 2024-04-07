@@ -1,3 +1,5 @@
+import { DynamicDataDeviationCalc, DynamicDataDeviationPair } from './MiscTypes'
+
 export interface ResponseGraph {
     name: string
     nodes: ResponseNode[]
@@ -28,4 +30,6 @@ export type ResponseDynamicData = {
     averageExecutionTime: number
     averageMemoryUsage: number
     averageCpuUsage: number
+    deviations: DynamicDataDeviationCalc
+    stat?: string
 }
