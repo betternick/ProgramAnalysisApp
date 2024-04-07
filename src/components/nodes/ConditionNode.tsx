@@ -1,4 +1,4 @@
-import { Card, CardBody, Heading, Code } from '@chakra-ui/react'
+import { Card, CardBody, Heading, Code, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Handle, NodeProps } from 'reactflow'
 import { CustomNodeWithCodeProps } from '../../types/MiscTypes'

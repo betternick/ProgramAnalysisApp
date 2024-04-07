@@ -28,4 +28,5 @@ export type ResponseDynamicData = {
     averageExecutionTime: number
     averageMemoryUsage: number
     averageCpuUsage: number
+    scaleFactor: number
 }

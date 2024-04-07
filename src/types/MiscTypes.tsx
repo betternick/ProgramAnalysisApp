@@ -14,6 +14,14 @@ export type CustomNodeProps = {
     code?: string
 }
 
+export type CustomNodeCollapsibleProps = {
+    color: string
+    label: string
+    handles: HandleInfo[]
+    comments: string[]
+    children: string[]
+}
+
 export type CustomNodeWithCodeProps = {
     color: string
     label: string
@@ -28,4 +36,12 @@ export type DynamicData = {
     averageExecutionTime: number
     averageMemoryUsage: number
     averageCpuUsage: number
+    scaleFactor: number
+}
+
+export type DynamicDataCalc = {
+    id: string
+    val: number
+    deviation: number
+    scaleFactor: number
 }

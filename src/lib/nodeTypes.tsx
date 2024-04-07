@@ -3,7 +3,6 @@ import BasicNode from '../components/nodes/BasicNode'
 import { Position } from 'reactflow'
 import ConditionNode from '../components/nodes/ConditionNode'
 import CollapsibleNode from '../components/nodes/CollapsibleNode'
-import BranchNode from '../components/nodes/BranchNode'
 
 export const ENTRY = 'Entry'
 export const EXIT = 'Exit'
@@ -20,13 +19,13 @@ export const LOOP_BODY = 'Loop body'
 export const AFTER_LOOP = 'After loop'
 
 export const entryNode = {
-    color: '#264653',
+    color: '#AEB6BF',
     label: ENTRY,
     handles: [{ type: 'source', position: Position.Bottom, id: 'a' }],
 }
 
 export const exitNode = {
-    color: '#9b2226',
+    color: '#AEB6BF',
     label: EXIT,
     handles: [{ type: 'target', position: Position.Top, id: 'a' }],
 }
@@ -39,6 +38,7 @@ export const trueBranchNode = {
         { type: 'source', position: Position.Bottom, id: 'b' },
         { type: 'source', position: Position.Left, id: 'c' },
     ],
+    children: [],
 }
 
 export const falseBranchNode = {
@@ -49,6 +49,7 @@ export const falseBranchNode = {
         { type: 'source', position: Position.Bottom, id: 'b' },
         { type: 'source', position: Position.Right, id: 'c' },
     ],
+    children: [],
 }
 
 export const afterIfElseNode = {
@@ -68,6 +69,7 @@ export const loopBodyNode = {
         { type: 'source', position: Position.Bottom, id: 'b' },
         { type: 'source', position: Position.Left, id: 'c' },
     ],
+    children: [],
 }
 
 export const afterLoopNode = {
@@ -129,7 +131,6 @@ export enum NodeType {
     BASIC_NODE = 'basicNode',
     CONDITION_NODE = 'conditionNode',
     COLLAPSIBLE_NODE = 'collapsibleNode',
-    BRANCH_NODE = 'branchNode',
 }
 
 export const nodeTypes = {
@@ -137,5 +138,4 @@ export const nodeTypes = {
     basicNode: BasicNode,
     conditionNode: ConditionNode,
     collapsibleNode: CollapsibleNode,
-    branchNode: BranchNode,
 }
