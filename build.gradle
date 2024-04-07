@@ -94,6 +94,7 @@ spotless {
             exclude '**/gradle/**'
             exclude '**/resources/**'
             exclude '**/examples/**'
+            exclude '**/test/**'
         }
         toggleOffOn()
         eclipse().configFile 'config/checkstyle/eclipse-formatter.xml'
