@@ -168,6 +168,52 @@ public class ProfilingAgent {
         }
     }
 
+    private static String removeArgumentNames(String functionSignature) {
+        StringBuilder newSignature = new StringBuilder();
+        boolean readingType = true; // State to keep track if we are reading a type
+
+        // Iterate over each character in the string
+        for (char ch : functionSignature.toCharArray()) {
+            // If we find a closing parenthesis, we are done
+            if (ch == ')') {
+                newSignature.append(ch);
+                break;
+            }
+
+            // If we find a comma or an opening parenthesis, the next token will be a type
+            if (ch == ',' || ch == '(') {
+                readingType = true;
+                newSignature.append(ch);
+                if (ch == ',') {
+                    newSignature.append(' '); // Add space after comma for formatting
+                }
+                continue;
+            }
+
+            // If we are reading a type, append the character to the result
+            if (readingType) {
+                newSignature.append(ch);
+            }
+
+            // If we encounter a space, the type has ended and an argument name is starting
+            if (ch == ' ') {
+                readingType = false; // Stop reading characters until we hit a comma or closing parenthesis
+            }
+        }
+
+        return newSignature.toString();
+    }
+
+    private static CFG findFunctionInCFGMap(String cfgName) {
+        for (Map.Entry<String, CFG> entry : cfgMap.entrySet()) {
+            String transformedName = removeArgumentNames(entry.getKey());
+            if (transformedName.equals(cfgName)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
     static class MethodAdapter extends AdviceAdapter {
         private String cfgName;
 
@@ -178,7 +224,7 @@ public class ProfilingAgent {
 
             cfgName = transformNameAndDescToCfgFormat(name, desc);
             // Get the corresponding CFG for the method
-            CFG functionCFG = cfgMap.get(cfgName);
+            CFG functionCFG = findFunctionInCFGMap(cfgName);
             if (functionCFG == null) {
                 // Do nothing if the CFG is not found
                 return;
