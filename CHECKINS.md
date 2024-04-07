@@ -81,9 +81,9 @@ We are on track since we met all the goals set for check-in 4 which were:
 
 # Project 2 - Check-In 3
 ## Mockup of how your project is planned to operate (as used for your first user study). Include any sketches/examples/scenarios.
-<img src="/controlFlowDiagram.jpg" height="600">
+<img src="assets/controlFlowDiagram.jpg" height="600">
 
-<img src="/performanceAnalysisReport.jpg" height="600">
+<img src="assets/performanceAnalysisReport.jpg" height="600">
 
 ## Notes about first user study results.
 Looking at the mock-up shown in the earlier section, one of the feedback received was that it was unclear what the different colors of the blocks were signifying. At this stage, we haven't decided how we want to use colouring to convey information but this is something we plan to look into. An early idea is to use a gradient from low to dark with dark signifying higher system resources use and room for optimization. 
