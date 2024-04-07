@@ -12,6 +12,9 @@ import java.io.*;
 import java.util.*;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ProfilingAgent {
 
     // Where is this agent compiled to?
@@ -168,52 +171,6 @@ public class ProfilingAgent {
         }
     }
 
-    private static String removeArgumentNames(String functionSignature) {
-        StringBuilder newSignature = new StringBuilder();
-        boolean readingType = true; // State to keep track if we are reading a type
-
-        // Iterate over each character in the string
-        for (char ch : functionSignature.toCharArray()) {
-            // If we find a closing parenthesis, we are done
-            if (ch == ')') {
-                newSignature.append(ch);
-                break;
-            }
-
-            // If we find a comma or an opening parenthesis, the next token will be a type
-            if (ch == ',' || ch == '(') {
-                readingType = true;
-                newSignature.append(ch);
-                if (ch == ',') {
-                    newSignature.append(' '); // Add space after comma for formatting
-                }
-                continue;
-            }
-
-            // If we are reading a type, append the character to the result
-            if (readingType) {
-                newSignature.append(ch);
-            }
-
-            // If we encounter a space, the type has ended and an argument name is starting
-            if (ch == ' ') {
-                readingType = false; // Stop reading characters until we hit a comma or closing parenthesis
-            }
-        }
-
-        return newSignature.toString();
-    }
-
-    private static CFG findFunctionInCFGMap(String cfgName) {
-        for (Map.Entry<String, CFG> entry : cfgMap.entrySet()) {
-            String transformedName = removeArgumentNames(entry.getKey());
-            if (transformedName.equals(cfgName)) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
     static class MethodAdapter extends AdviceAdapter {
         private String cfgName;
 
@@ -231,6 +188,25 @@ public class ProfilingAgent {
             }
 
             collectInjectPlaces(functionCFG);
+        }
+
+        public static String removeArgumentNames(String signature) {
+            // This pattern matches argument names in the function signature
+            Pattern pattern = Pattern.compile("\\s+\\w+(,|\\))");
+            Matcher matcher = pattern.matcher(signature);
+
+            // Replace all occurrences of the pattern with just the comma or parenthesis
+            return matcher.replaceAll("$1");
+        }
+
+        private static CFG findFunctionInCFGMap(String cfgName) {
+            for (Map.Entry<String, CFG> entry : cfgMap.entrySet()) {
+                String transformedName = removeArgumentNames(entry.getKey());
+                if (transformedName.equals(cfgName)) {
+                    return entry.getValue();
+                }
+            }
+            return null;
         }
 
         private void collectInjectPlaces(CFG cfg) {
