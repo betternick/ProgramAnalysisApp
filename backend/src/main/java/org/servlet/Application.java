@@ -9,6 +9,7 @@ import org.analysis.*;
 
 import java.io.*;
 import java.nio.file.*;
+import org.springframework.boot.SpringApplication;
 
 @SpringBootApplication
 public class Application {
@@ -18,15 +19,15 @@ public class Application {
     private static Analyser analyser;
 
     public static void main(String[] args) {
-        try {
-            analyzeNewProject("examples/IfElse.java");
-        } catch (CompilationException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     analyzeNewProject("examples/IfElse.java");
+        // } catch (CompilationException e) {
+        //     e.printStackTrace();
+        // }
 
-        // System.out.println("Application, Start!");
-        // SpringApplication.run(Application.class, args);
-        // System.out.println("End of Application !");
+        System.out.println("Application, Start!");
+        SpringApplication.run(Application.class, args);
+        System.out.println("End of Application !");
     }
 
     public static void analyzeNewProject(String projectPath) throws CompilationException {
