@@ -94,7 +94,7 @@ int b = a;
 
 if (b > 10) {
 b++;
-return;
+return 5;
 } else {
 b--;
 
@@ -107,7 +107,7 @@ int sampleForLoopProgram(int a) {
 int b = a;
 for (int count = 0; count < 10; count++) {
 b++;
-return;
+return 7;
 }
 System.out.println("Yay");
 return b;
@@ -156,7 +156,7 @@ int why = 9;
 int y = 999;
 }
 b++;
-return;
+return 3;
 }
 System.out.println("Yay");
 return a;
@@ -166,7 +166,7 @@ int returnInInnerLoop(int a) {
 int b = a;
 while (b > 10) {
 b--;
-return;
+return 5;
 while (1 > 0) {
 int why = 9;
 return;
@@ -183,7 +183,7 @@ int simplewhileReturn(int a) {
 int b = a;
 while (b > 10) {
 b--;
-return;
+return 3;
 }
 System.out.println("Yay");
 int y = 67;
@@ -194,10 +194,10 @@ int returnInBothBranches(int a) {
 int b = a;
 if (1 > 6) {
 int h = 90;
-return;
+return 5;
 } else {
 int y = 60;
-return;
+return 7;
 int check = 5;
 }
 System.out.println("Yay");
@@ -209,7 +209,7 @@ int b = a;
 if (1 > 6) {
 int h = 90;
 } else {
-return;
+return 8;
 int y = 60;
 }
 System.out.println("Yay");
@@ -350,7 +350,7 @@ int returnInIfThenBranch(int a) {
 int b = a;
 if (1 > 6) {
 int h = 90;
-return;
+return 4;
 } else {
 int y = 60;
 }
