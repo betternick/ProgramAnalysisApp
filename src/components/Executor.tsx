@@ -25,7 +25,7 @@ export default function Executor({ handleResponse }: ExecutorProps) {
     const handleSubmit = async () => {
         setIsExecuting(true)
         setError(null)
-        const url = 'http://localhost:8080/execute'
+        const url = 'https://programanalysis-latest2.onrender.com/execute'
         const results = await fetch(url, {
             method: 'POST',
         })
