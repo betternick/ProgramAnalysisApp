@@ -55,7 +55,7 @@ export default function Uploader({ handleResponse }: UploaderProps) {
         if (!file) return
         const fd = new FormData()
         fd.append(`file`, file)
-        const url = 'http://localhost:8080/upload'
+        const url = 'https://programanalysis-latest2.onrender.com/upload'
         setIsUploading(true)
         const results = await fetch(url, {
             method: 'POST',
